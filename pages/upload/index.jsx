@@ -5,7 +5,7 @@ import DataGridDemo from '../../components/datagrid';
 import Layout from '../../components/layout';
 import { Stack, Alert, Box, Container, Snackbar, Chip } from '@mui/material';
 
-
+import SelectColumn from '../../components/select-column';
 
 // Allowed extensions for input file
 const allowedExtensions = ["csv"];
@@ -65,8 +65,9 @@ const App = () => {
         reader.onload = async ({ target }) => {
             const csv = Papa.parse(target.result, { header: true });
             const parsedData = csv?.data;
-            const columns = Object.keys(parsedData[0]);
+            setData(parsedData);
 
+            const columns = Object.keys(parsedData[0]);
             const columns_datagrid = [
                 { field: 'id', headerName: 'ID', width: 90 },
             ].concat(columns.map((col) => Object.fromEntries([['field', col], ['headerName', col], ['width', 150], ['editable', true]])));
@@ -75,7 +76,7 @@ const App = () => {
 
             setColumns(columns_datagrid);
             setRows(rows_datagrid);
-            setData(parsedData);
+
         };
         reader.readAsText(file);
     };
@@ -83,12 +84,17 @@ const App = () => {
     return (
         <Layout>
             <div>
-                <Stack direction="column" spacing={2}>
+                <Stack
+                    direction="column"
+                    spacing={2} j
+                    ustifyContent="center"
+                    alignItems="center">
+
                     <h1>
                         Enter CSV File
                     </h1>
 
-                    <Stack direction="row" spacing={2} justifyContent="center">
+                    <Stack direction="row" spacing={2}>
 
                         <Button
                             variant="contained"
@@ -107,10 +113,11 @@ const App = () => {
                             component="label"
                             onClick={handleParse}
                         >
-                            Parse
+                            Load .csv
                         </Button>
                     </Stack>
-                    <Chip label={file && `${file.name} - ${file.type}`}></Chip>
+                    {file && <Chip label={file && `${file.name} - ${file.type}`} />}
+                    < SelectColumn />
                     <DataGridDemo columns={columns} rows={rows} />
                     {!!snackbar && (
                         <Snackbar
