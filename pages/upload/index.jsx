@@ -3,11 +3,17 @@ import Papa from "papaparse";
 import React, { useState } from "react";
 import DataGridDemo from '../../components/datagrid';
 import Layout from '../../components/layout';
+import { Stack, Alert, Box, Container, Snackbar, Chip } from '@mui/material';
+
+
 
 // Allowed extensions for input file
 const allowedExtensions = ["csv"];
 
 const App = () => {
+
+    const [snackbar, setSnackbar] = React.useState(null);
+    const handleCloseSnackbar = () => setSnackbar(null);
 
     // This state will store the parsed data
     const [data, setData] = useState([]);
@@ -18,17 +24,12 @@ const App = () => {
     // This state will store the rows formatted for datagrid
     const [rows, setRows] = useState([]);
 
-    // It state will contain the error when
-    // correct file extension is not used
-    const [error, setError] = useState("");
-
     // It will store the file uploaded by the user
     const [file, setFile] = useState("");
 
     // This function will be called when
     // the file input changes
     const handleFileChange = (e) => {
-        setError("");
 
         // Check if user has entered the file
         if (e.target.files.length) {
@@ -39,19 +40,21 @@ const App = () => {
             // we show the error
             const fileExtension = inputFile?.type.split("/")[1];
             if (!allowedExtensions.includes(fileExtension)) {
-                setError("Please input a csv file");
+                setSnackbar({ children: 'Only .csv are accepted', severity: 'error' });
                 return;
             }
 
             // If input type is correct set the state
             setFile(inputFile);
+            setSnackbar({ children: '.csv file found', severity: 'success' });
         }
     };
+
     const handleParse = () => {
 
         // If user clicks the parse button without
         // a file we show a error
-        if (!file) return setError("Enter a valid file");
+        if (!file) return setSnackbar({ children: 'select a csv file first', severity: 'error' });
 
         // Initialize a reader which allows user
         // to read any file or blob.
@@ -68,62 +71,61 @@ const App = () => {
                 { field: 'id', headerName: 'ID', width: 90 },
             ].concat(columns.map((col) => Object.fromEntries([['field', col], ['headerName', col], ['width', 150], ['editable', true]])));
 
-            const rows_datagrid = parsedData.map((row, idx) => Object.defineProperty(row, 'id', { value: idx }));
+            const rows_datagrid = parsedData.map((row, idx) => Object.assign({ id: idx }, row));
 
             setColumns(columns_datagrid);
             setRows(rows_datagrid);
             setData(parsedData);
-            console.log(parsedData);
-            console.log(columns_datagrid)
-            console.log(rows_datagrid)
-
         };
         reader.readAsText(file);
     };
 
-
-
-
     return (
         <Layout>
             <div>
-                <label htmlFor="csvInput" style={{ display: "block" }}>
-                    Enter CSV File
-                </label>
-                <Button
-                    variant="contained"
-                    component="label"
-                >
-                    Select .csv
-                    <input
-                        onChange={handleFileChange}
-                        id="csvInput"
-                        hidden
-                        type="File"
-                    />
-                </Button>
-                <div>{file && `${file.name} - ${file.type}`}</div>
-                <div>
-                    <Button
-                        variant="contained"
-                        component="label"
-                        onClick={handleParse}
-                    >
-                        Parse
-                    </Button>
-                </div>
-                <div>
-                    {/* {
-                        error ? error :
-                            data.map(
-                                (col, idx) => <div key={idx}>{col}</div>
-                            )
-                    } */}
+                <Stack direction="column" spacing={2}>
+                    <h1>
+                        Enter CSV File
+                    </h1>
+
+                    <Stack direction="row" spacing={2} justifyContent="center">
+
+                        <Button
+                            variant="contained"
+                            component="label"
+                        >
+                            Select .csv
+                            <input
+                                onChange={handleFileChange}
+                                id="csvInput"
+                                hidden
+                                type="File"
+                            />
+                        </Button>
+                        <Button
+                            variant="contained"
+                            component="label"
+                            onClick={handleParse}
+                        >
+                            Parse
+                        </Button>
+                    </Stack>
+                    <Chip label={file && `${file.name} - ${file.type}`}></Chip>
                     <DataGridDemo columns={columns} rows={rows} />
-                </div>
+                    {!!snackbar && (
+                        <Snackbar
+                            open
+                            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                            onClose={handleCloseSnackbar}
+                            autoHideDuration={6000}
+                        >
+                            <Alert {...snackbar} onClose={handleCloseSnackbar} />
+                        </Snackbar>
+                    )}
+                </Stack>
 
             </div>
-        </Layout>
+        </Layout >
     );
 };
 
