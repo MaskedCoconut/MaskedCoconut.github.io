@@ -1,14 +1,8 @@
-import React, { ChangeEvent, useState, useRef } from "react";
-import Papa from "papaparse";
 import Button from '@mui/material/Button';
+import Papa from "papaparse";
+import React, { useState } from "react";
+import DataGridDemo from '../../components/datagrid';
 import Layout from '../../components/layout';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 
 // Allowed extensions for input file
 const allowedExtensions = ["csv"];
@@ -17,6 +11,12 @@ const App = () => {
 
     // This state will store the parsed data
     const [data, setData] = useState([]);
+
+    // This state will store the columns formatted for datagrid
+    const [columns, setColumns] = useState([]);
+
+    // This state will store the rows formatted for datagrid
+    const [rows, setRows] = useState([]);
 
     // It state will contain the error when
     // correct file extension is not used
@@ -60,13 +60,29 @@ const App = () => {
         // Event listener on reader when the file
         // loads, we parse it and set the data.
         reader.onload = async ({ target }) => {
-            const csv = Papa.parse(target.result, { header: false });
+            const csv = Papa.parse(target.result, { header: true });
             const parsedData = csv?.data;
             const columns = Object.keys(parsedData[0]);
+
+            const columns_datagrid = [
+                { field: 'id', headerName: 'ID', width: 90 },
+            ].concat(columns.map((col) => Object.fromEntries([['field', col], ['headerName', col], ['width', 150], ['editable', true]])));
+
+            const rows_datagrid = parsedData.map((row, idx) => Object.defineProperty(row, 'id', { value: idx }));
+
+            setColumns(columns_datagrid);
+            setRows(rows_datagrid);
             setData(parsedData);
+            console.log(parsedData);
+            console.log(columns_datagrid)
+            console.log(rows_datagrid)
+
         };
         reader.readAsText(file);
     };
+
+
+
 
     return (
         <Layout>
@@ -97,12 +113,13 @@ const App = () => {
                     </Button>
                 </div>
                 <div>
-                    {
+                    {/* {
                         error ? error :
                             data.map(
                                 (col, idx) => <div key={idx}>{col}</div>
                             )
-                    }
+                    } */}
+                    <DataGridDemo columns={columns} rows={rows} />
                 </div>
 
             </div>
