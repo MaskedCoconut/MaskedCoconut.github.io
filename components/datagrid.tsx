@@ -2,16 +2,13 @@ import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import {
-    DataGrid,
-    GridEventListener,
-    GridToolbarColumnsButton,
-    GridToolbarContainer,
+    DataGrid, GridToolbarContainer,
     GridToolbarDensitySelector,
-    GridToolbarExport,
-    GridToolbarFilterButton,
+    GridToolbarExport
 } from '@mui/x-data-grid';
 import * as React from 'react';
 import Snackbar from '@mui/material/Snackbar';
+import 'simplebar-react/dist/simplebar.min.css';
 
 const useFakeMutation = () => {
     return React.useCallback(
@@ -65,7 +62,7 @@ export default function DataGridDemo(props) {
     if ((typeof props.rows != "undefined") && (typeof props.columns != "undefined")) {
         return (
             <Stack spacing={2} sx={{ width: '100%' }}>
-                <Box sx={{ height: 400, width: '100%' }}>
+                <Box sx={{ height: 1000, width: '100%' }}>
                     <DataGrid
                         rows={props.rows}
                         columns={props.columns}

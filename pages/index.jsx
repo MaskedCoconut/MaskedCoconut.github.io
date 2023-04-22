@@ -7,6 +7,8 @@ import Layout from "../components/layout";
 
 import SelectColumn from "../components/select-column";
 
+import MaterialReactTable from "../components/MRT";
+
 // Allowed extensions for input file
 const allowedExtensions = ["csv"];
 
@@ -99,13 +101,8 @@ const App = () => {
   return (
     <Layout>
       <div>
-        <Stack
-          direction="column"
-          spacing={2}
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Stack direction="row" spacing={2}>
+        <Stack direction="column" justifyContent="center" alignItems="center">
+          <Stack direction="row">
             <Button variant="contained" component="label">
               Select .csv
               <input
@@ -122,6 +119,7 @@ const App = () => {
           {file && <Chip label={file && `${file.name} - ${file.type}`} />}
           {columns && <SelectColumn choices={colList} />}
           <DataGridDemo columns={columns} rows={rows} />
+          {/* {columns && <MaterialReactTable columns={colList} data={data} />} */}
           {!!snackbar && (
             <Snackbar
               open
