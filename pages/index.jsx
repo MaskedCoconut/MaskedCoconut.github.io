@@ -100,38 +100,32 @@ const App = () => {
 
   return (
     <Layout>
-      <div>
-        <Stack direction="column" justifyContent="center" alignItems="center">
-          <Stack direction="row">
-            <Button variant="contained" component="label">
-              Select .csv
-              <input
-                onChange={handleFileChange}
-                id="csvInput"
-                hidden
-                type="File"
-              />
-            </Button>
-            <Button variant="contained" component="label" onClick={handleParse}>
-              Load .csv
-            </Button>
-          </Stack>
-          {file && <Chip label={file && `${file.name} - ${file.type}`} />}
-          {columns && <SelectColumn choices={colList} />}
-          <DataGridDemo columns={columns} rows={rows} />
-          {/* {columns && <MaterialReactTable columns={colList} data={data} />} */}
-          {!!snackbar && (
-            <Snackbar
-              open
-              anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-              onClose={handleCloseSnackbar}
-              autoHideDuration={6000}
-            >
-              <Alert {...snackbar} onClose={handleCloseSnackbar} />
-            </Snackbar>
-          )}
-        </Stack>
-      </div>
+      <Stack direction="row">
+        <Button variant="contained" component="label">
+          Select .csv
+          <input onChange={handleFileChange} id="csvInput" hidden type="File" />
+        </Button>
+        <Button variant="contained" component="label" onClick={handleParse}>
+          Load .csv
+        </Button>
+        {file && <Chip label={file && `${file.name} - ${file.type}`} />}
+      </Stack>
+
+      <Stack width={"90%"}>
+        {columns && <SelectColumn choices={colList} />}
+        <DataGridDemo columns={columns} rows={rows} />
+        {/* {columns && <MaterialReactTable columns={colList} data={data} />} */}
+        {!!snackbar && (
+          <Snackbar
+            open
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            onClose={handleCloseSnackbar}
+            autoHideDuration={6000}
+          >
+            <Alert {...snackbar} onClose={handleCloseSnackbar} />
+          </Snackbar>
+        )}
+      </Stack>
     </Layout>
   );
 };
