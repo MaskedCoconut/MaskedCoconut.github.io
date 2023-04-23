@@ -8,19 +8,6 @@ import Select from "@mui/material/Select";
 import * as React from "react";
 import { Stack } from "@mui/material";
 
-const selectList = [
-  "Flight Number",
-  "Flight Date",
-  "Scheduled Time",
-  "Arr./Dep.",
-  "Int./Dom.",
-  "T1/T2",
-  "Intl Regions",
-  "Category(P/C/O)",
-  "SEATS",
-  "PAX",
-];
-
 const SearchObjectForValue = (obj, val) => {
   const asArray = Object.entries(obj);
   const filteredArray = asArray.filter(([key, value]) => value === val);
@@ -31,7 +18,7 @@ const SearchObjectForValue = (obj, val) => {
   return result;
 };
 
-export default function BasicSelect(props) {
+export default function BasicSelect({choices,selectList}) {
   // Store the match between template (define above)
   // and the column chosen by user
   const [match, setMatch] = React.useState(
@@ -106,7 +93,7 @@ export default function BasicSelect(props) {
               //   </IconButton>
               // }
             >
-              {props.choices.map((val) => (
+              {choices.map((val) => (
                 <MenuItem key={val} value={val}>
                   {" "}
                   {val}{" "}

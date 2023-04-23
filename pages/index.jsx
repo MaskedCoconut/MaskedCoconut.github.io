@@ -4,35 +4,46 @@ import Papa from "papaparse";
 import React, { useState } from "react";
 import DataGridDemo from "../components/datagrid";
 import Layout from "../components/layout";
-
 import SelectColumn from "../components/select-column";
-
 import MaterialReactTable from "../components/MRT";
 
 // Allowed extensions for input file
 const allowedExtensions = ["csv"];
 
+// List of destination columns to match
+const selectList = [
+  "Flight Number",
+  "Flight Date",
+  "Scheduled Time",
+  "Arr./Dep.",
+  "Int./Dom.",
+  "T1/T2",
+  "Intl Regions",
+  "Category(P/C/O)",
+  "SEATS",
+  "PAX",
+];
+
 const App = () => {
-  const [snackbar, setSnackbar] = React.useState(null);
-  const handleCloseSnackbar = () => setSnackbar(null);
-
-  // This state will store the parsed data
-  const [data, setData] = useState();
-
-  // columns as a list
-  const [colList, setColList] = useState();
-
-  // This state will store the columns formatted for datagrid
-  const [columns, setColumns] = useState();
-
-  // This state will store the rows formatted for datagrid
-  const [rows, setRows] = useState();
 
   // It will store the file uploaded by the user
   const [file, setFile] = useState();
 
-  // This function will be called when
-  // the file input changes
+  // General snackbar
+  const [snackbar, setSnackbar] = React.useState(null);
+  const handleCloseSnackbar = () => setSnackbar(null);
+
+  // Data
+  // This state will store the parsed data
+  const [parsedData, setParsedData] = useState();
+  // columns as a list
+  const [colList, setColList] = useState();
+  // This state will store the columns formatted for datagrid
+  const [colDataGrid, setColDataGrid] = useState();
+  // This state will store the rows formatted for datagrid
+  const [rowsDataGrid, setRowsDataGrid] = useState();
+
+  // File input change
   const handleFileChange = (event) => {
     // Check if user has entered the file
     if (event.target.files.length) {
@@ -53,6 +64,7 @@ const App = () => {
     }
   };
 
+  // Parse and update data
   const handleParse = () => {
     // If user clicks the parse button without
     // a file we show a error
@@ -71,13 +83,13 @@ const App = () => {
     reader.onload = async ({ target }) => {
       const csv = Papa.parse(target.result, { header: true });
       const parsedData = csv?.data;
-      setData(parsedData);
+      setParsedData(parsedData);
 
-      const columns = Object.keys(parsedData[0]);
+      const colList = Object.keys(parsedData[0]);
       const columns_datagrid = [
         { field: "id", headerName: "ID", width: 90 },
       ].concat(
-        columns.map((col) =>
+        colList.map((col) =>
           Object.fromEntries([
             ["field", col],
             ["headerName", col],
@@ -91,16 +103,16 @@ const App = () => {
         Object.assign({ id: idx }, row)
       );
 
-      setColList(columns);
-      setColumns(columns_datagrid);
-      setRows(rows_datagrid);
+      setColList(colList);
+      setColDataGrid(columns_datagrid);
+      setRowsDataGrid(rows_datagrid);
     };
     reader.readAsText(file);
   };
 
   return (
     <Layout>
-      <Stack direction="row">
+      <Stack direction="row" flexWrap="wrap">
         <Button variant="contained" component="label">
           Select .csv
           <input onChange={handleFileChange} id="csvInput" hidden type="File" />
@@ -112,8 +124,8 @@ const App = () => {
       </Stack>
 
       <Stack width={"90%"}>
-        {columns && <SelectColumn choices={colList} />}
-        <DataGridDemo columns={columns} rows={rows} />
+        {colDataGrid && <SelectColumn choices={colList} selectList={selectList} />}
+        <DataGridDemo columns={colDataGrid} rows={rowsDataGrid} />
         {/* {columns && <MaterialReactTable columns={colList} data={data} />} */}
         {!!snackbar && (
           <Snackbar

@@ -9,7 +9,6 @@ import {
 } from "@mui/x-data-grid";
 import * as React from "react";
 import Snackbar from "@mui/material/Snackbar";
-import "simplebar-react/dist/simplebar.min.css";
 
 const useFakeMutation = () => {
   return React.useCallback(
