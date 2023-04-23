@@ -18,12 +18,14 @@ const SearchObjectForValue = (obj, val) => {
   return result;
 };
 
-export default function BasicSelect({choices,selectList}) {
-  // Store the match between template (define above)
-  // and the column chosen by user
-  const [match, setMatch] = React.useState(
-    Object.fromEntries(selectList.map((col) => [col, ""]))
-  );
+export default function BasicSelect({
+  selectList,
+  colDataGrid,
+  setColDataGrid,
+  match,
+  setMatch,
+}) {
+  const choices = colDataGrid.map((col) => col.field);
 
   const handleClearClick = (col) => {
     const deletedValue = Object.fromEntries([[col, ""]]);
@@ -50,6 +52,8 @@ export default function BasicSelect({choices,selectList}) {
       ...reinitValues,
     }));
   };
+
+  const handleMatchClick = () => {};
 
   return (
     <Stack
