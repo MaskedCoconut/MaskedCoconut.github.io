@@ -8,12 +8,21 @@ import Select from "@mui/material/Select";
 import * as React from "react";
 import { Stack } from "@mui/material";
 
-const SearchObjectForValue = (obj, val) => {
+import Button from "@mui/material/Button";
+
+// Get keys (array) by value
+const getKeyByValue = (object, value) => {
+  return Object.keys(object).filter((key) => object[key] === value);
+};
+
+// Returns filtered object keeping only keys matching value
+// Assign "" to all values if isReinit = true
+const FilterObjectOnValue = (obj, val, isReinit) => {
   const asArray = Object.entries(obj);
   const filteredArray = asArray.filter(([key, value]) => value === val);
   const filteredObject = Object.fromEntries(filteredArray);
   const result = Object.fromEntries(
-    Object.keys(filteredObject).map((key) => [key, ""])
+    Object.keys(filteredObject).map((key) => [key, isReinit ? "" : obj.key])
   );
   return result;
 };
@@ -29,22 +38,18 @@ export default function BasicSelect({
 
   const handleClearClick = (col) => {
     const deletedValue = Object.fromEntries([[col, ""]]);
-    console.log(deletedValue);
     // Update the match Object
     setMatch((match) => ({
       ...match,
       ...deletedValue,
     }));
-
-    console.log(match);
   };
 
   const handleChange = (e) => {
     // record the updated value
     const updatedValue = Object.fromEntries([[e.target.name, e.target.value]]);
     // take out the value if it is already somewhere
-    const reinitValues = SearchObjectForValue(match, e.target.value);
-    console.log(reinitValues);
+    const reinitValues = FilterObjectOnValue(match, e.target.value, true);
     // Update the match Object
     setMatch((match) => ({
       ...match,
@@ -54,16 +59,29 @@ export default function BasicSelect({
   };
 
   const handleMatchClick = () => {
-    // change the headername of matched columns
-    // match is like {col:match col:match col:match}
-    const updatedValues = match.map((match) =>
-      Object.fromEntries([
-        ["field", col],
-        ["headerName", col],
-        ["width", 150],
-        ["editable", true],
-      ])
+    console.log(match);
+
+    // look at each colDataGrid, if headerName is matched (= in the values of match), change the headerName to the corresponding key in match
+
+    const matchedHeaderName = Object.values(match);
+    console.log(matchedHeaderName);
+
+    const updatedColDatagrid = colDataGrid.map((col) =>
+      matchedHeaderName.includes(col["headerName"]) && col["headerName"] != ""
+        ? Object.fromEntries([
+            ["field", col["field"]],
+            ["headerName", ...getKeyByValue(match, col["headerName"])],
+            ["width", 150],
+            ["editable", true],
+          ])
+        : col
     );
+
+    console.log(updatedColDatagrid);
+
+    setColDataGrid(updatedColDatagrid);
+
+    console.log(colDataGrid);
 
     // activate the data validation
   };
@@ -120,6 +138,10 @@ export default function BasicSelect({
           </FormControl>
         </Box>
       ))}
+
+      <Button variant="contained" component="label" onClick={handleMatchClick}>
+        update columns
+      </Button>
     </Stack>
   );
 }
