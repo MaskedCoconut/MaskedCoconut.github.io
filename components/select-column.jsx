@@ -53,7 +53,20 @@ export default function BasicSelect({
     }));
   };
 
-  const handleMatchClick = () => {};
+  const handleMatchClick = () => {
+    // change the headername of matched columns
+    // match is like {col:match col:match col:match}
+    const updatedValues = match.map((match) =>
+      Object.fromEntries([
+        ["field", col],
+        ["headerName", col],
+        ["width", 150],
+        ["editable", true],
+      ])
+    );
+
+    // activate the data validation
+  };
 
   return (
     <Stack
