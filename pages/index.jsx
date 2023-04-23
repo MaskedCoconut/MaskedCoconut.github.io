@@ -25,7 +25,6 @@ const selectList = [
 ];
 
 const App = () => {
-
   // It will store the file uploaded by the user
   const [file, setFile] = useState();
 
@@ -37,11 +36,17 @@ const App = () => {
   // This state will store the parsed data
   const [parsedData, setParsedData] = useState();
   // columns as a list
-  const [colList, setColList] = useState();
+  // const [colList, setColList] = useState();
   // This state will store the columns formatted for datagrid
   const [colDataGrid, setColDataGrid] = useState();
   // This state will store the rows formatted for datagrid
   const [rowsDataGrid, setRowsDataGrid] = useState();
+
+  // Store the match between template (define above)
+  // and the column chosen by user
+  const [match, setMatch] = React.useState(
+    Object.fromEntries(selectList.map((col) => [col, ""]))
+  );
 
   // File input change
   const handleFileChange = (event) => {
@@ -85,11 +90,10 @@ const App = () => {
       const parsedData = csv?.data;
       setParsedData(parsedData);
 
-      const colList = Object.keys(parsedData[0]);
       const columns_datagrid = [
         { field: "id", headerName: "ID", width: 90 },
       ].concat(
-        colList.map((col) =>
+        Object.keys(parsedData[0]).map((col) =>
           Object.fromEntries([
             ["field", col],
             ["headerName", col],
@@ -103,7 +107,6 @@ const App = () => {
         Object.assign({ id: idx }, row)
       );
 
-      setColList(colList);
       setColDataGrid(columns_datagrid);
       setRowsDataGrid(rows_datagrid);
     };
@@ -124,7 +127,15 @@ const App = () => {
       </Stack>
 
       <Stack width={"90%"}>
-        {colDataGrid && <SelectColumn choices={colList} selectList={selectList} />}
+        {colDataGrid && (
+          <SelectColumn
+            selectList={selectList}
+            colDataGrid={colDataGrid}
+            setColDataGrid={setColDataGrid}
+            match={match}
+            setMatch={setMatch}
+          />
+        )}
         <DataGridDemo columns={colDataGrid} rows={rowsDataGrid} />
         {/* {columns && <MaterialReactTable columns={colList} data={data} />} */}
         {!!snackbar && (

@@ -30,3 +30,7 @@
 3. fix errors
 4. send
 
+
+# Fix some stuff
+- If new csv is selected, reinitialize all
+- empty column header in papa parse
