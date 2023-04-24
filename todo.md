@@ -34,3 +34,6 @@
 # Fix some stuff
 - If new csv is selected, reinitialize all
 - empty column header in papa parse
+- remove ID from mapping options
+
+- headername and its match should be managed in a 1-to-1 updatable object for convenience
