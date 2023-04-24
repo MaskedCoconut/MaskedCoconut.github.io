@@ -60,20 +60,51 @@ export default function BasicSelect({
     }));
   };
 
+  function getRowError(params) {
+    let result = [1];
+    Object.keys(match).forEach((headerName) => {
+      switch (headerName) {
+        case "Flight Date":
+          result.push(Date.parse(params.row[match[headerName]]) ? 1 : 0);
+          break;
+          debugger;
+        case "Arr./Dep.":
+          result.push(
+            ["A", "D"].includes(params.row[match[headerName]]) ? 1 : 0
+          );
+          debugger;
+          break;
+      }
+    });
+    return result.reduce((a, b) => a * b, 1);
+    debugger;
+  }
+
   const handleMatchClick = () => {
     // look at each colDataGrid, if headerName is matched (= in the values of match), change the headerName to the corresponding key in match
     const matchedHeaderName = Object.values(match);
-    const updatedColDatagrid = colDataGrid.map((col) =>
-      matchedHeaderName.includes(col["headerName"]) && col["headerName"] != ""
-        ? Object.fromEntries([
-            ["field", col["field"]],
-            ["headerName", ...getKeyByValue(match, col["headerName"])],
-            ["width", 150],
-            ["editable", true],
-          ])
-        : col
+    const updatedColDatagrid = colDataGrid
+      .filter((col) => col.field != "error")
+      .map((col) =>
+        matchedHeaderName.includes(col["headerName"]) && col["headerName"] != ""
+          ? Object.fromEntries([
+              ["field", col["field"]],
+              ["headerName", ...getKeyByValue(match, col["headerName"])],
+              ["width", 150],
+              ["editable", true],
+            ])
+          : col
+      );
+    const updatedColDatagridAndError = updatedColDatagrid.concat(
+      Object.fromEntries([
+        ["field", "error"],
+        ["headerName", "error"],
+        ["width", 150],
+        ["editable", false],
+        ["valueGetter", getRowError],
+      ])
     );
-    setColDataGrid(updatedColDatagrid);
+    setColDataGrid(updatedColDatagridAndError);
     setValidation(true);
   };
 

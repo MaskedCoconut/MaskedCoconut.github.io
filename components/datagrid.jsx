@@ -28,9 +28,7 @@ const useFakeMutation = () => {
 
 export default function DataGridDemo(props) {
   const mutateRow = useFakeMutation();
-
   const [snackbar, setSnackbar] = React.useState(null);
-
   const handleCloseSnackbar = () => setSnackbar(null);
 
   const processRowUpdate = React.useCallback(
@@ -90,13 +88,13 @@ export default function DataGridDemo(props) {
             onProcessRowUpdateError={handleProcessRowUpdateError}
             // for the conditional formatting of cells
             getCellClassName={(params) => {
-              switch (params.headerName) {
+              switch (params.colDef.headerName) {
                 case "Flight Date":
-                  return Date.parse(params.value) ? "" : "";
+                  return Date.parse(params.value) ? "ok" : "bad";
                 case "Arr./Dep.":
-                  return ["A", "D"].includes(params.value) ? "" : "bad";
+                  return ["A", "D"].includes(params.value) ? "ok" : "bad";
                 default:
-                  return "bad";
+                  return "ok";
               }
             }}
           />
