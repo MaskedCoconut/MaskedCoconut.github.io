@@ -33,6 +33,8 @@ export default function BasicSelect({
   setColDataGrid,
   match,
   setMatch,
+  isValidated,
+  setValidation,
 }) {
   const choices = colDataGrid.map((col) => col.field);
 
@@ -59,13 +61,8 @@ export default function BasicSelect({
   };
 
   const handleMatchClick = () => {
-    console.log(match);
-
     // look at each colDataGrid, if headerName is matched (= in the values of match), change the headerName to the corresponding key in match
-
     const matchedHeaderName = Object.values(match);
-    console.log(matchedHeaderName);
-
     const updatedColDatagrid = colDataGrid.map((col) =>
       matchedHeaderName.includes(col["headerName"]) && col["headerName"] != ""
         ? Object.fromEntries([
@@ -76,14 +73,8 @@ export default function BasicSelect({
           ])
         : col
     );
-
-    console.log(updatedColDatagrid);
-
     setColDataGrid(updatedColDatagrid);
-
-    console.log(colDataGrid);
-
-    // activate the data validation
+    setValidation(true);
   };
 
   return (

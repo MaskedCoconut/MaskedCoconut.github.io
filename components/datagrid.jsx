@@ -90,10 +90,14 @@ export default function DataGridDemo(props) {
             onProcessRowUpdateError={handleProcessRowUpdateError}
             // for the conditional formatting of cells
             getCellClassName={(params) => {
-              if (params.field != "datetime" || params.value == null) {
-                return "";
+              switch (params.headerName) {
+                case "Flight Date":
+                  return Date.parse(params.value) ? "" : "";
+                case "Arr./Dep.":
+                  return ["A", "D"].includes(params.value) ? "" : "bad";
+                default:
+                  return "bad";
               }
-              return Date.parse(params.value) ? "" : "bad";
             }}
           />
         </Box>

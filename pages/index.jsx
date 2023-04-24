@@ -48,6 +48,8 @@ const App = () => {
     Object.fromEntries(selectList.map((col) => [col, ""]))
   );
 
+  const [isValidated, setValidation] = React.useState(false);
+
   // File input change
   const handleFileChange = (event) => {
     // Check if user has entered the file
@@ -134,9 +136,15 @@ const App = () => {
             setColDataGrid={setColDataGrid}
             match={match}
             setMatch={setMatch}
+            isValidated={isValidated}
+            setValidation={setValidation}
           />
         )}
-        <DataGridDemo columns={colDataGrid} rows={rowsDataGrid} />
+        <DataGridDemo
+          columns={colDataGrid}
+          rows={rowsDataGrid}
+          isValidated={isValidated}
+        />
         {/* {columns && <MaterialReactTable columns={colList} data={data} />} */}
         {!!snackbar && (
           <Snackbar
