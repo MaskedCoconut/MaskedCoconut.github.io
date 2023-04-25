@@ -20,8 +20,8 @@ const selectList = [
   "T1/T2",
   "Intl Regions",
   "Category(P/C/O)",
-  "SEATS",
-  "PAX",
+  "Seats",
+  "Pax",
 ];
 
 const App = () => {
