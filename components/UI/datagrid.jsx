@@ -1,5 +1,6 @@
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
+import Snackbar from "@mui/material/Snackbar";
 import Stack from "@mui/material/Stack";
 import {
   DataGrid,
@@ -7,10 +8,14 @@ import {
   GridToolbarDensitySelector,
   GridToolbarExport,
 } from "@mui/x-data-grid";
-import * as React from "react";
-import Snackbar from "@mui/material/Snackbar";
+import React, { useContext } from "react";
+import {
+  AppDataContext,
+  AppDataDispatchContext,
+} from "../context/AppDataContext";
 
 const useFakeMutation = () => {
+  const dispatch = useContext(AppDataDispatchContext);
   return React.useCallback(
     (newrow) =>
       new Promise((resolve, reject) => {
@@ -18,15 +23,18 @@ const useFakeMutation = () => {
           if (newrow.Category?.trim() === "") {
             reject(new Error("Error while saving user: name can't be empty."));
           } else {
+            // dispatch({ type: "UpdateCols" });
             resolve({ ...newrow, Category: newrow.Category?.toUpperCase() });
           }
-        }, 200);
+        }, 0);
       }),
     []
   );
 };
 
-export default function DataGridDemo(props) {
+export default function DataGridDemo() {
+  // AppDataContext
+  const data = useContext(AppDataContext);
   const mutateRow = useFakeMutation();
   const [snackbar, setSnackbar] = React.useState(null);
   const handleCloseSnackbar = () => setSnackbar(null);
@@ -56,7 +64,7 @@ export default function DataGridDemo(props) {
     );
   }
 
-  if (typeof props.rows != "undefined" && typeof props.columns != "undefined") {
+  if (typeof data.rows != "undefined" && typeof data.cols != "undefined") {
     return (
       <Stack spacing={2} sx={{ width: "100%" }}>
         <Box
@@ -70,9 +78,9 @@ export default function DataGridDemo(props) {
           }}
         >
           <DataGrid
-            rows={props.rows}
+            rows={data.rows}
             density="compact"
-            columns={props.columns}
+            columns={data.cols}
             initialState={{
               pagination: {
                 paginationModel: {

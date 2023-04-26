@@ -1,11 +1,11 @@
 import * as React from "react";
-import AppBar from "./appbar";
+import AppBar from "./UI/appbar";
 import { Stack } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import Footer from "./footer";
+import Footer from "./UI/footer";
 import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
-import AppProvider from "../components/simcontext";
+import AppProvider from "../components/context/AppDataContext";
 
 const theme = createTheme({
   components: {

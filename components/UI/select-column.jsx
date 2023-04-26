@@ -1,14 +1,18 @@
 import ClearIcon from "@mui/icons-material/Clear";
+import { Stack } from "@mui/material";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import IconButton from "@mui/material/IconButton";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import * as React from "react";
-import { Stack } from "@mui/material";
-
-import Button from "@mui/material/Button";
+import React, { useState, useContext } from "react";
+import {
+  AppDataContext,
+  AppDataDispatchContext,
+} from "../context/AppDataContext";
+import { ALLOWEDEXTENSIONS, SELECTLIST } from "../settings";
 
 // Get keys (array) by value
 const getKeyByValue = (object, value) => {
@@ -27,84 +31,46 @@ const FilterObjectOnValue = (obj, val, isReinit) => {
   return result;
 };
 
-export default function BasicSelect({
-  selectList,
-  colDataGrid,
-  setColDataGrid,
-  match,
-  setMatch,
-  isValidated,
-  setValidation,
-}) {
-  const choices = colDataGrid.map((col) => col.field);
+export default function BasicSelect({ isValidated, setValidation }) {
+  // AppDataContext
+  const dispatch = useContext(AppDataDispatchContext);
+  const data = useContext(AppDataContext);
+  const choices = data.cols.map((col) => col["headerName"]);
 
-  const handleClearClick = (col) => {
-    const deletedValue = Object.fromEntries([[col, ""]]);
-    // Update the match Object
-    setMatch((match) => ({
-      ...match,
-      ...deletedValue,
-    }));
-  };
+  // const handleClearClick = (col) => {
+  //   const deletedValue = Object.fromEntries([[col, ""]]);
+  //   // Update the match Object
+  //   setMatch((match) => ({
+  //     ...match,
+  //     ...deletedValue,
+  //   }));
+  // };
 
-  const handleChange = (e) => {
+  const handleSelect = (e) => {
     // record the updated value
     const updatedValue = Object.fromEntries([[e.target.name, e.target.value]]);
     // take out the value if it is already somewhere
-    const reinitValues = FilterObjectOnValue(match, e.target.value, true);
+    const reinitValues = FilterObjectOnValue(data.match, e.target.value, true);
     // Update the match Object
-    setMatch((match) => ({
-      ...match,
+    // setMatch((match) => ({
+    //   ...match,
+    //   ...updatedValue,
+    //   ...reinitValues,
+    // }));
+    const newMatch = {
+      ...data.match,
       ...updatedValue,
       ...reinitValues,
-    }));
-  };
-
-  function getRowError(params) {
-    let result = [1];
-    Object.keys(match).forEach((headerName) => {
-      switch (headerName) {
-        case "Flight Date":
-          result.push(Date.parse(params.row[match[headerName]]) ? 1 : 0);
-          break;
-          debugger;
-        case "Arr./Dep.":
-          result.push(
-            ["A", "D"].includes(params.row[match[headerName]]) ? 1 : 0
-          );
-          debugger;
-          break;
-      }
-    });
-    return result.reduce((a, b) => a * b, 1);
+    };
+    dispatch({ type: "UpdateMatch", match: newMatch });
+    console.log(data.match);
     debugger;
-  }
+  };
 
   const handleMatchClick = () => {
     // look at each colDataGrid, if headerName is matched (= in the values of match), change the headerName to the corresponding key in match
-    const matchedHeaderName = Object.values(match);
-    const updatedColDatagrid = colDataGrid
-      .filter((col) => col.field != "error")
-      .map((col) =>
-        matchedHeaderName.includes(col["headerName"]) && col["headerName"] != ""
-          ? Object.fromEntries([
-              ["field", col["field"]],
-              ["headerName", ...getKeyByValue(match, col["headerName"])],
-              ["width", 150],
-              ["editable", true],
-            ])
-          : col
-      );
-    const updatedColDatagridAndError = updatedColDatagrid.concat(
-      Object.fromEntries([
-        ["field", "error"],
-        ["headerName", "error"],
-        ["width", 150],
-        ["editable", false],
-        ["valueGetter", getRowError],
-      ])
-    );
-    setColDataGrid(updatedColDatagridAndError);
+    dispatch({ type: "UpdateCols", match: data.match });
+
     setValidation(true);
   };
 
@@ -117,7 +83,7 @@ export default function BasicSelect({
       alignItems="center"
       justifyContent="center"
     >
-      {selectList.map((col) => (
+      {SELECTLIST.map((col) => (
         <Box key={"box" + col} sx={{ minWidth: 120 }}>
           <FormControl key={"form" + col} fullWidth>
             <InputLabel
@@ -130,10 +96,10 @@ export default function BasicSelect({
               key={"select" + col}
               labelId={"demo-simple-select-label" + col}
               id={"demo-simple-select" + col}
-              value={match[col]}
+              value={data.match[col]}
               label={col}
               name={col}
-              onChange={handleChange}
+              onChange={handleSelect}
               sx={{
                 "& .MuiSelect-iconOutlined": {
                   // display: match[col] ? "none" : "",
