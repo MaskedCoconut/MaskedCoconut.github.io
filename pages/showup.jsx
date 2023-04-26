@@ -1,20 +1,26 @@
 import * as React from "react";
-import { Card, Title, BarChart, LineChart, Subtitle } from "@tremor/react";
-import LineChartTest from "../components/UI/showupchart";
-import Layout from "../components/layout";
+import LineChartTest from "../components/UI/linecharttest";
 import Link from "next/link";
 import { Button } from "@mui/material";
+import {
+  BadgeDelta,
+  Card,
+  Flex,
+  Metric,
+  ProgressBar,
+  Text,
+} from "@tremor/react";
 
 const App = () => {
   return (
-    <Layout>
-      <LineChartTest />{" "}
+    <Card className="max-w-lg">
+      <LineChartTest />
       <Link href="/">
         <Button variant="contained" component="label">
           Back
         </Button>
       </Link>
-    </Layout>
+    </Card>
   );
 };
 

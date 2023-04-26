@@ -50,18 +50,15 @@ const dataFormatter = (number) =>
 const App = () => {
   debugger;
   return (
-    <Card>
-      <Title>title</Title>
-      <LineChart
-        className="mt-6"
-        data={chartdata}
-        index="slot"
-        categories={["pax"]}
-        colors={["blue"]}
-        valueFormatter={dataFormatter}
-        yAxisWidth={40}
-      />
-    </Card>
+    <LineChart
+      className="mt-6"
+      data={chartdata}
+      index="slot"
+      categories={["pax"]}
+      colors={["blue"]}
+      valueFormatter={dataFormatter}
+      yAxisWidth={40}
+    />
   );
 };
 

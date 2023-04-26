@@ -48,12 +48,7 @@ const dataFormatter = (number) => {
 
 export default function Chart() {
   return (
-    <Card>
-      <Title>Number of species threatened with extinction (2021)</Title>
-      <Subtitle>
-        The IUCN Red List has assessed only a small share of the total known
-        species in the world.
-      </Subtitle>
+    <id>
       <BarChart
         className="mt-6"
         data={chartdata}
@@ -63,6 +58,6 @@ export default function Chart() {
         valueFormatter={dataFormatter}
         yAxisWidth={48}
       />
-    </Card>
+    </id>
   );
 }
