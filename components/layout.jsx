@@ -5,6 +5,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Footer from "./footer";
 import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
+import AppProvider from "../components/simcontext";
 
 const theme = createTheme({
   components: {
@@ -25,16 +26,18 @@ const theme = createTheme({
 
 export default function Layout({ children }) {
   return (
-    <ThemeProvider theme={theme}>
-      <Stack>
-        <AppBar />
-        <Stack divider={<Divider orientation="horizontal" flexItem />}>
-          <Stack width="100%" minHeight={500}>
-            {children}
+    <AppProvider>
+      <ThemeProvider theme={theme}>
+        <Stack>
+          <AppBar />
+          <Stack divider={<Divider orientation="horizontal" flexItem />}>
+            <Stack width="100%" minHeight={500}>
+              {children}
+            </Stack>
+            <Footer />
           </Stack>
-          <Footer />
         </Stack>
-      </Stack>
-    </ThemeProvider>
+      </ThemeProvider>
+    </AppProvider>
   );
 }

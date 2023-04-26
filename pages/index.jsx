@@ -6,6 +6,7 @@ import DataGridDemo from "../components/datagrid";
 import Layout from "../components/layout";
 import SelectColumn from "../components/select-column";
 import MaterialReactTable from "../components/MRT";
+import Link from "next/link";
 
 // Allowed extensions for input file
 const allowedExtensions = ["csv"];
@@ -48,6 +49,7 @@ const App = () => {
     Object.fromEntries(selectList.map((col) => [col, ""]))
   );
 
+  // Store the status of column matching
   const [isValidated, setValidation] = React.useState(false);
 
   // File input change
@@ -126,6 +128,13 @@ const App = () => {
           Load .csv
         </Button>
         {file && <Chip label={file && `${file.name} - ${file.type}`} />}
+        {isValidated && (
+          <Link href="/showup">
+            <Button variant="contained" component="label">
+              To showup
+            </Button>
+          </Link>
+        )}
       </Stack>
 
       <Stack width={"90%"}>
