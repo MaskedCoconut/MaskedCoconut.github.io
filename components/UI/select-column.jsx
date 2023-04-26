@@ -13,6 +13,7 @@ import {
   AppDataDispatchContext,
 } from "../context/AppDataContext";
 import { ALLOWEDEXTENSIONS, SELECTLIST } from "../settings";
+import { match } from "assert";
 
 // Get keys (array) by value
 const getKeyByValue = (object, value) => {
@@ -31,47 +32,31 @@ const FilterObjectOnValue = (obj, val, isReinit) => {
   return result;
 };
 
-export default function BasicSelect({ isValidated, setValidation }) {
+export default function BasicSelect({ setValidation }) {
   // AppDataContext
   const dispatch = useContext(AppDataDispatchContext);
   const data = useContext(AppDataContext);
   const choices = data.cols.map((col) => col["headerName"]);
-
-  // const handleClearClick = (col) => {
-  //   const deletedValue = Object.fromEntries([[col, ""]]);
-  //   // Update the match Object
-  //   setMatch((match) => ({
-  //     ...match,
-  //     ...deletedValue,
-  //   }));
-  // };
 
   const handleSelect = (e) => {
     // record the updated value
     const updatedValue = Object.fromEntries([[e.target.name, e.target.value]]);
     // take out the value if it is already somewhere
     const reinitValues = FilterObjectOnValue(data.match, e.target.value, true);
-    // Update the match Object
-    // setMatch((match) => ({
-    //   ...match,
-    //   ...updatedValue,
-    //   ...reinitValues,
-    // }));
     const newMatch = {
       ...data.match,
       ...updatedValue,
       ...reinitValues,
     };
-    dispatch({ type: "UpdateMatch", match: newMatch });
+    dispatch({ type: "setMatch", match: newMatch });
     console.log(data.match);
     debugger;
   };
 
   const handleMatchClick = () => {
-    // look at each colDataGrid, if headerName is matched (= in the values of match), change the headerName to the corresponding key in match
     dispatch({ type: "UpdateCols", match: data.match });
-
-    setValidation(true);
+    dispatch({ type: "setIsValidated", isvalidated: true });
+    dispatch({ type: "setMatch", match: "reinit" });
   };
 
   return (
@@ -107,14 +92,6 @@ export default function BasicSelect({ isValidated, setValidation }) {
                 },
                 "&.Mui-focused .MuiIconButton-root": { color: "primary.main" },
               }}
-              // endAdornment={
-              //   <IconButton
-              //     sx={{ visibility: match[col] ? "visible" : "hidden" }}
-              //     onClick={() => handleClearClick(col)}
-              //   >
-              //     <ClearIcon />
-              //   </IconButton>
-              // }
             >
               {choices.map((val) => (
                 <MenuItem key={val} value={val}>

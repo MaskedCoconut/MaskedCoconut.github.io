@@ -1,6 +1,7 @@
 import { createContext, useReducer } from "react";
 import selectList from "../../pages/index";
 import { ALLOWEDEXTENSIONS, SELECTLIST } from "../settings";
+import { fileURLToPath } from "url";
 
 export const AppDataContext = createContext(null);
 export const AppDataDispatchContext = createContext(null);
@@ -37,29 +38,32 @@ function appDataReducer(data, action) {
         )
       );
 
-      return Object.fromEntries([
+      const updated = Object.fromEntries([
         ["rows", rows],
         ["cols", cols],
         ["match", data.match],
       ]);
+
+      return { ...data, ...updated };
     }
 
-    case "UpdateRow": {
-      const newRows = { ...action.newrow };
-      return Object.fromEntries([
-        ["rows", newRows],
-        ["cols", data.cols],
-        ["match", data.match],
-      ]);
-    }
+    case "setRow":
+      return { ...data, row: action.newrow };
 
-    case "UpdateMatch":
-      debugger;
-      return Object.fromEntries([
-        ["rows", data.rows],
-        ["cols", data.cols],
-        ["match", action.match],
-      ]);
+    case "setMatch":
+      if (action.match == "reinit") {
+        return { ...data, match: initialAppData.match };
+      } else {
+        return { ...data, match: action.match };
+      }
+    case "setFile":
+      return { ...data, file: action.file };
+
+    case "setSnackbar":
+      return { ...data, snackbar: action.snackbar };
+
+    case "setIsValidated":
+      return { ...data, isvalidated: action.isvalidated };
 
     case "UpdateCols": {
       // look at each colDataGrid, if headerName is matched (= in the values of match), change the headerName to the corresponding key in match
@@ -89,11 +93,11 @@ function appDataReducer(data, action) {
         ])
       );
 
-      return Object.fromEntries([
-        ["rows", data.rows],
+      const updated = Object.fromEntries([
         ["cols", updatedColDatagridAndError],
-        ["match", data.match],
       ]);
+
+      return { ...data, ...updated };
     }
     default: {
       console.log("bamboozled");
@@ -106,6 +110,9 @@ const initialAppData = Object.fromEntries([
   ["rows", null],
   ["cols", null],
   ["match", Object.fromEntries(SELECTLIST.map((col) => [col, ""]))],
+  ["file", null],
+  ["snackbar", null],
+  ["isvalidated", false],
 ]);
 
 // Get keys (array) by value

@@ -14,44 +14,9 @@ import {
   AppDataDispatchContext,
 } from "../context/AppDataContext";
 
-const useFakeMutation = () => {
-  const dispatch = useContext(AppDataDispatchContext);
-  return React.useCallback(
-    (newrow) =>
-      new Promise((resolve, reject) => {
-        setTimeout(() => {
-          if (newrow.Category?.trim() === "") {
-            reject(new Error("Error while saving user: name can't be empty."));
-          } else {
-            // dispatch({ type: "UpdateCols" });
-            resolve({ ...newrow, Category: newrow.Category?.toUpperCase() });
-          }
-        }, 0);
-      }),
-    []
-  );
-};
-
 export default function DataGridDemo() {
   // AppDataContext
   const data = useContext(AppDataContext);
-  const mutateRow = useFakeMutation();
-  const [snackbar, setSnackbar] = React.useState(null);
-  const handleCloseSnackbar = () => setSnackbar(null);
-
-  const processRowUpdate = React.useCallback(
-    async (newRow) => {
-      // Make the HTTP request to save in the backend
-      const response = await mutateRow(newRow);
-      setSnackbar({ children: "Data updated", severity: "success" });
-      return response;
-    },
-    [mutateRow]
-  );
-
-  const handleProcessRowUpdateError = React.useCallback((error) => {
-    setSnackbar({ children: error.message, severity: "error" });
-  }, []);
 
   function CustomToolbar() {
     return (
@@ -92,8 +57,6 @@ export default function DataGridDemo() {
             checkboxSelection
             disableRowSelectionOnClick
             slots={{ toolbar: CustomToolbar }}
-            processRowUpdate={processRowUpdate}
-            onProcessRowUpdateError={handleProcessRowUpdateError}
             // for the conditional formatting of cells
             getCellClassName={(params) => {
               switch (params.colDef.headerName) {
@@ -107,16 +70,6 @@ export default function DataGridDemo() {
             }}
           />
         </Box>
-        {!!snackbar && (
-          <Snackbar
-            open
-            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-            onClose={handleCloseSnackbar}
-            autoHideDuration={6000}
-          >
-            <Alert {...snackbar} onClose={handleCloseSnackbar} />
-          </Snackbar>
-        )}
       </Stack>
     );
   }
