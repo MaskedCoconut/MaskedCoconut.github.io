@@ -96,7 +96,7 @@ const App = () => {
         <Button variant="contained" component="label" onClick={handleLoad}>
           Load .csv
         </Button>
-        {data.isValidated && (
+        {data.isvalidated && (
           <Link href="/showup">
             <Button variant="contained" component="label">
               To showup
