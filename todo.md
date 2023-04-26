@@ -37,3 +37,9 @@
 - remove ID from mapping options
 
 - headername and its match should be managed in a 1-to-1 updatable object for convenience
+- no way to modify element at -2 position of array in js ?!
+
+
+- typescript
+- tailwind css
+- nextjs13 & app folder
