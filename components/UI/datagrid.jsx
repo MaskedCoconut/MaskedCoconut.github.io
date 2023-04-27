@@ -1,6 +1,4 @@
-import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
-import Snackbar from "@mui/material/Snackbar";
 import Stack from "@mui/material/Stack";
 import {
   DataGrid,
@@ -9,10 +7,7 @@ import {
   GridToolbarExport,
 } from "@mui/x-data-grid";
 import React, { useContext } from "react";
-import {
-  AppDataContext,
-  AppDataDispatchContext,
-} from "../context/AppDataContext";
+import { AppDataContext } from "../context/AppDataContext";
 
 export default function DataGridDemo() {
   // AppDataContext

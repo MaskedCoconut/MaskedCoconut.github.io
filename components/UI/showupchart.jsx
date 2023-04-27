@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Card, Title, BarChart, Subtitle } from "@tremor/react";
+import { BarChart } from "@tremor/react";
 
 const showUpProfile = [
   3.16712e-5, 3.1538e-5, 5.96572e-5, 0.000109763, 0.000196431, 0.000341924,

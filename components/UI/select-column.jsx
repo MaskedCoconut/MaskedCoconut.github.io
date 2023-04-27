@@ -1,36 +1,16 @@
-import ClearIcon from "@mui/icons-material/Clear";
 import { Stack } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
-import IconButton from "@mui/material/IconButton";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import React, { useState, useContext } from "react";
+import { useContext } from "react";
 import {
   AppDataContext,
   AppDataDispatchContext,
 } from "../context/AppDataContext";
-import { ALLOWEDEXTENSIONS, SELECTLIST } from "../settings";
-import { match } from "assert";
-
-// Get keys (array) by value
-const getKeyByValue = (object, value) => {
-  return Object.keys(object).filter((key) => object[key] === value);
-};
-
-// Returns filtered object keeping only keys matching value
-// Assign "" to all values if isReinit = true
-const FilterObjectOnValue = (obj, val, isReinit) => {
-  const asArray = Object.entries(obj);
-  const filteredArray = asArray.filter(([key, value]) => value === val);
-  const filteredObject = Object.fromEntries(filteredArray);
-  const result = Object.fromEntries(
-    Object.keys(filteredObject).map((key) => [key, isReinit ? "" : obj.key])
-  );
-  return result;
-};
+import { SELECTLIST } from "../settings";
 
 export default function BasicSelect({ setValidation }) {
   // AppDataContext
@@ -54,9 +34,45 @@ export default function BasicSelect({ setValidation }) {
   };
 
   const handleMatchClick = () => {
-    dispatch({ type: "UpdateCols", match: data.match });
-    dispatch({ type: "setIsValidated", isvalidated: true });
-    dispatch({ type: "setMatch", match: "reinit" });
+    // if match has only empty values, throw an error and do nothing
+    if (Object.values(data.match).every((x) => x === null || x === "")) {
+      dispatch({
+        type: "setSnackbar",
+        snackbar: {
+          children: "no columns selected for match",
+          severity: "error",
+        },
+      });
+    } else {
+      const matchedHeaderName = Object.values(data.match);
+      const updatedColDatagrid = data.cols
+        // filter to not recreate "error" column
+        .filter((col) => col.field != "error")
+        .map((col) =>
+          matchedHeaderName.includes(col["headerName"]) &&
+          col["headerName"] != ""
+            ? Object.fromEntries([
+                ["field", col["field"]],
+                ["headerName", ...getKeyByValue(data.match, col["headerName"])],
+                ["width", 150],
+                ["editable", true],
+              ])
+            : col
+        );
+      const updatedColDatagridAndError = updatedColDatagrid.concat(
+        Object.fromEntries([
+          ["field", "error"],
+          ["headerName", "error"],
+          ["width", 150],
+          ["editable", false],
+          ["valueGetter", (params) => getRowError(params, data.match)],
+        ])
+      );
+
+      dispatch({ type: "setCols", newcols: updatedColDatagridAndError });
+      dispatch({ type: "setIsValidated", isvalidated: true });
+      dispatch({ type: "setMatch", match: "reinit" });
+    }
   };
 
   return (
@@ -110,3 +126,44 @@ export default function BasicSelect({ setValidation }) {
     </Stack>
   );
 }
+
+// Get keys (array) by value
+const getKeyByValue = (object, value) => {
+  return Object.keys(object).filter((key) => object[key] === value);
+};
+
+// Returns filtered object keeping only keys matching value
+// Assign "" to all values if isReinit = true
+const FilterObjectOnValue = (obj, val, isReinit) => {
+  const asArray = Object.entries(obj);
+  const filteredArray = asArray.filter(([key, value]) => value === val);
+  const filteredObject = Object.fromEntries(filteredArray);
+  const result = Object.fromEntries(
+    Object.keys(filteredObject).map((key) => [key, isReinit ? "" : obj.key])
+  );
+  return result;
+};
+
+// Errors for conditional formatting
+const getRowError = (params, match) => {
+  let result = [1];
+  // take only the matched columns
+  Object.keys(match)
+    .filter((key) => match[key])
+    .forEach((headerName) => {
+      switch (headerName) {
+        case "Flight Date":
+          result.push(Date.parse(params.row[match[headerName]]) ? 1 : 0);
+          debugger;
+          break;
+        case "Arr./Dep.":
+          result.push(
+            ["A", "D"].includes(params.row[match[headerName]]) ? 1 : 0
+          );
+          debugger;
+          break;
+      }
+    });
+  debugger;
+  return result.reduce((a, b) => a * b, 1);
+};
