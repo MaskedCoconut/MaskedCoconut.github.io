@@ -21,7 +21,7 @@ export default AppProvider;
 function appDataReducer(data, action) {
   switch (action.type) {
     case "setRows":
-      return { ...data, row: action.newrows };
+      return { ...data, rows: action.newrows };
 
     case "setCols":
       return { ...data, cols: action.newcols };

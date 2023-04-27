@@ -45,7 +45,8 @@ const UploadStack = () => {
       });
     } else {
       const reader = new FileReader();
-      reader.onload = async ({ target }) => {
+      reader.readAsText(data.file);
+      reader.onload = ({ target }) => {
         const csv = Papa.parse(target.result, { header: true });
         const parsedData = csv?.data;
         const rows = parsedData.map((row, idx) =>
@@ -61,15 +62,14 @@ const UploadStack = () => {
             ])
           )
         );
-        dispatch({ type: "setCols", newcols: cols });
-        dispatch({ type: "setRows", newrows: rows });
+        dispatch({ type: "setCols", newcols: cols, option: "reinit" });
+        dispatch({ type: "setRows", newrows: rows, option: "reinit" });
+        dispatch({ type: "setMatch", match: "reinit" });
+        dispatch({
+          type: "setSnackbar",
+          snackbar: { children: "data loaded from file", severity: "success" },
+        });
       };
-      reader.readAsText(data.file);
-      dispatch({ type: "setMatch", match: "reinit" });
-      dispatch({
-        type: "setSnackbar",
-        snackbar: { children: "data loaded from file", severity: "success" },
-      });
     }
   };
 

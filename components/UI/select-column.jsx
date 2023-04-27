@@ -12,7 +12,7 @@ import {
 } from "../context/AppDataContext";
 import { SELECTLIST } from "../settings";
 
-export default function BasicSelect({ setValidation }) {
+export default function BasicSelect() {
   // AppDataContext
   const dispatch = useContext(AppDataDispatchContext);
   const data = useContext(AppDataContext);
@@ -29,8 +29,6 @@ export default function BasicSelect({ setValidation }) {
       ...reinitValues,
     };
     dispatch({ type: "setMatch", match: newMatch });
-    console.log(data.match);
-    debugger;
   };
 
   const handleMatchClick = () => {
@@ -44,32 +42,47 @@ export default function BasicSelect({ setValidation }) {
         },
       });
     } else {
-      const matchedHeaderName = Object.values(data.match);
-      const updatedColDatagrid = data.cols
+      const matchedHeaderNames = Object.values(data.match).filter((x) => x);
+      const updatedCols = data.cols
         // filter to not recreate "error" column
         .filter((col) => col.field != "error")
         .map((col) =>
-          matchedHeaderName.includes(col["headerName"]) &&
+          matchedHeaderNames.includes(col["headerName"]) &&
           col["headerName"] != ""
             ? Object.fromEntries([
-                ["field", col["field"]],
+                ["field", ...getKeyByValue(data.match, col["headerName"])],
                 ["headerName", ...getKeyByValue(data.match, col["headerName"])],
                 ["width", 150],
                 ["editable", true],
               ])
             : col
         );
-      const updatedColDatagridAndError = updatedColDatagrid.concat(
+      const updatedColsAndError = updatedCols.concat(
         Object.fromEntries([
           ["field", "error"],
           ["headerName", "error"],
           ["width", 150],
           ["editable", false],
-          ["valueGetter", (params) => getRowError(params, data.match)],
+          ["valueGetter", (params) => getRowError(params, data)],
         ])
       );
 
-      dispatch({ type: "setCols", newcols: updatedColDatagridAndError });
+      const updatedRows = data.rows.map((row) => {
+        // replace all keys found in matchedHeaderName
+        matchedHeaderNames
+          // .filter((matchedHeaderName) => !Object.keys(row).includes(SELECTLIST))
+          .forEach((header) => {
+            const newHeader = getKeyByValue(data.match, header);
+            if (header != newHeader) {
+              row[newHeader] = row[header];
+              delete row[header];
+            }
+          });
+        return row;
+      });
+
+      dispatch({ type: "setCols", newcols: updatedColsAndError });
+      dispatch({ type: "setRows", newrows: updatedRows });
       dispatch({ type: "setIsValidated", isvalidated: true });
       dispatch({ type: "setMatch", match: "reinit" });
     }
@@ -145,25 +158,21 @@ const FilterObjectOnValue = (obj, val, isReinit) => {
 };
 
 // Errors for conditional formatting
-const getRowError = (params, match) => {
-  let result = [1];
-  // take only the matched columns
-  Object.keys(match)
-    .filter((key) => match[key])
-    .forEach((headerName) => {
-      switch (headerName) {
+const getRowError = (params, data) => {
+  const result = [1];
+  const colFieldList = Object.keys(data.rows[0]);
+
+  SELECTLIST.filter((field) => colFieldList.includes(field)).forEach(
+    (field) => {
+      switch (field) {
         case "Flight Date":
-          result.push(Date.parse(params.row[match[headerName]]) ? 1 : 0);
-          debugger;
+          result.push(Date.parse(params.row[field]) ? 1 : 0);
           break;
         case "Arr./Dep.":
-          result.push(
-            ["A", "D"].includes(params.row[match[headerName]]) ? 1 : 0
-          );
-          debugger;
+          result.push(["A", "D"].includes(params.row[field]) ? 1 : 0);
           break;
       }
-    });
-  debugger;
-  return result.reduce((a, b) => a * b, 1);
+    }
+  );
+  return result.reduce((a, b) => a * b, 1) == 1 ? "valid row" : "error in row";
 };
