@@ -7,7 +7,6 @@ import {
   AppDataContext,
   AppDataDispatchContext,
 } from "../context/AppDataContext";
-
 import * as Constants from "../settings";
 
 const UploadStack = () => {
@@ -47,17 +46,20 @@ const UploadStack = () => {
       const reader = new FileReader();
       reader.readAsText(data.file);
       reader.onload = ({ target }) => {
-        const csv = Papa.parse(target.result, { header: true });
+        const csv = Papa.parse(target.result, {
+          header: true,
+          dynamicTyping: true,
+        });
         const parsedData = csv?.data;
         const rows = parsedData.map((row, idx) =>
           Object.assign({ id: idx }, row)
         );
-        const cols = [{ field: "id", headerName: "ID", width: 90 }].concat(
+        const cols = [{ field: "id", headerName: "ID", width: 50 }].concat(
           Object.keys(parsedData[0]).map((col) =>
             Object.fromEntries([
               ["field", col],
               ["headerName", col],
-              ["width", 150],
+              ["flex", 1],
               ["editable", true],
             ])
           )

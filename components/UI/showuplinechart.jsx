@@ -1,5 +1,10 @@
+import { LineChart } from "@tremor/react";
 import * as React from "react";
-import { BarChart } from "@tremor/react";
+import {
+  AppDataContext,
+  AppDataDispatchContext,
+} from "../context/AppDataContext";
+import { useContext } from "react";
 
 const showUpProfile = [
   3.16712e-5, 3.1538e-5, 5.96572e-5, 0.000109763, 0.000196431, 0.000341924,
@@ -15,49 +20,48 @@ const showUpProfile = [
   1.72996e-9,
 ]; // index 0 = STD to std-5 , index 60 = STD-295 to STD-300
 
-const data = [
-  { stdMinutes: 500, Pax: 200 },
-  { stdMinutes: 100, Pax: 500 },
-];
-
 const skdToShowUp = (data, showUpProfile) => {
   // for each flight
   // add pax*showup with idx => ((STD//5) - idx) % 1440
   const result = Array(1440).fill(0);
   data.map((row) => {
+    const originTime = "2022-10-13 ";
+    const stdMinutes = Date.parse([originTime, row["Scheduled Time"]]) / 60000;
     showUpProfile.forEach((sup, idx) => {
-      const destIndex = (Math.floor(result[row.stdMinutes] / 5) - idx) % 1440;
-      result[idx < 0 ? result.length - idx : idx] += sup * row.Pax;
+      const destIndex = (Math.floor(stdMinutes / 5) - idx) % 1440;
+      result[destIndex < 0 ? result.length + destIndex : destIndex] +=
+        sup * row.Pax;
     });
   });
   return result;
 };
 
-const chartdata = Object.fromEntries(
-  skdToShowUp(data, showUpProfile).map((val, id) =>
+const dataFormatter = (number) =>
+  `${Intl.NumberFormat("us").format(number).toString()}`;
+
+const App = () => {
+  const data = useContext(AppDataContext);
+
+  const showuparray = skdToShowUp(data.rows, showUpProfile);
+
+  const chartdata = showuparray.map((val, id) =>
     Object.fromEntries([
       ["slot", id],
       ["pax", val],
     ])
-  )
-);
+  );
 
-const dataFormatter = (number) => {
-  return "$ " + Intl.NumberFormat("us").format(number).toString();
+  return (
+    <LineChart
+      className="mt-6"
+      data={chartdata}
+      index="slot"
+      categories={["pax"]}
+      colors={["blue"]}
+      valueFormatter={dataFormatter}
+      yAxisWidth={40}
+    />
+  );
 };
 
-export default function Chart() {
-  return (
-    <id>
-      <BarChart
-        className="mt-6"
-        data={chartdata}
-        index="name"
-        categories={["Number of threatened species"]}
-        colors={["blue"]}
-        valueFormatter={dataFormatter}
-        yAxisWidth={48}
-      />
-    </id>
-  );
-}
+export default App;

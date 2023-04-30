@@ -52,7 +52,7 @@ export default function BasicSelect() {
             ? Object.fromEntries([
                 ["field", ...getKeyByValue(data.match, col["headerName"])],
                 ["headerName", ...getKeyByValue(data.match, col["headerName"])],
-                ["width", 150],
+                ["flex", 1],
                 ["editable", true],
               ])
             : col
@@ -61,7 +61,7 @@ export default function BasicSelect() {
         Object.fromEntries([
           ["field", "error"],
           ["headerName", "error"],
-          ["width", 150],
+          ["flex", 1],
           ["editable", false],
           ["valueGetter", (params) => getRowError(params, data)],
         ])
@@ -160,19 +160,49 @@ const FilterObjectOnValue = (obj, val, isReinit) => {
 // Errors for conditional formatting
 const getRowError = (params, data) => {
   const result = [1];
+  const errors = [];
   const colFieldList = Object.keys(data.rows[0]);
 
   SELECTLIST.filter((field) => colFieldList.includes(field)).forEach(
     (field) => {
       switch (field) {
         case "Flight Date":
-          result.push(Date.parse(params.row[field]) ? 1 : 0);
+          if (Date.parse(params.row[field])) {
+            result.push(1);
+          } else {
+            result.push(0);
+            errors.push("Flight Date");
+          }
+          break;
+        case "Scheduled Time":
+          const originTime = "2022-10-13 ";
+          if (Date.parse([originTime, params.row[field]].join(" "))) {
+            result.push(1);
+          } else {
+            result.push(0);
+            errors.push("Scheduled Time");
+          }
           break;
         case "Arr./Dep.":
-          result.push(["A", "D"].includes(params.row[field]) ? 1 : 0);
+          if (["A", "D"].includes(params.row[field])) {
+            result.push(1);
+          } else {
+            result.push(0);
+            errors.push("Arr./Dep.");
+          }
+          break;
+        case "Pax":
+          if (!isNaN(params.row[field])) {
+            result.push(1);
+          } else {
+            result.push(0);
+            errors.push("Pax");
+          }
           break;
       }
     }
   );
-  return result.reduce((a, b) => a * b, 1) == 1 ? "valid row" : "error in row";
+  return result.reduce((a, b) => a * b, 1) == 1
+    ? "valid row"
+    : errors.join("|");
 };
