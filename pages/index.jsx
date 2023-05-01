@@ -1,11 +1,13 @@
-import { Alert, Snackbar, Stack } from "@mui/material";
+import { Alert, Snackbar, Stack, Box } from "@mui/material";
 import { useContext } from "react";
 import DataGridDemo from "../components/UI/datagrid";
 import SelectColumn from "../components/UI/select-column";
 import UploadStack from "../components/UI/uploadstack";
+import MRTdata from "../components/UI/MRTdata";
 import {
   AppDataContext,
   AppDataDispatchContext,
+  useState,
 } from "../components/context/AppDataContext";
 
 const App = () => {
@@ -21,25 +23,26 @@ const App = () => {
     });
 
   return (
-    <div>
+    <Stack minHeight={500}>
       <UploadStack />
-      <div>
-        <Stack width={"90%"}>
-          {data.cols && <SelectColumn />}
-          {data.cols && <DataGridDemo />}
-          {!!data.snackbar && (
-            <Snackbar
-              open
-              anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-              onClose={handleCloseSnackbar}
-              autoHideDuration={3000}
-            >
-              <Alert {...data.snackbar} onClose={handleCloseSnackbar} />
-            </Snackbar>
-          )}
-        </Stack>
-      </div>
-    </div>
+      {/* <Stack> */}
+      {data.cols && <SelectColumn />}
+      <Box width="95%">
+        {data.cols && <DataGridDemo />}
+        {/* {data.cols && <MRTdata />} */}
+      </Box>
+      {!!data.snackbar && (
+        <Snackbar
+          open
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          onClose={handleCloseSnackbar}
+          autoHideDuration={3000}
+        >
+          <Alert {...data.snackbar} onClose={handleCloseSnackbar} />
+        </Snackbar>
+      )}
+      {/* </Stack> */}
+    </Stack>
   );
 };
 

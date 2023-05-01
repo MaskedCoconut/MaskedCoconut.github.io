@@ -10,7 +10,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 export default function App() {
   return (
     <Box width={"100%"} sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="sticky">
         <Toolbar>
           <IconButton
             size="large"

@@ -1,10 +1,11 @@
-import { LineChart } from "@tremor/react";
+import { LineChart, Card, Title, BarChart } from "@tremor/react";
 import * as React from "react";
 import {
   AppDataContext,
   AppDataDispatchContext,
 } from "../context/AppDataContext";
 import { useContext } from "react";
+import { Stack } from "@mui/material";
 
 const showUpProfile = [
   3.16712e-5, 3.1538e-5, 5.96572e-5, 0.000109763, 0.000196431, 0.000341924,
@@ -22,45 +23,59 @@ const showUpProfile = [
 
 const skdToShowUp = (data, showUpProfile) => {
   // for each flight
-  // add pax*showup with idx => ((STD//5) - idx) % 1440
-  const result = Array(1440).fill(0);
-  data.map((row) => {
-    const originTime = "2022-10-13 ";
-    const stdMinutes = Date.parse([originTime, row["Scheduled Time"]]) / 60000;
-    showUpProfile.forEach((sup, idx) => {
-      const destIndex = (Math.floor(stdMinutes / 5) - idx) % 1440;
-      result[destIndex < 0 ? result.length + destIndex : destIndex] +=
-        sup * row.Pax;
+  const result = Array(288).fill(0);
+
+  data
+    .filter((row) => row.Pax)
+    .map((row) => {
+      const originTime = "2022-10-13 ";
+      const date = new Date([originTime, row["Scheduled Time"]].join(" "));
+      const std5Minutes = Math.floor(
+        (date.getMinutes() + date.getHours() * 60) / 5
+      );
+
+      showUpProfile.forEach((sup, idx) => {
+        const destIndex = (std5Minutes - idx) % 288;
+        result[destIndex < 0 ? result.length + destIndex : destIndex] +=
+          sup * row.Pax;
+      });
     });
-  });
   return result;
 };
 
 const dataFormatter = (number) =>
-  `${Intl.NumberFormat("us").format(number).toString()}`;
+  `${Intl.NumberFormat("us")
+    .format(Math.round(number * 12))
+    .toString()}`;
+
+const timeFromatter = (slot5m) => {
+  const h = Math.floor((slot5m * 5) / 60);
+  const m = (slot5m * 5) % 60;
+  return h.toString().padStart(2, "0") + ":" + m.toString().padStart(2, "0");
+};
 
 const App = () => {
   const data = useContext(AppDataContext);
-
   const showuparray = skdToShowUp(data.rows, showUpProfile);
-
   const chartdata = showuparray.map((val, id) =>
     Object.fromEntries([
-      ["slot", id],
-      ["pax", val],
+      ["slot", timeFromatter(id)],
+      ["Pax/h", val],
     ])
   );
 
   return (
-    <LineChart
-      className="mt-6"
-      data={chartdata}
-      index="slot"
-      categories={["pax"]}
-      colors={["blue"]}
-      valueFormatter={dataFormatter}
-      yAxisWidth={40}
-    />
+    <Card className="mx-auto">
+      <Title>Show-up profile generated from schedule</Title>
+      <BarChart
+        className="mt-6"
+        data={chartdata}
+        index="slot"
+        categories={["Pax/h"]}
+        colors={["blue"]}
+        valueFormatter={dataFormatter}
+      />
+    </Card>
   );
 };
 

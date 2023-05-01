@@ -76,7 +76,7 @@ const UploadStack = () => {
   };
 
   return (
-    <Stack direction="row" flexWrap="wrap">
+    <Stack direction="row" flexWrap="wrap" padding={1}>
       <div>
         <Stack direction="row" spacing={0.1}>
           <Button variant="contained" component="label">

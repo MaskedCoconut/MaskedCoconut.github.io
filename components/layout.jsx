@@ -1,10 +1,7 @@
 import * as React from "react";
 import AppBar from "./UI/appbar";
-import { Stack } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Footer from "./UI/footer";
-import Divider from "@mui/material/Divider";
-import Box from "@mui/material/Box";
 import AppProvider from "../components/context/AppDataContext";
 
 const theme = createTheme({
@@ -12,7 +9,7 @@ const theme = createTheme({
     MuiStack: {
       defaultProps: {
         spacing: { xs: 1, sm: 2, md: 4 },
-        justifyContent: "space-evenly",
+        justifyContent: "center",
         alignItems: "center",
         width: "100%",
       },
@@ -28,15 +25,9 @@ export default function Layout({ children }) {
   return (
     <AppProvider>
       <ThemeProvider theme={theme}>
-        <Stack>
-          <AppBar />
-          <Stack divider={<Divider orientation="horizontal" flexItem />}>
-            <Stack width="100%" minHeight={500}>
-              {children}
-            </Stack>
-            <Footer />
-          </Stack>
-        </Stack>
+        <AppBar />
+        {children}
+        <Footer />
       </ThemeProvider>
     </AppProvider>
   );
