@@ -3,7 +3,6 @@ import { useContext } from "react";
 import DataGridDemo from "../components/UI/datagrid";
 import SelectColumn from "../components/UI/select-column";
 import UploadStack from "../components/UI/uploadstack";
-import MRTdata from "../components/UI/MRTdata";
 import {
   AppDataContext,
   AppDataDispatchContext,
