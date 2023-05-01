@@ -1,11 +1,21 @@
-import { LineChart, Card, Title, BarChart } from "@tremor/react";
+import FunctionsIcon from "@mui/icons-material/Functions";
+import {
+  BarChart,
+  Card,
+  Flex,
+  LineChart,
+  TextInput,
+  Title,
+  Toggle,
+  ToggleItem,
+} from "@tremor/react";
 import * as React from "react";
+import { useContext } from "react";
 import {
   AppDataContext,
   AppDataDispatchContext,
 } from "../context/AppDataContext";
-import { useContext } from "react";
-import { Stack } from "@mui/material";
+import Slider from "./slider";
 
 const showUpProfile = [
   3.16712e-5, 3.1538e-5, 5.96572e-5, 0.000109763, 0.000196431, 0.000341924,
@@ -48,6 +58,8 @@ const dataFormatter = (number) =>
     .format(Math.round(number * 12))
     .toString()}`;
 
+const percentageFormatter = (number) => `${(number * 100).toFixed(2)}%`;
+
 const timeFromatter = (slot5m) => {
   const h = Math.floor((slot5m * 5) / 60);
   const m = (slot5m * 5) % 60;
@@ -64,18 +76,53 @@ const App = () => {
     ])
   );
 
+  const profiledata = showUpProfile.map((val, id) =>
+    Object.fromEntries([
+      ["slot", timeFromatter(id)],
+      ["Pax/h", val],
+    ])
+  );
+
+  const handleMeanChange = (mean) => console.log(mean);
+
+  const handleStdevChange = (stdev) => console.log(stdev);
+
   return (
-    <Card className="mx-auto">
-      <Title>Show-up profile generated from schedule</Title>
-      <BarChart
-        className="mt-6"
-        data={chartdata}
-        index="slot"
-        categories={["Pax/h"]}
-        colors={["blue"]}
-        valueFormatter={dataFormatter}
-      />
-    </Card>
+    <>
+      <Card className="mx-auto">
+        <Title>Design day show-up</Title>
+        <BarChart
+          className="mt-6"
+          data={chartdata}
+          index="slot"
+          categories={["Pax/h"]}
+          colors={["blue"]}
+          valueFormatter={dataFormatter}
+        />
+      </Card>
+      <Card className="yay">
+        <Title>Show-up profile</Title>
+        <Flex>
+          <Toggle
+            defaultValue="1"
+            onValueChange={(value) => console.log(value)}
+          >
+            <ToggleItem value="1" text="Default" />
+            <ToggleItem value="2" text="Norm. dist." icon={FunctionsIcon} />
+          </Toggle>
+          <Slider title="mean" />
+          <Slider title="std dev" />
+        </Flex>
+        <BarChart
+          className="mt-6"
+          data={profiledata}
+          index="slot"
+          categories={["Pax/h"]}
+          colors={["blue"]}
+          valueFormatter={percentageFormatter}
+        />
+      </Card>
+    </>
   );
 };
 
