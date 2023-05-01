@@ -1,38 +1,18 @@
-import ClearIcon from "@mui/icons-material/Clear";
 import { Stack } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
-import IconButton from "@mui/material/IconButton";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import React, { useState, useContext } from "react";
+import { useContext } from "react";
 import {
   AppDataContext,
   AppDataDispatchContext,
 } from "../context/AppDataContext";
-import { ALLOWEDEXTENSIONS, SELECTLIST } from "../settings";
-import { match } from "assert";
+import { SELECTLIST } from "../settings";
 
-// Get keys (array) by value
-const getKeyByValue = (object, value) => {
-  return Object.keys(object).filter((key) => object[key] === value);
-};
-
-// Returns filtered object keeping only keys matching value
-// Assign "" to all values if isReinit = true
-const FilterObjectOnValue = (obj, val, isReinit) => {
-  const asArray = Object.entries(obj);
-  const filteredArray = asArray.filter(([key, value]) => value === val);
-  const filteredObject = Object.fromEntries(filteredArray);
-  const result = Object.fromEntries(
-    Object.keys(filteredObject).map((key) => [key, isReinit ? "" : obj.key])
-  );
-  return result;
-};
-
-export default function BasicSelect({ setValidation }) {
+export default function BasicSelect() {
   // AppDataContext
   const dispatch = useContext(AppDataDispatchContext);
   const data = useContext(AppDataContext);
@@ -49,14 +29,63 @@ export default function BasicSelect({ setValidation }) {
       ...reinitValues,
     };
     dispatch({ type: "setMatch", match: newMatch });
-    console.log(data.match);
-    debugger;
   };
 
   const handleMatchClick = () => {
-    dispatch({ type: "UpdateCols", match: data.match });
-    dispatch({ type: "setIsValidated", isvalidated: true });
-    dispatch({ type: "setMatch", match: "reinit" });
+    // if match has only empty values, throw an error and do nothing
+    if (Object.values(data.match).every((x) => x === null || x === "")) {
+      dispatch({
+        type: "setSnackbar",
+        snackbar: {
+          children: "no columns selected for match",
+          severity: "error",
+        },
+      });
+    } else {
+      const matchedHeaderNames = Object.values(data.match).filter((x) => x);
+      const updatedCols = data.cols
+        // filter to not recreate "error" column
+        .filter((col) => col.field != "error")
+        .map((col) =>
+          matchedHeaderNames.includes(col["headerName"]) &&
+          col["headerName"] != ""
+            ? Object.fromEntries([
+                ["field", ...getKeyByValue(data.match, col["headerName"])],
+                ["headerName", ...getKeyByValue(data.match, col["headerName"])],
+                ["flex", 1],
+                ["editable", true],
+              ])
+            : col
+        );
+      const updatedColsAndError = updatedCols.concat(
+        Object.fromEntries([
+          ["field", "error"],
+          ["headerName", "error"],
+          ["flex", 1],
+          ["editable", false],
+          ["valueGetter", (params) => getRowError(params, data)],
+        ])
+      );
+
+      const updatedRows = data.rows.map((row) => {
+        // replace all keys found in matchedHeaderName
+        matchedHeaderNames
+          // .filter((matchedHeaderName) => !Object.keys(row).includes(SELECTLIST))
+          .forEach((header) => {
+            const newHeader = getKeyByValue(data.match, header);
+            if (header != newHeader) {
+              row[newHeader] = row[header];
+              delete row[header];
+            }
+          });
+        return row;
+      });
+
+      dispatch({ type: "setCols", newcols: updatedColsAndError });
+      dispatch({ type: "setRows", newrows: updatedRows });
+      dispatch({ type: "setIsValidated", isvalidated: true });
+      dispatch({ type: "setMatch", match: "reinit" });
+    }
   };
 
   return (
@@ -110,3 +139,70 @@ export default function BasicSelect({ setValidation }) {
     </Stack>
   );
 }
+
+// Get keys (array) by value
+const getKeyByValue = (object, value) => {
+  return Object.keys(object).filter((key) => object[key] === value);
+};
+
+// Returns filtered object keeping only keys matching value
+// Assign "" to all values if isReinit = true
+const FilterObjectOnValue = (obj, val, isReinit) => {
+  const asArray = Object.entries(obj);
+  const filteredArray = asArray.filter(([key, value]) => value === val);
+  const filteredObject = Object.fromEntries(filteredArray);
+  const result = Object.fromEntries(
+    Object.keys(filteredObject).map((key) => [key, isReinit ? "" : obj.key])
+  );
+  return result;
+};
+
+// Errors for conditional formatting
+const getRowError = (params, data) => {
+  const result = [1];
+  const errors = [];
+  const colFieldList = Object.keys(data.rows[0]);
+
+  SELECTLIST.filter((field) => colFieldList.includes(field)).forEach(
+    (field) => {
+      switch (field) {
+        case "Flight Date":
+          if (Date.parse(params.row[field])) {
+            result.push(1);
+          } else {
+            result.push(0);
+            errors.push("Flight Date");
+          }
+          break;
+        case "Scheduled Time":
+          const originTime = "2022-10-13 ";
+          if (Date.parse([originTime, params.row[field]].join(" "))) {
+            result.push(1);
+          } else {
+            result.push(0);
+            errors.push("Scheduled Time");
+          }
+          break;
+        case "Arr./Dep.":
+          if (["A", "D"].includes(params.row[field])) {
+            result.push(1);
+          } else {
+            result.push(0);
+            errors.push("Arr./Dep.");
+          }
+          break;
+        case "Pax":
+          if (!isNaN(params.row[field])) {
+            result.push(1);
+          } else {
+            result.push(0);
+            errors.push("Pax");
+          }
+          break;
+      }
+    }
+  );
+  return result.reduce((a, b) => a * b, 1) == 1
+    ? "valid row"
+    : errors.join("|");
+};

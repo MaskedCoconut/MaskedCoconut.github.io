@@ -1,7 +1,7 @@
 import * as React from "react";
-import LineChartTest from "../components/UI/linecharttest";
+import LineChartTest from "../components/UI/showuplinechart";
 import Link from "next/link";
-import { Button } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import {
   BadgeDelta,
   Card,
@@ -13,14 +13,16 @@ import {
 
 const App = () => {
   return (
-    <Card className="max-w-lg">
-      <LineChartTest />
-      <Link href="/">
-        <Button variant="contained" component="label">
-          Back
-        </Button>
-      </Link>
-    </Card>
+    <div>
+      <Stack width="100%">
+        <LineChartTest />
+        <Link href="/">
+          <Button variant="contained" component="label">
+            Back
+          </Button>
+        </Link>
+      </Stack>
+    </div>
   );
 };
 
