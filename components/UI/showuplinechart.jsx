@@ -82,9 +82,9 @@ const App = () => {
       ["Pax/h", val],
     ])
   );
+  const reversedprofiledata = profiledata.reverse();
 
   const handleMeanChange = (mean) => console.log(mean);
-
   const handleStdevChange = (stdev) => console.log(stdev);
 
   return (
@@ -115,7 +115,7 @@ const App = () => {
         </Flex>
         <BarChart
           className="mt-6"
-          data={profiledata}
+          data={reversedprofiledata}
           index="slot"
           categories={["Pax/h"]}
           colors={["blue"]}
