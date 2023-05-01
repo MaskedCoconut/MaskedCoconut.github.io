@@ -43,3 +43,15 @@
 - typescript
 - tailwind css
 - nextjs13 & app folder
+
+
+
+- show-up profile details to put in data (context)
+  - type (default/normal dist)
+  - mean
+  - std dev
+
+- calculate showUpProfile from mean+std dev
+- graph for cumulated and reverse x-axis
+
+
