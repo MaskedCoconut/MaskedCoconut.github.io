@@ -7,18 +7,7 @@ import { AppDataContext } from "../components/context/AppDataContext";
 
 const App = () => {
   const data = useContext(AppDataContext);
-  return (
-    <div>
-      <Stack width="100%">
-        {data.cols && <LineChartTest />}
-        <Link href="/">
-          <Button variant="contained" component="label">
-            Back
-          </Button>
-        </Link>
-      </Stack>
-    </div>
-  );
+  return <div>{data.cols && <LineChartTest />}</div>;
 };
 
 export default App;
