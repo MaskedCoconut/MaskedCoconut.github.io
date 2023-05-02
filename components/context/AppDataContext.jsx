@@ -42,6 +42,13 @@ function appDataReducer(data, action) {
         return { ...data, match: action.match };
       }
 
+    case "setShowup":
+      if (action.newshowup == "reinit") {
+        return { ...data, showup: initialAppData.showup };
+      } else {
+        return { ...data, showup: action.newshowup };
+      }
+
     default: {
       return {
         ...data,
@@ -61,4 +68,12 @@ const initialAppData = Object.fromEntries([
   ["file", null],
   ["snackbar", null],
   ["isvalidated", false],
+  [
+    "showup",
+    Object.fromEntries([
+      ["type", "default"],
+      ["mean", 60],
+      ["stdev", 30],
+    ]),
+  ],
 ]);

@@ -49,6 +49,7 @@ const UploadStack = () => {
         const csv = Papa.parse(target.result, {
           header: true,
           dynamicTyping: true,
+          skipEmptyLines: "greedy",
         });
         const parsedData = csv?.data;
         const rows = parsedData.map((row, idx) =>
