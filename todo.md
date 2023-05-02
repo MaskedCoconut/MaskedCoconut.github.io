@@ -45,9 +45,11 @@
 - nextjs13 & app folder
 
 
-- migrate to react table fully
-- migrate graphs to d3.js
+- migrate to react table fully?
+- migrate graphs to d3.js?
 - uniformize data in context (eg. Pax/hour everywhere)
+
+- update calculation flow (auto updates, no buttons)
 
 - full example for security
 

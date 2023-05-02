@@ -5,6 +5,7 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
+import Typography from "@mui/material";
 import { useContext } from "react";
 import {
   AppDataContext,
@@ -12,7 +13,7 @@ import {
 } from "../context/AppDataContext";
 import { SELECTLIST } from "../settings";
 
-export default function BasicSelect() {
+export default function BasicSelect({ buttonText, setButtonText }) {
   // AppDataContext
   const dispatch = useContext(AppDataDispatchContext);
   const data = useContext(AppDataContext);
@@ -84,6 +85,7 @@ export default function BasicSelect() {
       dispatch({ type: "setCols", newcols: updatedColsAndError });
       dispatch({ type: "setRows", newrows: updatedRows });
       dispatch({ type: "setIsValidated", isvalidated: true });
+      setButtonText("reload csv");
       dispatch({ type: "setMatch", match: "reinit" });
     }
   };
@@ -133,8 +135,13 @@ export default function BasicSelect() {
         </Box>
       ))}
 
-      <Button variant="contained" component="label" onClick={handleMatchClick}>
-        update columns
+      <Button
+        variant="contained"
+        component="label"
+        onClick={handleMatchClick}
+        disabled={data.isvalidated}
+      >
+        {buttonText}
       </Button>
     </Stack>
   );
