@@ -43,3 +43,17 @@
 - typescript
 - tailwind css
 - nextjs13 & app folder
+
+
+- migrate to react table fully
+- migrate graphs to d3.js
+- uniformize data in context (eg. Pax/hour everywhere)
+
+- full example for security
+
+
+
+
+
+
+

@@ -42,6 +42,16 @@ function appDataReducer(data, action) {
         return { ...data, match: action.match };
       }
 
+    case "setShowup":
+      if (action.newshowup == "reinit") {
+        return { ...data, showup: initialAppData.showup };
+      } else {
+        return { ...data, showup: action.newshowup };
+      }
+
+    case "setSimresult":
+      return { ...data, simresult: action.newsimresult };
+
     default: {
       return {
         ...data,
@@ -61,4 +71,24 @@ const initialAppData = Object.fromEntries([
   ["file", null],
   ["snackbar", null],
   ["isvalidated", false],
+  [
+    "showup",
+    Object.fromEntries([
+      ["type", "default"],
+      ["mean", 60],
+      ["stdev", 30],
+    ]),
+  ],
+  ["simresult", null],
+  [
+    "terminal",
+    {
+      security: {
+        isFirstStep: true,
+        "previous step": null,
+        "processing time": 15,
+        "processor number": 15,
+      },
+    },
+  ],
 ]);

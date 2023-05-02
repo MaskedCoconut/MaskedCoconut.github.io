@@ -3,6 +3,7 @@ import { useContext } from "react";
 import DataGridDemo from "../components/UI/datagrid";
 import SelectColumn from "../components/UI/select-column";
 import UploadStack from "../components/UI/uploadstack";
+import MRTdata from "../components/UI/MRTdata";
 import {
   AppDataContext,
   AppDataDispatchContext,
@@ -24,11 +25,10 @@ const App = () => {
   return (
     <Stack minHeight={500}>
       <UploadStack />
-      {/* <Stack> */}
       {data.cols && <SelectColumn />}
       <Box width="95%">
-        {data.cols && <DataGridDemo />}
-        {/* {data.cols && <MRTdata />} */}
+        {/* {data.cols && <DataGridDemo />} */}
+        {data.cols && <MRTdata />}
       </Box>
       {!!data.snackbar && (
         <Snackbar
@@ -40,7 +40,6 @@ const App = () => {
           <Alert {...data.snackbar} onClose={handleCloseSnackbar} />
         </Snackbar>
       )}
-      {/* </Stack> */}
     </Stack>
   );
 };

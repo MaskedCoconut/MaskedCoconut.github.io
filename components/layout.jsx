@@ -3,6 +3,7 @@ import AppBar from "./UI/appbar";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Footer from "./UI/footer";
 import AppProvider from "../components/context/AppDataContext";
+import Box from "@mui/material/Box";
 
 const theme = createTheme({
   components: {
@@ -26,7 +27,7 @@ export default function Layout({ children }) {
     <AppProvider>
       <ThemeProvider theme={theme}>
         <AppBar />
-        {children}
+        <Box minHeight={500}>{children}</Box>
         <Footer />
       </ThemeProvider>
     </AppProvider>

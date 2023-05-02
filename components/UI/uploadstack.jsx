@@ -49,6 +49,7 @@ const UploadStack = () => {
         const csv = Papa.parse(target.result, {
           header: true,
           dynamicTyping: true,
+          skipEmptyLines: "greedy",
         });
         const parsedData = csv?.data;
         const rows = parsedData.map((row, idx) =>
@@ -96,13 +97,6 @@ const UploadStack = () => {
       <Button variant="contained" component="label" onClick={handleLoad}>
         Load .csv
       </Button>
-      {data.isvalidated && (
-        <Link href="/showup">
-          <Button variant="contained" component="label">
-            To showup
-          </Button>
-        </Link>
-      )}
     </Stack>
   );
 };
