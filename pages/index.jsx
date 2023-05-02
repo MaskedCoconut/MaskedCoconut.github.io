@@ -7,13 +7,17 @@ import MRTdata from "../components/UI/MRTdata";
 import {
   AppDataContext,
   AppDataDispatchContext,
-  useState,
 } from "../components/context/AppDataContext";
+
+import { useState } from "react";
 
 const App = () => {
   // AppDataContext
   const dispatch = useContext(AppDataDispatchContext);
   const data = useContext(AppDataContext);
+
+  // text change for the update columns button
+  const [buttonText, setButtonText] = useState("Update columns");
 
   // shorthand
   const handleCloseSnackbar = () =>
@@ -24,11 +28,13 @@ const App = () => {
 
   return (
     <Stack minHeight={500}>
-      <UploadStack />
-      {data.cols && <SelectColumn />}
+      <UploadStack setButtonText={setButtonText} />
+      {data.cols && (
+        <SelectColumn buttonText={buttonText} setButtonText={setButtonText} />
+      )}
       <Box width="95%">
-        {/* {data.cols && <DataGridDemo />} */}
-        {data.cols && <MRTdata />}
+        {data.cols && <DataGridDemo />}
+        {/* {data.cols && <MRTdata />} */}
       </Box>
       {!!data.snackbar && (
         <Snackbar

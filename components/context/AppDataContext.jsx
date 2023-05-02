@@ -86,7 +86,7 @@ const initialAppData = Object.fromEntries([
       security: {
         isFirstStep: true,
         "previous step": null,
-        "processing time": 15,
+        "processing time": 12,
         "processor number": 15,
       },
     },

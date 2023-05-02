@@ -9,7 +9,7 @@ import {
 } from "../context/AppDataContext";
 import * as Constants from "../settings";
 
-const UploadStack = () => {
+const UploadStack = ({ setButtonText }) => {
   // AppDataContext
   const dispatch = useContext(AppDataDispatchContext);
   const data = useContext(AppDataContext);
@@ -60,7 +60,6 @@ const UploadStack = () => {
             Object.fromEntries([
               ["field", col],
               ["headerName", col],
-              ["flex", 1],
               ["editable", true],
             ])
           )
@@ -68,6 +67,8 @@ const UploadStack = () => {
         dispatch({ type: "setCols", newcols: cols, option: "reinit" });
         dispatch({ type: "setRows", newrows: rows, option: "reinit" });
         dispatch({ type: "setMatch", match: "reinit" });
+        dispatch({ type: "setIsValidated", isvalidated: false });
+        setButtonText("Update columns");
         dispatch({
           type: "setSnackbar",
           snackbar: { children: "data loaded from file", severity: "success" },
@@ -78,23 +79,19 @@ const UploadStack = () => {
 
   return (
     <Stack direction="row" flexWrap="wrap" padding={1}>
-      <div>
-        <Stack direction="row" spacing={0.1}>
-          <Button variant="contained" component="label">
-            Select .csv
-            <input
-              onChange={handleFileChange}
-              id="csvInput"
-              hidden
-              type="File"
-            />
-          </Button>
-          {data.file && (
-            <Chip size="small" label={data.file && `${data.file.name}`} />
-          )}
-        </Stack>
-      </div>
-      <Button variant="contained" component="label" onClick={handleLoad}>
+      <Button size="medium" variant="contained" component="label">
+        Select .csv
+        <input onChange={handleFileChange} id="csvInput" hidden type="File" />
+      </Button>
+      {data.file && (
+        <Chip size="small" label={data.file && `${data.file.name}`} />
+      )}
+      <Button
+        size="medium"
+        variant="contained"
+        component="label"
+        onClick={handleLoad}
+      >
         Load .csv
       </Button>
     </Stack>

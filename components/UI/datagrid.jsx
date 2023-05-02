@@ -9,11 +9,28 @@ import {
   GridToolbarFilterButton,
 } from "@mui/x-data-grid";
 import React, { useContext } from "react";
-import { AppDataContext } from "../context/AppDataContext";
+import {
+  AppDataContext,
+  AppDataDispatchContext,
+} from "../context/AppDataContext";
 
 export default function DataGridDemo() {
   // AppDataContext
   const data = useContext(AppDataContext);
+  const dispatch = useContext(AppDataDispatchContext);
+
+  const processRowUpdate = (newRow) => {
+    const updatedRow = { ...newRow, isNew: false };
+    const updatedRows = data.rows.map((row) =>
+      row.id === newRow.id ? updatedRow : row
+    );
+    dispatch({ type: "setRows", newrows: updatedRows });
+    dispatch({
+      type: "setSnackbar",
+      snackbar: { children: "saved", severity: "success" },
+    });
+    return updatedRow;
+  };
 
   function CustomToolbar() {
     return (
@@ -30,8 +47,8 @@ export default function DataGridDemo() {
     <Box
       sx={{
         "& .bad": {
-          backgroundColor: "#ff3ee5",
-          color: "#1a1a1a",
+          backgroundColor: "#bd93f9",
+          color: "#282a36",
         },
       }}
     >
@@ -42,18 +59,20 @@ export default function DataGridDemo() {
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: 20,
+              pageSize: 10,
             },
           },
         }}
-        pageSizeOptions={[20]}
+        pageSizeOptions={[10, 20, 50]}
         disableRowSelectionOnClick
         slots={{ toolbar: CustomToolbar }}
+        // for editing
+        processRowUpdate={processRowUpdate}
         // for the conditional formatting of cells
         getCellClassName={(params) => {
           switch (params.colDef.field) {
             case "Flight Number":
-              const regex = new RegExp("s");
+              let regex = /[A-Za-z0-9]+\s[0-9]+/i;
               return regex.test(params.value) ? "ok" : "bad";
             case "Flight Date":
               return Date.parse(params.value) ? "ok" : "bad";

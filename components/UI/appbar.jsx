@@ -13,12 +13,27 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import LocalAirportIcon from "@mui/icons-material/LocalAirport";
 import Link from "next/link";
+import { runSecurity } from "../utils";
+import {
+  AppDataContext,
+  AppDataDispatchContext,
+} from "../context/AppDataContext";
+import { useContext } from "react";
 
 const pages = { Schedule: "/", "Show-up": "/showup", Terminal: "/terminal" };
+const action = {
+  Schedule: () => console.log("hello there"),
+  "Show-up": () => console.log("hello there"),
+  Terminal: runSecurity,
+};
+
 const settings = ["History", "Logout"];
-const title = "ADRM App";
+const title = "ADRM-App";
 
 function ResponsiveAppBar() {
+  const data = useContext(AppDataContext);
+  const dispatch = useContext(AppDataDispatchContext);
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -93,7 +108,13 @@ function ResponsiveAppBar() {
             >
               {Object.keys(pages).map((page) => (
                 <Link key={page} href={pages[page]}>
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
+                  <MenuItem
+                    key={page}
+                    onClick={() => {
+                      handleCloseNavMenu();
+                      action[page](data, dispatch);
+                    }}
+                  >
                     <Typography textAlign="center">{page}</Typography>
                   </MenuItem>
                 </Link>
@@ -126,7 +147,10 @@ function ResponsiveAppBar() {
               <Link key={page} href={pages[page]}>
                 <Button
                   key={page}
-                  onClick={handleCloseNavMenu}
+                  onClick={() => {
+                    handleCloseNavMenu();
+                    action[page](data, dispatch);
+                  }}
                   sx={{ my: 2, color: "white", display: "block" }}
                 >
                   {page}
