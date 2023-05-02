@@ -92,7 +92,7 @@ function ResponsiveAppBar() {
               }}
             >
               {Object.keys(pages).map((page) => (
-                <Link href={pages[page]}>
+                <Link key={page} href={pages[page]}>
                   <MenuItem key={page} onClick={handleCloseNavMenu}>
                     <Typography textAlign="center">{page}</Typography>
                   </MenuItem>
@@ -123,7 +123,7 @@ function ResponsiveAppBar() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {Object.keys(pages).map((page) => (
-              <Link href={pages[page]}>
+              <Link key={page} href={pages[page]}>
                 <Button
                   key={page}
                   onClick={handleCloseNavMenu}
