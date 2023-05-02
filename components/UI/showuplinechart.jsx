@@ -17,8 +17,8 @@ import {
 } from "../context/AppDataContext";
 import Slider from "./slider";
 import { defaultShowUpProfile, timestep } from "../settings";
-
 import { erf } from "mathjs";
+import { Button } from "@tremor/react";
 
 const App = () => {
   const data = useContext(AppDataContext);
@@ -52,6 +52,10 @@ const App = () => {
   );
   const reversedprofiledata = profiledata.reverse();
 
+  const handleSaveShowUp = () => {
+    dispatch({ type: "setSimresult", newsimresult: chartdata });
+  };
+
   const handleTypeChange = (type, data) => {
     const newShowup = {
       ...data.showup,
@@ -63,10 +67,15 @@ const App = () => {
   return (
     <>
       <Card>
-        <Title>Design day show-up</Title>
+        <Flex>
+          <Title>Design day show-up</Title>
+          <Button size="xs" onClick={handleSaveShowUp}>
+            Save this showup
+          </Button>
+        </Flex>
         <BarChart
           className="mt-6"
-          data={chartdata}
+          data={data.simresult}
           index="slot"
           categories={["Pax/h"]}
           colors={["blue"]}

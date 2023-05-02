@@ -45,13 +45,15 @@
 - nextjs13 & app folder
 
 
+- migrate to react table fully
+- migrate graphs to d3.js
+- uniformize data in context (eg. Pax/hour everywhere)
 
-- show-up profile details to put in data (context)
-  - type (default/normal dist)
-  - mean
-  - std dev
+- full example for security
 
-- calculate showUpProfile from mean+std dev
-- graph for cumulated and reverse x-axis
+
+
+
+
 
 

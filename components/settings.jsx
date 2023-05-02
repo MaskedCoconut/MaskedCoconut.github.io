@@ -30,6 +30,5 @@ export const defaultShowUpProfile = [
   1.72996e-9,
 ]; // index 0 = STD to std-5 , index 60 = STD-295 to STD-300
 
-// default timestep
-
+// default timestep in minutes
 export const timestep = 5;

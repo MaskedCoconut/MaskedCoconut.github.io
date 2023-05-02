@@ -97,13 +97,6 @@ const UploadStack = () => {
       <Button variant="contained" component="label" onClick={handleLoad}>
         Load .csv
       </Button>
-      {data.isvalidated && (
-        <Link href="/showup">
-          <Button variant="contained" component="label">
-            To showup
-          </Button>
-        </Link>
-      )}
     </Stack>
   );
 };
