@@ -49,6 +49,9 @@ function appDataReducer(data, action) {
         return { ...data, showup: action.newshowup };
       }
 
+    case "setProfiledata":
+      return { ...data, profiledata: action.newprofiledata };
+
     case "setSimresult":
       return { ...data, simresult: action.newsimresult };
 
@@ -79,6 +82,7 @@ const initialAppData = Object.fromEntries([
       ["stdev", 30],
     ]),
   ],
+  ["profiledata", null],
   ["simresult", null],
   [
     "terminal",

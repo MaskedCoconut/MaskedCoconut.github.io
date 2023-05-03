@@ -13,7 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import LocalAirportIcon from "@mui/icons-material/LocalAirport";
 import Link from "next/link";
-import { runSecurity } from "../utils";
+import { runSecurity, calculateShowUp } from "../utils";
 import {
   AppDataContext,
   AppDataDispatchContext,
@@ -23,7 +23,7 @@ import { useContext } from "react";
 const pages = { Schedule: "/", "Show-up": "/showup", Terminal: "/terminal" };
 const action = {
   Schedule: () => console.log("hello there"),
-  "Show-up": () => console.log("hello there"),
+  "Show-up": calculateShowUp,
   Terminal: runSecurity,
 };
 
