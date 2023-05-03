@@ -37,7 +37,6 @@ const App = () => {
       ...{ type: type },
     };
     dispatch({ type: "setShowup", newshowup: newShowup });
-    calculateShowUp(data, dispatch);
   };
 
   return (
@@ -80,7 +79,7 @@ const App = () => {
           <Toggle
             defaultValue="default"
             onValueChange={(value) => {
-              handleTypeChange(value, data);
+              handleTypeChange(value, { ...data });
               calculateShowUp(data, dispatch);
             }}
           >
