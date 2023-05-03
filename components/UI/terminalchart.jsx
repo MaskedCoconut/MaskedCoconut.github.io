@@ -32,7 +32,7 @@ const TerminalChart = () => {
             className="mt-6"
             data={data.simresult}
             index="slot"
-            categories={["Pax/h", "Security queue"]}
+            categories={["Show-up [Pax/h]", "Security queue [Pax]"]}
             colors={["blue"]}
             valueFormatter={dataFormatter}
           />
@@ -45,4 +45,4 @@ const TerminalChart = () => {
 export default TerminalChart;
 
 const dataFormatter = (number) =>
-  `${Intl.NumberFormat("us").format(Math.round(number)).toString()} Pax`;
+  `${Intl.NumberFormat("us").format(Math.round(number)).toString()}`;

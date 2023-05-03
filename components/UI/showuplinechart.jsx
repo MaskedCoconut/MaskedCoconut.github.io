@@ -96,7 +96,7 @@ const App = () => {
           className="mt-6"
           data={data.profiledata.toReversed()}
           index="slot"
-          categories={["Pax/h"]}
+          categories={["Show-up Profile"]}
           colors={["blue"]}
           valueFormatter={percentageFormatter}
         />
@@ -110,7 +110,7 @@ const App = () => {
           data={data.simresult}
           // data={chartdata}
           index="slot"
-          categories={["Pax/h"]}
+          categories={["Show-up [Pax/h]"]}
           colors={["blue"]}
           valueFormatter={dataFormatter}
         />
