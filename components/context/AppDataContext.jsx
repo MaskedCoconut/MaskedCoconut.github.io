@@ -20,17 +20,14 @@ export default AppProvider;
 
 function appDataReducer(data, action) {
   switch (action.type) {
-    case "setRows":
-      return { ...data, rows: action.newrows };
-
-    case "setCols":
-      return { ...data, cols: action.newcols };
-
     case "setFile":
       return { ...data, file: action.file };
 
     case "setSnackbar":
       return { ...data, snackbar: action.snackbar };
+
+    case "setRows":
+      return { ...data, rows: action.newrows };
 
     case "setIsValidated":
       return { ...data, isvalidated: action.isvalidated };

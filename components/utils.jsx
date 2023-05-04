@@ -1,9 +1,73 @@
 import { defaultShowUpProfile, timestep } from "./settings";
 import { erf } from "mathjs";
-import {
-  AppDataContext,
-  AppDataDispatchContext,
-} from "./context/AppDataContext";
+import { SELECTLIST } from "./settings";
+
+// Get keys (array) by value
+export const getKeyByValue = (object, value) => {
+  return Object.keys(object).filter((key) => object[key] === value);
+};
+
+// Returns filtered object keeping only keys matching value
+// Assign "" to all values if isReinit = true
+export const FilterObjectOnValue = (obj, val, isReinit) => {
+  const asArray = Object.entries(obj);
+  const filteredArray = asArray.filter(([key, value]) => value === val);
+  const filteredObject = Object.fromEntries(filteredArray);
+  const result = Object.fromEntries(
+    Object.keys(filteredObject).map((key) => [key, isReinit ? "" : obj.key])
+  );
+  return result;
+};
+
+// Errors for conditional formatting of schedule
+export const getRowError = (row) => {
+  const result = [1];
+  const errors = [];
+  const colFieldList = Object.keys(row);
+
+  SELECTLIST.filter((field) => colFieldList.includes(field)).forEach(
+    (field) => {
+      switch (field) {
+        case "Flight Date":
+          if (Date.parse(row[field])) {
+            result.push(1);
+          } else {
+            result.push(0);
+            errors.push("Flight Date");
+          }
+          break;
+        case "Scheduled Time":
+          const originTime = "2022-10-13 ";
+          if (Date.parse([originTime, row[field]].join(" "))) {
+            result.push(1);
+          } else {
+            result.push(0);
+            errors.push("Scheduled Time");
+          }
+          break;
+        case "Arr./Dep.":
+          if (["A", "D"].includes(row[field])) {
+            result.push(1);
+          } else {
+            result.push(0);
+            errors.push("Arr./Dep.");
+          }
+          break;
+        case "Pax":
+          if (!isNaN(row[field])) {
+            result.push(1);
+          } else {
+            result.push(0);
+            errors.push("Pax");
+          }
+          break;
+      }
+    }
+  );
+  return result.reduce((a, b) => a * b, 1) == 1
+    ? "valid row"
+    : errors.join("|");
+};
 
 // recalculate security queue
 export const runSecurity = (data, dispatch) => {
