@@ -1,5 +1,6 @@
 import { createContext, useReducer } from "react";
 import { SELECTLIST } from "../settings";
+import { calculateShowUp } from "../utils";
 
 export const AppDataContext = createContext(null);
 export const AppDataDispatchContext = createContext(null);
@@ -40,11 +41,17 @@ function appDataReducer(data, action) {
       }
 
     case "setShowup":
-      if (action.newshowup == "reinit") {
-        return { ...data, showup: initialAppData.showup };
-      } else {
-        return { ...data, showup: action.newshowup };
-      }
+      // updated showup parameters
+      const newdata = { ...data, showup: action.newshowup };
+
+      // refresh showUp graphs
+      const [newsimresult, newprofiledata] = calculateShowUp(newdata);
+
+      return {
+        ...newdata,
+        profiledata: newprofiledata,
+        simresult: newsimresult,
+      };
 
     case "setProfiledata":
       return { ...data, profiledata: action.newprofiledata };

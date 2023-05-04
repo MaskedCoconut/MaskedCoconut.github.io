@@ -70,7 +70,7 @@ export const getRowError = (row) => {
 };
 
 // recalculate security queue
-export const runSecurity = (data, dispatch) => {
+export const runSecurity = (data) => {
   if (data.simresult) {
     const empty = new Array((24 * 60) / timestep).fill(0);
 
@@ -82,7 +82,7 @@ export const runSecurity = (data, dispatch) => {
           data.terminal.security["processing time"]
     );
 
-    // cumsum of previous
+    // cumsum of previous without negative queue
     net_diff.forEach((val, id) => {
       if (id > 0) {
         if (empty[id - 1] + net_diff[id] > 0) {
@@ -101,12 +101,17 @@ export const runSecurity = (data, dispatch) => {
       return { ...row, ...{ "Security queue [Pax]": empty[id] } };
     });
 
-    dispatch({ type: "setSimresult", newsimresult: newchartdata });
+    return newchartdata;
   }
 };
 
+export const runAndUpdateSecurity = (data, dispatch) => {
+  const newchartdata = runSecurity(data);
+  dispatch({ type: "setSimresult", newsimresult: newchartdata });
+};
+
 // recalculate and update the show-up and profile
-export const calculateShowUp = (data, dispatch) => {
+export const calculateShowUp = (data) => {
   if (data.rows) {
     // case default or normal distribution
     var usedShowUpProfile = [];
@@ -155,10 +160,16 @@ export const calculateShowUp = (data, dispatch) => {
       ])
     );
 
-    // update state
-    dispatch({ type: "setSimresult", newsimresult: chartdata });
-    dispatch({ type: "setProfiledata", newprofiledata: profiledata });
+    // return result
+    return [chartdata, profiledata];
   }
+};
+
+export const calculateAndUpdateShowUp = (data, dispatch) => {
+  const [chartdata, profiledata] = calculateShowUp(data);
+  // update state
+  dispatch({ type: "setSimresult", newsimresult: chartdata });
+  dispatch({ type: "setProfiledata", newprofiledata: profiledata });
 };
 
 export function generateNormShowupProfile(mean, stdev) {
