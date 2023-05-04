@@ -51,7 +51,7 @@ export default function RangeSlider() {
   };
 
   return (
-    <div class="min-w-screen min-h-[10vh] flex items-center justify-evenly">
+    <div class="p-2 gap-3 max-w-fit min-w-min border-2 bg-indigo-500/50 border-gray-700 border-solid rounded-lg flex items-center justify-evenly flex flex-wrap m-auto">
       {/* processor select */}
       <Box sx={{ minWidth: 120 }}>
         <FormControl fullWidth>
@@ -73,17 +73,19 @@ export default function RangeSlider() {
         </FormControl>
       </Box>
       {/* number input */}
-      <Input
-        value={value}
-        size="small"
-        onChange={handleInputChange}
-        onBlur={handleBlur}
-        inputProps={{
-          step: step,
-          type: "number",
-          "aria-labelledby": "input-slider",
-        }}
-      />
+      <div class="w-8">
+        <Input
+          value={value}
+          size="small"
+          onChange={handleInputChange}
+          onBlur={handleBlur}
+          inputProps={{
+            step: step,
+            type: "number",
+            "aria-labelledby": "input-slider",
+          }}
+        />
+      </div>
       {/* slider */}
       <Box sx={{ minWidth: 300 }}>
         <Slider

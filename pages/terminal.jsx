@@ -11,7 +11,9 @@ const App = () => {
       <div class="min-w-screen min-h-[35vh] flex items-center justify-center">
         {data.simresult && <Testgraph />}
       </div>
-      <TerminalSimpleEditor />
+      <div class="min-w-screen text-center items-center m-auto content-center border-2">
+        <TerminalSimpleEditor />
+      </div>
     </>
   );
 };
