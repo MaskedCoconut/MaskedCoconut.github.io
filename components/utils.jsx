@@ -78,8 +78,8 @@ export const runSecurity = (data) => {
     const net_diff = empty.map(
       (val, id) =>
         (data.simresult[id]["Show-up [Pax/h]"] * timestep) / 60 -
-        (data.terminal.security["processor number"] * timestep * 60) /
-          data.terminal.security["processing time"]
+        (data.terminal.security["processor number"][id] * timestep * 60) /
+          data.terminal.security["processing time"][id]
     );
 
     // cumsum of previous without negative queue

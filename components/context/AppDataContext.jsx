@@ -1,6 +1,7 @@
 import { createContext, useReducer } from "react";
 import { SELECTLIST } from "../settings";
-import { calculateShowUp } from "../utils";
+import { calculateShowUp, runSecurity } from "../utils";
+import { timestep } from "../settings";
 
 export const AppDataContext = createContext(null);
 export const AppDataDispatchContext = createContext(null);
@@ -59,6 +60,14 @@ function appDataReducer(data, action) {
     case "setSimresult":
       return { ...data, simresult: action.newsimresult };
 
+    case "setTerminal":
+      // updated terminal parameters
+      const newnewdata = { ...data, terminal: action.newterminal };
+
+      // refresh simulation
+      const newchartdata = runSecurity(newnewdata);
+      return { ...newnewdata, simresult: newchartdata };
+
     default: {
       return {
         ...data,
@@ -94,8 +103,8 @@ const initialAppData = Object.fromEntries([
       security: {
         isFirstStep: true,
         "previous step": null,
-        "processing time": 12,
-        "processor number": 15,
+        "processing time": new Array((24 * 60) / timestep).fill(12),
+        "processor number": new Array((24 * 60) / timestep).fill(15),
       },
     },
   ],
