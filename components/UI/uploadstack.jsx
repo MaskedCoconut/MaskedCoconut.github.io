@@ -55,16 +55,7 @@ const UploadStack = ({ setButtonText }) => {
         const rows = parsedData.map((row, idx) =>
           Object.assign({ id: idx }, row)
         );
-        const cols = [{ field: "id", headerName: "ID", width: 50 }].concat(
-          Object.keys(parsedData[0]).map((col) =>
-            Object.fromEntries([
-              ["field", col],
-              ["headerName", col],
-              ["editable", true],
-            ])
-          )
-        );
-        dispatch({ type: "setCols", newcols: cols, option: "reinit" });
+
         dispatch({ type: "setRows", newrows: rows, option: "reinit" });
         dispatch({ type: "setMatch", match: "reinit" });
         dispatch({ type: "setIsValidated", isvalidated: false });

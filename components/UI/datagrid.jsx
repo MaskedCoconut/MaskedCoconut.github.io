@@ -14,13 +14,24 @@ import {
   AppDataDispatchContext,
 } from "../context/AppDataContext";
 
+import { getRowError } from "../utils";
+
 export default function DataGridDemo() {
   // AppDataContext
   const data = useContext(AppDataContext);
   const dispatch = useContext(AppDataDispatchContext);
 
+  const cols = Object.keys(data.rows[0]).map((col) =>
+    Object.fromEntries([
+      ["field", col],
+      ["headerName", col],
+      ["editable", true],
+    ])
+  );
+
   const processRowUpdate = (newRow) => {
-    const updatedRow = { ...newRow, isNew: false };
+    newRow["error"] = getRowError(newRow);
+    const updatedRow = { ...newRow };
     const updatedRows = data.rows.map((row) =>
       row.id === newRow.id ? updatedRow : row
     );
@@ -55,7 +66,7 @@ export default function DataGridDemo() {
       <DataGrid
         rows={data.rows}
         density="compact"
-        columns={data.cols}
+        columns={cols}
         initialState={{
           pagination: {
             paginationModel: {

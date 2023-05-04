@@ -17,14 +17,7 @@ import {
 } from "../context/AppDataContext";
 import Slider from "./slider";
 
-import {
-  skdToShowUp,
-  dataFormatter,
-  percentageFormatter,
-  timeFromatter,
-  generateNormShowupProfile,
-  calculateShowUp,
-} from "../utils";
+import { dataFormatter, percentageFormatter } from "../utils";
 
 const App = () => {
   const data = useContext(AppDataContext);
@@ -57,7 +50,6 @@ const App = () => {
                     type: "setShowup",
                     newshowup: { ...data.showup, ...{ mean: mean } },
                   });
-                  calculateShowUp(data, dispatch);
                 }}
               />
               <Slider
@@ -71,7 +63,6 @@ const App = () => {
                     type: "setShowup",
                     newshowup: { ...data.showup, ...{ stdev: stdev } },
                   });
-                  calculateShowUp(data, dispatch);
                 }}
               />
             </>
@@ -80,7 +71,6 @@ const App = () => {
             defaultValue="default"
             onValueChange={(value) => {
               handleTypeChange(value, { ...data });
-              calculateShowUp(data, dispatch);
             }}
           >
             <ToggleItem value="default" text="Default" />
@@ -93,7 +83,7 @@ const App = () => {
         </Flex>
         <BarChart
           className="mt-6"
-          data={data.profiledata.toReversed()}
+          data={data.profiledata ? data.profiledata.toReversed() : null}
           index="slot"
           categories={["Show-up Profile"]}
           colors={["blue"]}

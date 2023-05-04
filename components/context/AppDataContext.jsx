@@ -1,5 +1,7 @@
 import { createContext, useReducer } from "react";
 import { SELECTLIST } from "../settings";
+import { calculateShowUp, runSecurity } from "../utils";
+import { timestep } from "../settings";
 
 export const AppDataContext = createContext(null);
 export const AppDataDispatchContext = createContext(null);
@@ -20,17 +22,14 @@ export default AppProvider;
 
 function appDataReducer(data, action) {
   switch (action.type) {
-    case "setRows":
-      return { ...data, rows: action.newrows };
-
-    case "setCols":
-      return { ...data, cols: action.newcols };
-
     case "setFile":
       return { ...data, file: action.file };
 
     case "setSnackbar":
       return { ...data, snackbar: action.snackbar };
+
+    case "setRows":
+      return { ...data, rows: action.newrows };
 
     case "setIsValidated":
       return { ...data, isvalidated: action.isvalidated };
@@ -43,17 +42,31 @@ function appDataReducer(data, action) {
       }
 
     case "setShowup":
-      if (action.newshowup == "reinit") {
-        return { ...data, showup: initialAppData.showup };
-      } else {
-        return { ...data, showup: action.newshowup };
-      }
+      // updated showup parameters
+      const newdata = { ...data, showup: action.newshowup };
+
+      // refresh showUp graphs
+      const [newsimresult, newprofiledata] = calculateShowUp(newdata);
+
+      return {
+        ...newdata,
+        profiledata: newprofiledata,
+        simresult: newsimresult,
+      };
 
     case "setProfiledata":
       return { ...data, profiledata: action.newprofiledata };
 
     case "setSimresult":
       return { ...data, simresult: action.newsimresult };
+
+    case "setTerminal":
+      // updated terminal parameters
+      const newnewdata = { ...data, terminal: action.newterminal };
+
+      // refresh simulation
+      const newchartdata = runSecurity(newnewdata);
+      return { ...newnewdata, simresult: newchartdata };
 
     default: {
       return {
@@ -90,8 +103,8 @@ const initialAppData = Object.fromEntries([
       security: {
         isFirstStep: true,
         "previous step": null,
-        "processing time": 12,
-        "processor number": 15,
+        "processing time": new Array((24 * 60) / timestep).fill(12),
+        "processor number": new Array((24 * 60) / timestep).fill(15),
       },
     },
   ],

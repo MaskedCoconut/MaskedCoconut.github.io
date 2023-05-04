@@ -51,7 +51,7 @@ export default function Layout({ children }) {
           <meta name="theme-color" content="#ffffff" />
         </Head>
         <AppBar />
-        <Box minHeight={500}>{children}</Box>
+        <div class="min-h-[80vh]">{children}</div>
         <Footer />
       </ThemeProvider>
     </AppProvider>

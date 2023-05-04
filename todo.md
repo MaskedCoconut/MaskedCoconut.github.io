@@ -32,26 +32,34 @@
 
 
 # Fix some stuff
-- If new csv is selected, reinitialize all
 - empty column header in papa parse
-- remove ID from mapping options
 
 - headername and its match should be managed in a 1-to-1 updatable object for convenience
 - no way to modify element at -2 position of array in js ?!
-
 
 - typescript
 - tailwind css
 - nextjs13 & app folder
 
-
 - migrate to react table fully?
-- migrate graphs to d3.js?
-- uniformize data in context (eg. Pax/hour everywhere)
-
-- update calculation flow (auto updates, no buttons)
 
 - full example for security
+- also single page app?
+
+Priority list:
+- graph js: 2 axis, styling, draggable components
+- table: highlight matched headers
+
+- user settings for terminal (2 modes: constant/variable -- modified by )
+- Create light and dracula mode to the App
+
+
+
+advanced ideas:
+- Detailed show-up (per AL/Flight groups) (each group have profile and showup)
+- Pax ratio and bags ratio (per Airlines/Flight groups)
+
+
 
 
 

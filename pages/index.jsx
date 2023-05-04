@@ -29,11 +29,11 @@ const App = () => {
   return (
     <Stack minHeight={500}>
       <UploadStack setButtonText={setButtonText} />
-      {data.cols && (
+      {data.rows && (
         <SelectColumn buttonText={buttonText} setButtonText={setButtonText} />
       )}
       <Box width="95%">
-        {data.cols && <DataGridDemo />}
+        {data.rows && <DataGridDemo />}
         {/* {data.cols && <MRTdata />} */}
       </Box>
       {!!data.snackbar && (
