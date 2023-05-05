@@ -16,10 +16,12 @@ import {
   AppDataDispatchContext,
 } from "../context/AppDataContext";
 import Slider from "./slider";
-
 import { dataFormatter, percentageFormatter } from "../utils";
+import { useTheme } from "@mui/material/styles";
+import ProfileChart from "./ProfileChart";
 
 const App = () => {
+  const theme = useTheme();
   const data = useContext(AppDataContext);
   const dispatch = useContext(AppDataDispatchContext);
 
@@ -36,7 +38,7 @@ const App = () => {
     <>
       <Card>
         <Flex>
-          <Title>Show-up profile</Title>
+          {/* <Title>Show-up profile</Title> */}
           {data.showup.type == "normdist" && (
             <>
               <Slider
@@ -81,19 +83,20 @@ const App = () => {
             />
           </Toggle>
         </Flex>
-        <BarChart
+        <div class="min-w-screen p-6 min-h-[40vh] flex items-center justify-center">
+          {data.profiledata && <ProfileChart />}
+        </div>
+        {/* <BarChart
           className="mt-6"
           data={data.profiledata ? data.profiledata.toReversed() : null}
           index="slot"
           categories={["Show-up Profile"]}
           colors={["blue"]}
           valueFormatter={percentageFormatter}
-        />
+        /> */}
       </Card>
       <Card>
-        <Flex>
-          <Title>Design day show-up</Title>
-        </Flex>
+        <Flex>{/* <Title>Design day show-up</Title> */}</Flex>
         <BarChart
           className="mt-6"
           data={data.simresult}

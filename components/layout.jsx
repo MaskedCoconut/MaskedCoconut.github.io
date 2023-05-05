@@ -51,7 +51,7 @@ export default function Layout({ children }) {
           <meta name="theme-color" content="#ffffff" />
         </Head>
         <AppBar />
-        <div class="min-h-[80vh]">{children}</div>
+        <div className="min-h-[80vh]">{children}</div>
         <Footer />
       </ThemeProvider>
     </AppProvider>
