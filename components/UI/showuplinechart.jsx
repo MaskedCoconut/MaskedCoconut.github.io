@@ -1,77 +1,39 @@
-import FunctionsIcon from "@mui/icons-material/Functions";
 import * as React from "react";
 import { useContext } from "react";
 import {
   AppDataContext,
   AppDataDispatchContext,
 } from "../context/AppDataContext";
-import Slider from "./slider";
 import { useTheme } from "@mui/material/styles";
-import { Toggle, ToggleItem } from "@tremor/react";
+import { Stack } from "@mui/material";
+import Grid from "@mui/material/Unstable_Grid2";
 import ProfileChart from "./ProfileChart";
 import ShowUpChart from "./ShowUpChart";
+import ShowUpProfileSelector from "./ShowUpProfileSelector";
 
 const App = () => {
   const theme = useTheme();
   const data = useContext(AppDataContext);
-  const dispatch = useContext(AppDataDispatchContext);
-
-  // handle show-up type change
-  const handleTypeChange = (type, data) => {
-    const newShowup = {
-      ...data.showup,
-      ...{ type: type },
-    };
-    dispatch({ type: "setShowup", newshowup: newShowup });
-  };
 
   return (
     <>
-      {data.showup.type == "normdist" && (
-        <>
-          <Slider
-            title="mean"
-            step={1}
-            min={0}
-            max={150}
-            value={data.showup.mean}
-            setValue={(mean) => {
-              dispatch({
-                type: "setShowup",
-                newshowup: { ...data.showup, ...{ mean: mean } },
-              });
-            }}
-          />
-          <Slider
-            title="std dev"
-            step={1}
-            min={0}
-            max={60}
-            value={data.showup.stdev}
-            setValue={(stdev) => {
-              dispatch({
-                type: "setShowup",
-                newshowup: { ...data.showup, ...{ stdev: stdev } },
-              });
-            }}
-          />
-        </>
-      )}
-      <Toggle
-        defaultValue="default"
-        onValueChange={(value) => {
-          handleTypeChange(value, { ...data });
-        }}
+      <Grid
+        container
+        spacing={2}
+        disableEqualOverflow
+        justifyItems="center"
+        alignItems="center"
       >
-        <ToggleItem value="default" text="Default" />
-        <ToggleItem value="normdist" text="Norm. dist." icon={FunctionsIcon} />
-      </Toggle>
-      <div class="min-w-screen p-6 min-h-[40vh] flex items-center justify-center">
-        {data.profiledata && <ProfileChart />}
-      </div>
-      <div class="min-w-screen p-6 min-h-[40vh] flex items-center justify-center">
-        <ShowUpChart />
-      </div>
+        <Grid padding={1} justifyItems="center" alignItems="center">
+          <ShowUpProfileSelector />
+        </Grid>
+        <Grid xs padding={1} minWidth="70%">
+          {data.profiledata && <ProfileChart />}
+        </Grid>
+        <Grid xs={12} padding={1}>
+          <ShowUpChart />
+        </Grid>
+      </Grid>
     </>
   );
 };

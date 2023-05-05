@@ -4,6 +4,7 @@ import {
   Select,
   FormControl,
   InputLabel,
+  Paper,
   MenuItem,
   Input,
   Button,
@@ -52,59 +53,61 @@ export default function RangeSlider() {
   };
 
   return (
-    <div class="p-2 gap-3 max-w-fit min-w-min border-2 bg-indigo-500/50 border-gray-700 border-solid rounded-lg flex items-center justify-evenly flex flex-wrap m-auto">
-      {/* processor select */}
-      <Box sx={{ minWidth: 120 }}>
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Processor</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
+    <Paper>
+      <div class="p-2 gap-3 max-w-fit min-w-min rounded-lg flex items-center justify-evenly flex flex-wrap m-auto">
+        {/* processor select */}
+        <Box sx={{ minWidth: 120 }}>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Processor</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              size="small"
+              id="demo-simple-select"
+              value={processor}
+              label="Processor"
+              onChange={handleSelect}
+            >
+              {Object.keys(data.terminal).map((val) => (
+                <MenuItem key={val} value={val}>
+                  {val}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+        {/* number input */}
+        <div class="w-8">
+          <Input
+            value={value}
             size="small"
-            id="demo-simple-select"
-            value={processor}
-            label="Processor"
-            onChange={handleSelect}
-          >
-            {Object.keys(data.terminal).map((val) => (
-              <MenuItem key={val} value={val}>
-                {val}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Box>
-      {/* number input */}
-      <div class="w-8">
-        <Input
-          value={value}
-          size="small"
-          onChange={handleInputChange}
-          onBlur={handleBlur}
-          inputProps={{
-            step: step,
-            type: "number",
-            "aria-labelledby": "input-slider",
-          }}
-        />
+            onChange={handleInputChange}
+            onBlur={handleBlur}
+            inputProps={{
+              step: step,
+              type: "number",
+              "aria-labelledby": "input-slider",
+            }}
+          />
+        </div>
+        {/* slider */}
+        <Box sx={{ minWidth: 300 }}>
+          <Slider
+            value={range}
+            onChange={handleRangeChange}
+            valueLabelDisplay="auto"
+            getAriaValueText={timeFromatter}
+            valueLabelFormat={timeFromatter}
+            min={min}
+            max={max}
+            step={step}
+          />
+        </Box>
+        {/* validation button */}
+        <Button variant="contained" component="label" onClick={handleClick}>
+          {" "}
+          bim{" "}
+        </Button>
       </div>
-      {/* slider */}
-      <Box sx={{ minWidth: 300 }}>
-        <Slider
-          value={range}
-          onChange={handleRangeChange}
-          valueLabelDisplay="auto"
-          getAriaValueText={timeFromatter}
-          valueLabelFormat={timeFromatter}
-          min={min}
-          max={max}
-          step={step}
-        />
-      </Box>
-      {/* validation button */}
-      <Button variant="contained" component="label" onClick={handleClick}>
-        {" "}
-        bim{" "}
-      </Button>
-    </div>
+    </Paper>
   );
 }

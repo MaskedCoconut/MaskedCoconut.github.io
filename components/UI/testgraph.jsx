@@ -8,6 +8,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { Paper } from "@mui/material";
 import { Line } from "react-chartjs-2";
 import * as React from "react";
 import { useContext } from "react";
@@ -51,10 +52,10 @@ const options = {
   },
   elements: {
     point: {
-      radius: 2,
+      radius: 0.5,
     },
     line: {
-      borderWidth: 2,
+      borderWidth: 0.5,
     },
   },
   scales: {
@@ -131,5 +132,11 @@ export default function App() {
     ],
   };
 
-  return <Line options={options} data={graphdata} />;
+  return (
+    <Paper>
+      <div class="p-2 min-h-[40vh]">
+        <Line options={options} data={graphdata} />
+      </div>
+    </Paper>
+  );
 }

@@ -8,6 +8,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { Card, Paper } from "@mui/material";
 import { Bar } from "react-chartjs-2";
 import * as React from "react";
 import { useContext } from "react";
@@ -99,5 +100,11 @@ export default function App() {
     ],
   };
 
-  return <Bar options={options} data={graphdata} />;
+  return (
+    <Paper>
+      <div class="p-2 min-h-[40vh]">
+        <Bar options={options} data={graphdata} />
+      </div>
+    </Paper>
+  );
 }
