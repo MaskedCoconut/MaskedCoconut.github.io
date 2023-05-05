@@ -46,6 +46,7 @@ export default function RangeSlider() {
   };
 
   const handleClick = () => {
+    range[1] += 1;
     data.terminal.security["processor number"].fill(value, ...range);
     dispatch({ type: "setTerminal", newterminal: { ...data.terminal } });
   };

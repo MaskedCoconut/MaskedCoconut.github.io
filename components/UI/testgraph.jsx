@@ -108,8 +108,8 @@ export default function App() {
       {
         label: "Show-up [Pax/h]",
         data: data.simresult.map((row) => Math.floor(row["Show-up [Pax/h]"])),
-        borderColor: theme.palette.primary.main,
-        backgroundColor: theme.palette.primary.main,
+        borderColor: theme.palette.info.main,
+        backgroundColor: theme.palette.info.main,
         yAxisID: "y",
       },
       {
@@ -117,15 +117,15 @@ export default function App() {
         data: data.simresult.map((row) =>
           Math.floor(row["Security queue [Pax]"])
         ),
-        borderColor: theme.palette.secondary.main,
-        backgroundColor: theme.palette.secondary.main,
+        borderColor: theme.palette.info.dark,
+        backgroundColor: theme.palette.info.dark,
         yAxisID: "y",
       },
       {
         label: "Security lanes",
         data: data.terminal.security["processor number"],
-        borderColor: theme.palette.warning.main,
-        backgroundColor: theme.palette.warning.main,
+        borderColor: theme.palette.secondary.main,
+        backgroundColor: theme.palette.secondary.main,
         yAxisID: "y1",
       },
     ],

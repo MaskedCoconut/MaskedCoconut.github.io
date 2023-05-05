@@ -87,13 +87,11 @@ export default function App() {
   const data = useContext(AppDataContext);
 
   const graphdata = {
-    labels: data.profiledata.toReversed().map((row) => row["slot"]),
+    labels: data.simresult.map((row) => row["slot"]),
     datasets: [
       {
         label: "Show-up Profile",
-        data: data.profiledata
-          .toReversed()
-          .map((row) => row["Show-up Profile"]),
+        data: data.simresult.map((row) => Math.floor(row["Show-up [Pax/h]"])),
         borderColor: theme.palette.info.main,
         backgroundColor: theme.palette.info.main,
         yAxisID: "y",
