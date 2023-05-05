@@ -3,13 +3,13 @@ import {
   CategoryScale,
   LinearScale,
   PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
 } from "chart.js";
-import { Paper } from "@mui/material";
-import { Line } from "react-chartjs-2";
+import { Card, Paper } from "@mui/material";
+import { Bar } from "react-chartjs-2";
 import * as React from "react";
 import { useContext } from "react";
 import { useTheme } from "@mui/material/styles";
@@ -17,12 +17,13 @@ import {
   AppDataContext,
   AppDataDispatchContext,
 } from "../context/AppDataContext";
+import { percentageFormatter } from "../utils";
 
 ChartJS.register(
   CategoryScale,
   LinearScale,
   PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend
@@ -39,7 +40,7 @@ const options = {
   plugins: {
     title: {
       display: true,
-      text: "Security area",
+      text: "Show-up Profile",
     },
     legend: {
       position: "chartArea",
@@ -52,10 +53,10 @@ const options = {
   },
   elements: {
     point: {
-      radius: 0.5,
+      radius: 2,
     },
     line: {
-      borderWidth: 0.5,
+      borderWidth: 2,
     },
   },
   scales: {
@@ -69,31 +70,14 @@ const options = {
     y: {
       type: "linear",
       beginAtZero: true,
-      title: {
-        display: true,
-        text: "Pax/h",
-      },
+      // title: {
+      //   display: true,
+      //   text: "Pax/h",
+      // },
       position: "left",
       border: {
         display: false,
         dash: [4, 4],
-      },
-    },
-    y1: {
-      type: "linear",
-      beginAtZero: true,
-      title: {
-        display: true,
-        text: "Pax",
-      },
-      position: "right",
-      grid: {
-        drawborder: false,
-        display: false,
-      },
-      border: {
-        display: false,
-        drawborder: false,
       },
     },
   },
@@ -107,27 +91,11 @@ export default function App() {
     labels: data.simresult.map((row) => row["slot"]),
     datasets: [
       {
-        label: "Show-up [Pax/h]",
+        label: "Show-up Profile",
         data: data.simresult.map((row) => Math.floor(row["Show-up [Pax/h]"])),
         borderColor: theme.palette.info.main,
         backgroundColor: theme.palette.info.main,
         yAxisID: "y",
-      },
-      {
-        label: "Security queue [Pax]",
-        data: data.simresult.map((row) =>
-          Math.floor(row["Security queue [Pax]"])
-        ),
-        borderColor: theme.palette.info.dark,
-        backgroundColor: theme.palette.info.dark,
-        yAxisID: "y",
-      },
-      {
-        label: "Security lanes",
-        data: data.terminal.security["processor number"],
-        borderColor: theme.palette.secondary.main,
-        backgroundColor: theme.palette.secondary.main,
-        yAxisID: "y1",
       },
     ],
   };
@@ -135,7 +103,7 @@ export default function App() {
   return (
     <Paper>
       <div class="p-2 min-h-[40vh]">
-        <Line options={options} data={graphdata} />
+        <Bar options={options} data={graphdata} />
       </div>
     </Paper>
   );

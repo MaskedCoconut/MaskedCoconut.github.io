@@ -162,7 +162,7 @@ export const calculateShowUp = (data) => {
 
     // return result
     return [chartdata, profiledata];
-  }
+  } else return ["", ""];
 };
 
 export const calculateAndUpdateShowUp = (data, dispatch) => {

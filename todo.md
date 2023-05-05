@@ -52,6 +52,10 @@ Priority list:
 
 - user settings for terminal (2 modes: constant/variable -- modified by )
 - Create light and dracula mode to the App
+- Work on UI:
+  - SPA: with tabs and animations
+  - Theme
+  - Components clearly divided with Paper, background etc...
 
 
 

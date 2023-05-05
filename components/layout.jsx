@@ -12,14 +12,28 @@ const theme = createTheme({
       defaultProps: {
         spacing: { xs: 1, sm: 2, md: 4 },
         justifyContent: "center",
+        justifyItems: "center",
+        alignContent: "center",
         alignItems: "center",
         width: "100%",
+      },
+    },
+    MuiGrid: {
+      defaultProps: {
+        spacing: { xs: 1, sm: 2, md: 4 },
+        justifyContent: "center",
+        justifyItems: "center",
+        alignContent: "center",
+        alignItems: "center",
       },
     },
   },
   palette: {
     primary: { main: "#21235b" },
     secondary: { main: "#e90e8b" },
+    background: {
+      paper: "rgba(242,242,242,0.9)",
+    },
   },
 });
 
@@ -51,7 +65,9 @@ export default function Layout({ children }) {
           <meta name="theme-color" content="#ffffff" />
         </Head>
         <AppBar />
-        <div class="min-h-[80vh]">{children}</div>
+        {/* <div className="min-h-[80vh] max-w-screen"> */}
+        <Box sx={{ margin: 2 }}>{children}</Box>
+        {/* </div> */}
         <Footer />
       </ThemeProvider>
     </AppProvider>
