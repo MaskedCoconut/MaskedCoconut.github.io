@@ -32,7 +32,7 @@ const App = () => {
       <Card>
         <Paper sx={{ width: 250, margin: "auto" }}>
           <CardContent>
-            <Typography sx={{ fontSize: 14 }} gutterBottom>
+            <Typography sx={{ fontSize: 14, margin: "auto" }} gutterBottom>
               <EditIcon />
               Edit Show-up Profile
             </Typography>
@@ -43,7 +43,7 @@ const App = () => {
               spacing={1}
             >
               <Toggle
-                defaultValue="default"
+                defaultValue={data.showup.type}
                 onValueChange={(value) => {
                   handleTypeChange(value, { ...data });
                 }}

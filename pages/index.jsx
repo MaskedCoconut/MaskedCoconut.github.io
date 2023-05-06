@@ -15,6 +15,7 @@ import Showup from "../components/Tabs/showup";
 import Terminal from "../components/Tabs/terminal";
 
 import { useState } from "react";
+import Slide from "@mui/material/Slide";
 
 const App = () => {
   // AppDataContext
