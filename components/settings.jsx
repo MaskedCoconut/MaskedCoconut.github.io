@@ -38,3 +38,75 @@ export const appTitle = "ADRM-App";
 
 // Types of processor
 export const processortypes = ["check-in", "security", "immigration"];
+
+// Graphjs Options for Processor
+export const optionsProcessorGraph = {
+  responsive: true,
+  maintainAspectRatio: false,
+  interaction: {
+    mode: "index",
+    intersect: false,
+  },
+  stacked: false,
+  plugins: {
+    title: {
+      display: true,
+      text: "Security area",
+    },
+    legend: {
+      position: "chartArea",
+      labels: {
+        usePointStyle: true,
+        boxWidth: 8,
+        boxHeight: 8,
+      },
+    },
+  },
+  elements: {
+    point: {
+      radius: 0.5,
+    },
+    line: {
+      borderWidth: 0.5,
+    },
+  },
+  scales: {
+    x: {
+      grid: {
+        drawOnChartArea: false,
+        display: false,
+      },
+      beginAtZero: true,
+    },
+    y: {
+      type: "linear",
+      beginAtZero: true,
+      title: {
+        display: true,
+        text: "Pax/h",
+      },
+      position: "left",
+      border: {
+        display: false,
+        dash: [4, 4],
+      },
+    },
+    y1: {
+      type: "linear",
+      beginAtZero: true,
+      title: {
+        display: true,
+        text: "Pax",
+      },
+      position: "right",
+      grid: {
+        drawborder: false,
+        display: false,
+      },
+      border: {
+        display: false,
+        drawborder: false,
+      },
+    },
+  },
+};

@@ -55,7 +55,7 @@ const handleNewProcessor = (data, dispatch) => {
     isFirstStep: true,
     name: "new process",
     type: "security",
-    "previous step": null,
+    "previous step": "showup",
     "processing time": new Array((24 * 60) / timestep).fill(10),
     "processor number": new Array((24 * 60) / timestep).fill(10),
   };

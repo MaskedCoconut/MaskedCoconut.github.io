@@ -35,12 +35,12 @@ function appDataReducer(data, action) {
       const newdataRows = { ...data, rows: action.newrows };
 
       // refresh showUp graphs
-      const [newsimresultRows, newprofiledataRows] =
-        calculateShowUp(newdataRows);
+      const [newshowupdata, newprofiledata1] = calculateShowUp(newdataRows);
+
       const newdataRowsAndShowup = {
         ...newdataRows,
-        profiledata: newprofiledataRows,
-        simresult: newsimresultRows,
+        profiledata: newprofiledata1,
+        simresult: { ...data.simresult, showup: newshowupdata },
       };
 
       // refresh simulation
@@ -122,7 +122,7 @@ const initialAppData = Object.fromEntries([
         isFirstStep: true,
         name: "security",
         type: "security",
-        "previous step": null,
+        "previous step": "showup",
         "processing time": new Array((24 * 60) / timestep).fill(12),
         "processor number": new Array((24 * 60) / timestep).fill(15),
       },

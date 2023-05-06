@@ -1,11 +1,12 @@
 import * as React from "react";
 import { useContext } from "react";
 import TerminalSimpleEditor from "../UI/terminalSimpleEditor";
-import Testgraph from "../UI/testgraph";
+import Testgraph from "../UI/ProcessorGraph";
 import { AppDataContext } from "../context/AppDataContext";
 import { Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2";
+import { optionsProcessorGraph } from "../settings";
 
 const App = () => {
   const theme = useTheme();
@@ -21,7 +22,12 @@ const App = () => {
         margin="auto"
       >
         <Grid padding={1} xs={12}>
-          {data.simresult && <Testgraph />}
+          {data.simresult &&
+            Object.keys(data.terminal).map((key) => {
+              const options = structuredClone(optionsProcessorGraph);
+              options.plugins.title.text = key;
+              return <Testgraph processor={key} options={options} />;
+            })}
         </Grid>
         <Grid padding={1} margin="auto">
           <TerminalSimpleEditor />

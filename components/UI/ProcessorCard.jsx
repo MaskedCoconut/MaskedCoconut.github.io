@@ -89,21 +89,32 @@ export default function OutlinedCard({ processor, keyprocessor, prout }) {
                 sx={{ minWidth: 225 }}
                 label="previous step"
                 size="small"
-                defaultValue={formatvalue(processor["previous step"])}
+                defaultValue={formatvalue(
+                  processor["previous step"] == "showup"
+                    ? "first step"
+                    : data.terminal[processor["previous step"].toString()][
+                        "name"
+                      ]
+                )}
               >
                 {Object.keys(data.terminal).map((processor) => (
-                  <MenuItem
-                    key={data.terminal[processor].name}
-                    value={data.terminal[processor].name}
-                  >
+                  <MenuItem key={processor} value={processor}>
                     {data.terminal[processor].name}
                   </MenuItem>
                 ))}
 
-                <MenuItem value="first step">first step</MenuItem>
+                <MenuItem value="showup">first step</MenuItem>
               </TextField>
             ) : (
-              <Typography>{formatvalue(processor["previous step"])}</Typography>
+              <Typography>
+                {formatvalue(
+                  processor["previous step"] == "showup"
+                    ? "first step"
+                    : data.terminal[processor["previous step"].toString()][
+                        "name"
+                      ]
+                )}
+              </Typography>
             )}
           </Stack>
 

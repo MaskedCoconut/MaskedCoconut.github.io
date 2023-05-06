@@ -88,11 +88,13 @@ export default function App() {
   const data = useContext(AppDataContext);
 
   const graphdata = {
-    labels: data.simresult.map((row) => row["slot"]),
+    labels: data.simresult.showup.map((row) => row["slot"]),
     datasets: [
       {
         label: "Show-up Profile",
-        data: data.simresult.map((row) => Math.floor(row["Show-up [Pax/h]"])),
+        data: data.simresult.showup.map((row) =>
+          Math.floor(row["Show-up [Pax/h]"])
+        ),
         borderColor: theme.palette.info.main,
         backgroundColor: theme.palette.info.main,
         yAxisID: "y",

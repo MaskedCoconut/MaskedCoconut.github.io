@@ -59,6 +59,12 @@ Priority list:
 
 - default schedule, process, show-up
 
+- gerer mieux l'ordre et le name/key des processors
+
+- add holding area?
+
+- add LoS
+
 advanced ideas:
 - Detailed show-up (per AL/Flight groups) (each group have profile and showup)
 - Pax ratio and bags ratio (per Airlines/Flight groups)

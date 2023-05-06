@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useContext } from "react";
 import TerminalSimpleEditor from "../UI/terminalSimpleEditor";
-import Testgraph from "../UI/testgraph";
 import { AppDataContext } from "../context/AppDataContext";
 import { Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
