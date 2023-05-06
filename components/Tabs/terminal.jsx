@@ -1,8 +1,8 @@
 import * as React from "react";
 import { useContext } from "react";
-import TerminalSimpleEditor from "../components/UI/terminalSimpleEditor";
-import Testgraph from "../components/UI/testgraph";
-import { AppDataContext } from "../components/context/AppDataContext";
+import TerminalSimpleEditor from "../UI/terminalSimpleEditor";
+import Testgraph from "../UI/testgraph";
+import { AppDataContext } from "../context/AppDataContext";
 import { Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2";

@@ -11,24 +11,27 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
 import LocalAirportIcon from "@mui/icons-material/LocalAirport";
 import Link from "next/link";
-import { runAndUpdateSecurity, calculateAndUpdateShowUp } from "../utils";
+import { appTitle } from "../settings";
 import {
   AppDataContext,
   AppDataDispatchContext,
 } from "../context/AppDataContext";
 import { useContext } from "react";
 
-const pages = { Schedule: "/", "Show-up": "/showup", Terminal: "/terminal" };
-const action = {
-  Schedule: () => console.log("hello there"),
-  "Show-up": calculateAndUpdateShowUp,
-  Terminal: runAndUpdateSecurity,
-};
-
 const settings = ["History", "Logout"];
-const title = "ADRM-App";
+
+const pages = { Schedule: "/", "Show-up": "/showup", Terminal: "/terminal" };
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
 
 function ResponsiveAppBar() {
   const data = useContext(AppDataContext);
@@ -36,6 +39,11 @@ function ResponsiveAppBar() {
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const tabNumber = data.currenttab;
+
+  const handleTabChange = (event, newTab) => {
+    dispatch({ type: "setCurrenttab", newtab: newTab });
+  };
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -74,7 +82,7 @@ function ResponsiveAppBar() {
               textDecoration: "none",
             }}
           >
-            {title}
+            {appTitle}
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -112,7 +120,6 @@ function ResponsiveAppBar() {
                     key={page}
                     onClick={() => {
                       handleCloseNavMenu();
-                      action[page](data, dispatch);
                     }}
                   >
                     <Typography textAlign="center">{page}</Typography>
@@ -140,23 +147,19 @@ function ResponsiveAppBar() {
               textDecoration: "none",
             }}
           >
-            {title}
+            {appTitle}
           </Typography>
+
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {Object.keys(pages).map((page) => (
-              <Link key={page} href={pages[page]}>
-                <Button
-                  key={page}
-                  onClick={() => {
-                    handleCloseNavMenu();
-                    action[page](data, dispatch);
-                  }}
-                  sx={{ my: 2, color: "white", display: "block" }}
-                >
-                  {page}
-                </Button>
-              </Link>
-            ))}
+            <Tabs
+              value={tabNumber}
+              onChange={handleTabChange}
+              aria-label="basic tabs example"
+            >
+              <Tab label="Schedule" {...a11yProps(0)} />
+              <Tab label="Show-up" {...a11yProps(1)} />
+              <Tab label="Terminal" {...a11yProps(2)} />
+            </Tabs>
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>

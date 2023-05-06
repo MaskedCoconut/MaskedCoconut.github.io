@@ -32,3 +32,6 @@ export const defaultShowUpProfile = [
 
 // default timestep in minutes
 export const timestep = 5;
+
+// App title
+export const appTitle = "ADRM-App";

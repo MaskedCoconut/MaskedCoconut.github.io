@@ -1,26 +1,24 @@
 import { Stack, Box, Typography, Divider } from "@mui/material";
 import GitHubIcon from "@mui/icons-material/GitHub";
+import { useTheme } from "@mui/material/styles";
 
 const Footer = () => {
+  const theme = useTheme();
+
   return (
     <Box
       sx={{
         position: "static",
         width: "100%",
         bottom: 0,
-        pt: "0.5em",
+        // pt: "0.5em",
         pb: "0.5em",
         pl: "0.5em",
         pr: "0.5em",
       }}
     >
       <Divider />
-      <Stack
-        sx={{ pt: "0.5em" }}
-        direction="row"
-        justifyContent="space-between"
-        width="100%"
-      >
+      <Stack direction="row" justifyContent="space-between" width="100%">
         <a
           target="_blank"
           href="https://github.com/AntoineGlacet/test-app-react"

@@ -22,6 +22,9 @@ export default AppProvider;
 
 function appDataReducer(data, action) {
   switch (action.type) {
+    case "setCurrenttab":
+      return { ...data, currenttab: action.newtab };
+
     case "setFile":
       return { ...data, file: action.file };
 
@@ -29,7 +32,21 @@ function appDataReducer(data, action) {
       return { ...data, snackbar: action.snackbar };
 
     case "setRows":
-      return { ...data, rows: action.newrows };
+      const newdataRows = { ...data, rows: action.newrows };
+
+      // refresh showUp graphs
+      const [newsimresultRows, newprofiledataRows] =
+        calculateShowUp(newdataRows);
+      const newdataRowsAndShowup = {
+        ...newdataRows,
+        profiledata: newprofiledataRows,
+        simresult: newsimresultRows,
+      };
+
+      // refresh simulation
+      const newchartdataRows = runSecurity(newdataRowsAndShowup);
+
+      return { ...newdataRowsAndShowup, simresult: newchartdataRows };
 
     case "setIsValidated":
       return { ...data, isvalidated: action.isvalidated };
@@ -48,6 +65,7 @@ function appDataReducer(data, action) {
       // refresh showUp graphs
       const [newsimresult, newprofiledata] = calculateShowUp(newdata);
 
+      // return updated data
       return {
         ...newdata,
         profiledata: newprofiledata,
@@ -81,6 +99,7 @@ function appDataReducer(data, action) {
 }
 
 const initialAppData = Object.fromEntries([
+  ["currenttab", 0],
   ["rows", null],
   ["cols", null],
   ["match", Object.fromEntries(SELECTLIST.map((col) => [col, ""]))],

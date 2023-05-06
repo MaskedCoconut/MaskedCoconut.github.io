@@ -40,7 +40,7 @@ const options = {
   plugins: {
     title: {
       display: true,
-      text: "Show-up Profile",
+      text: "Calculated Show-up",
     },
     legend: {
       position: "chartArea",

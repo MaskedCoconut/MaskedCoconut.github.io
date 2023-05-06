@@ -134,7 +134,7 @@ export default function App() {
 
   return (
     <Paper>
-      <div class="p-2 min-h-[40vh]">
+      <div class="p2 min-h-[40vh]">
         <Line options={options} data={graphdata} />
       </div>
     </Paper>
