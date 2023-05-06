@@ -96,37 +96,6 @@ function ResponsiveAppBar() {
             >
               <MenuIcon />
             </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: "block", md: "none" },
-              }}
-            >
-              {Object.keys(pages).map((page) => (
-                <Link key={page} href={pages[page]}>
-                  <MenuItem
-                    key={page}
-                    onClick={() => {
-                      handleCloseNavMenu();
-                    }}
-                  >
-                    <Typography textAlign="center">{page}</Typography>
-                  </MenuItem>
-                </Link>
-              ))}
-            </Menu>
           </Box>
           <LocalAirportIcon
             sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
