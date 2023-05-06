@@ -18,7 +18,12 @@ const Footer = () => {
       }}
     >
       <Divider />
-      <Stack direction="row" justifyContent="space-between" width="100%">
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        width="100%"
+        padding={1}
+      >
         <a
           target="_blank"
           href="https://github.com/AntoineGlacet/test-app-react"
@@ -29,11 +34,11 @@ const Footer = () => {
             alignItems="center"
             spacing={0.5}
           >
-            <GitHubIcon />
-            <Typography variant="subtitle2">see on GitHub</Typography>
+            <GitHubIcon sx={{ color: theme.palette.primary.dark }} />
+            <Typography variant="subtitle2"></Typography>
           </Stack>
         </a>
-        <Typography variant="subtitle2">Work in progress</Typography>
+        <Typography variant="subtitle2"></Typography>
       </Stack>
     </Box>
   );

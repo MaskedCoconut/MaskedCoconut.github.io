@@ -59,7 +59,6 @@ export default function Layout({ children }) {
             pr: 1,
             pl: 1,
             pb: 1,
-            border: 1,
             minHeight: 500,
           }}
         >
