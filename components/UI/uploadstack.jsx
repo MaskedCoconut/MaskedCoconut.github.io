@@ -8,7 +8,7 @@ import {
 } from "../context/AppDataContext";
 import * as Constants from "../settings";
 
-const UploadStack = ({ setButtonText }) => {
+const UploadStack = () => {
   // AppDataContext
   const dispatch = useContext(AppDataDispatchContext);
   const data = useContext(AppDataContext);
@@ -58,7 +58,6 @@ const UploadStack = ({ setButtonText }) => {
         dispatch({ type: "setRows", newrows: rows, option: "reinit" });
         dispatch({ type: "setMatch", match: "reinit" });
         dispatch({ type: "setIsValidated", isvalidated: false });
-        setButtonText("Update columns");
         dispatch({
           type: "setSnackbar",
           snackbar: { children: "data loaded from file", severity: "success" },

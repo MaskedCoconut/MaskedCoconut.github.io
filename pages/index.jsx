@@ -13,6 +13,7 @@ import {
 import Schedule from "../components/Tabs/schedule";
 import Showup from "../components/Tabs/showup";
 import Terminal from "../components/Tabs/terminal";
+import Terminal2 from "../components/Tabs/terminal2";
 
 import { useState } from "react";
 import Slide from "@mui/material/Slide";
@@ -42,6 +43,9 @@ const App = () => {
       </TabPanel>
       <TabPanel value={data.currenttab} index={2}>
         <Terminal />
+      </TabPanel>
+      <TabPanel value={data.currenttab} index={3}>
+        <Terminal2 />
       </TabPanel>
     </Box>
   );

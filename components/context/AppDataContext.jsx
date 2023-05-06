@@ -121,6 +121,7 @@ const initialAppData = Object.fromEntries([
     {
       security: {
         isFirstStep: true,
+        name: "security",
         "previous step": null,
         "processing time": new Array((24 * 60) / timestep).fill(12),
         "processor number": new Array((24 * 60) / timestep).fill(15),

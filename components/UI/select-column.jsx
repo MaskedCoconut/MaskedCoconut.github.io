@@ -14,7 +14,7 @@ import {
 import { SELECTLIST } from "../settings";
 import { getRowError, FilterObjectOnValue, getKeyByValue } from "../utils";
 
-export default function BasicSelect({ buttonText, setButtonText }) {
+export default function BasicSelect() {
   // AppDataContext
   const dispatch = useContext(AppDataDispatchContext);
   const data = useContext(AppDataContext);
@@ -63,7 +63,6 @@ export default function BasicSelect({ buttonText, setButtonText }) {
 
       dispatch({ type: "setRows", newrows: updatedRows });
       dispatch({ type: "setIsValidated", isvalidated: true });
-      setButtonText("reload csv");
       dispatch({ type: "setMatch", match: "reinit" });
     }
   };
@@ -121,7 +120,7 @@ export default function BasicSelect({ buttonText, setButtonText }) {
         onClick={handleMatchClick}
         disabled={data.isvalidated}
       >
-        {buttonText}
+        {data.isvalidated ? "reload .csv" : "update columns"}
       </Button>
     </Stack>
   );

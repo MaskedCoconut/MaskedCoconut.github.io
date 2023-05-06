@@ -16,9 +16,6 @@ const App = () => {
   const dispatch = useContext(AppDataDispatchContext);
   const data = useContext(AppDataContext);
 
-  // text change for the update columns button
-  const [buttonText, setButtonText] = useState("Update columns");
-
   // shorthand
   const handleCloseSnackbar = () =>
     dispatch({
@@ -28,10 +25,8 @@ const App = () => {
 
   return (
     <Stack minHeight={500}>
-      <UploadStack setButtonText={setButtonText} />
-      {data.rows && (
-        <SelectColumn buttonText={buttonText} setButtonText={setButtonText} />
-      )}
+      <UploadStack />
+      {data.rows && <SelectColumn />}
       <Box width="95%">
         {data.rows && <DataGridDemo />}
         {/* {data.cols && <MRTdata />} */}
