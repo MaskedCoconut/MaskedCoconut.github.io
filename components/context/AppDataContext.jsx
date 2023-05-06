@@ -75,9 +75,6 @@ function appDataReducer(data, action) {
     case "setProfiledata":
       return { ...data, profiledata: action.newprofiledata };
 
-    case "setSimresult":
-      return { ...data, simresult: action.newsimresult };
-
     case "setTerminal":
       // updated terminal parameters
       const newnewdata = { ...data, terminal: action.newterminal };
@@ -85,6 +82,9 @@ function appDataReducer(data, action) {
       // refresh simulation
       const newchartdata = runSecurity(newnewdata);
       return { ...newnewdata, simresult: newchartdata };
+
+    case "setSimresult":
+      return { ...data, simresult: action.newsimresult };
 
     default: {
       return {
@@ -101,7 +101,6 @@ function appDataReducer(data, action) {
 const initialAppData = Object.fromEntries([
   ["currenttab", 0],
   ["rows", null],
-  ["cols", null],
   ["match", Object.fromEntries(SELECTLIST.map((col) => [col, ""]))],
   ["file", null],
   ["snackbar", null],
@@ -122,6 +121,7 @@ const initialAppData = Object.fromEntries([
       security: {
         isFirstStep: true,
         name: "security",
+        type: "security",
         "previous step": null,
         "processing time": new Array((24 * 60) / timestep).fill(12),
         "processor number": new Array((24 * 60) / timestep).fill(15),

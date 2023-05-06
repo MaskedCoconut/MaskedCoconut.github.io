@@ -23,8 +23,6 @@ export default function OutlinedCard() {
       sx={{
         minWidth: 275,
         minHeight: 200,
-        margin: "auto",
-        position: "relative",
       }}
     >
       <Button
@@ -36,10 +34,6 @@ export default function OutlinedCard() {
         sx={{
           border: 3,
           borderStyle: "dashed",
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
           minWidth: 275,
           minHeight: 200,
           "&:hover": {
@@ -60,6 +54,7 @@ const handleNewProcessor = (data, dispatch) => {
   data.terminal[newkey] = {
     isFirstStep: true,
     name: "new process",
+    type: "security",
     "previous step": null,
     "processing time": new Array((24 * 60) / timestep).fill(10),
     "processor number": new Array((24 * 60) / timestep).fill(10),

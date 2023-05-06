@@ -57,7 +57,7 @@ Priority list:
   - Theme
   - Components clearly divided with Paper, background etc...
 
-
+- default schedule, process, show-up
 
 advanced ideas:
 - Detailed show-up (per AL/Flight groups) (each group have profile and showup)

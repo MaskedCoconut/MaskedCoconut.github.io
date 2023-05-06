@@ -14,23 +14,24 @@ const App = () => {
   const data = useContext(AppDataContext);
   return (
     <>
-      <Grid
-        container
-        spacing={{ xs: 2, md: 3 }}
-        columns={{ xs: 4, sm: 8, md: 12 }}
-        justifyItems="center"
+      <Stack
+        spacing={{ xs: 1, sm: 2 }}
+        direction="row"
+        useFlexGap
+        flexWrap="wrap"
         alignItems="center"
-        margin="auto"
+        justifyContent="center"
       >
-        {Object.keys(data.terminal).map((processor) => (
-          <Grid item xs={4}>
-            <ProcessorCard processor={data.terminal[processor]} />
-          </Grid>
+        {Object.keys(data.terminal).map((key) => (
+          <ProcessorCard
+            processor={data.terminal[key]}
+            keyprocessor={key}
+            prout={"yes"}
+          />
         ))}
-        <Grid item xs={4}>
-          <AddNewCard />
-        </Grid>
-      </Grid>
+
+        <AddNewCard />
+      </Stack>
     </>
   );
 };

@@ -35,3 +35,6 @@ export const timestep = 5;
 
 // App title
 export const appTitle = "ADRM-App";
+
+// Types of processor
+export const processortypes = ["check-in", "security", "immigration"];
