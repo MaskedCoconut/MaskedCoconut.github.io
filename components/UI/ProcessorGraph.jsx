@@ -14,6 +14,11 @@ import * as React from "react";
 import { useContext } from "react";
 import { useTheme } from "@mui/material/styles";
 import { AppDataContext } from "../context/AppDataContext";
+import TerminalGraphEditor from "./TerminalGraphEditor";
+import { Box } from "@mui/material";
+import Grid from "@mui/material/Unstable_Grid2";
+import EditIcon from "@mui/icons-material/Edit";
+import { IconButton } from "@mui/material";
 
 ChartJS.register(
   CategoryScale,
@@ -71,9 +76,30 @@ export default function App({ processor, options }) {
 
   return (
     <Paper>
-      <div class="p2 min-h-[40vh]">
-        <Line options={options} data={graphdata} />
-      </div>
+      <Grid
+        container
+        spacing={1}
+        disableEqualOverflow
+        justifyItems="center"
+        alignItems="center"
+        margin="auto"
+      >
+        <Grid xs={10}>
+          <Box>
+            <TerminalGraphEditor processor={processor} />
+          </Box>
+        </Grid>
+        <Grid xs={2}>
+          <IconButton color="primary" aria-label="add an alarm">
+            <EditIcon />
+          </IconButton>
+        </Grid>
+        <Grid xs={12}>
+          <div class="p2 min-h-[40vh]">
+            <Line options={options} data={graphdata} />
+          </div>
+        </Grid>
+      </Grid>
     </Paper>
   );
 }
