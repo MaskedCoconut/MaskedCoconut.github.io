@@ -62,9 +62,14 @@ export const optionsProcessorGraph = {
         boxHeight: 8,
       },
       cursor: "pointer",
+      onHover: (event, ChartElement) => {
+        event.native.target.style.cursor = "pointer";
+      },
+
+      onLeave: (event, ChartElement) => {
+        event.native.target.style.cursor = "default";
+      },
       itemclick: function (e) {
-        //console.log("legend click: " + e.dataPointIndex);
-        //console.log(e);
         if (
           typeof e.dataSeries.visible === "undefined" ||
           e.dataSeries.visible
