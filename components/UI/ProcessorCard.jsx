@@ -221,7 +221,11 @@ const formatvalue = (val) => {
 
 const deleteprocessor = (data, dispatch, keyprocessor) => {
   delete data.terminal[keyprocessor];
-  delete data.simresult[keyprocessor];
+
+  if (data?.simresult?.[keyprocessor]) {
+    delete data.simresult[keyprocessor];
+  }
+
   dispatch({ type: "setTerminal", newterminal: data.terminal });
 };
 

@@ -124,17 +124,5 @@ const initialAppData = Object.fromEntries([
   ],
   ["profiledata", null],
   ["simresult", null],
-  [
-    "terminal",
-    {
-      process0: {
-        isFirstStep: true,
-        name: "security",
-        type: "security",
-        "previous step": "showup",
-        "processing time": new Array((24 * 60) / timestep).fill(12),
-        "processor number": new Array((24 * 60) / timestep).fill(15),
-      },
-    },
-  ],
+  ["terminal", {}],
 ]);

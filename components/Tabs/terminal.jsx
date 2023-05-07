@@ -35,7 +35,7 @@ const App = () => {
             })}
 
         <Grid padding={1} margin="auto">
-          <TerminalSimpleEditor />
+          {/* <TerminalSimpleEditor /> */}
         </Grid>
       </Grid>
     </>

@@ -16,12 +16,12 @@ const App = () => {
   const dispatch = useContext(AppDataDispatchContext);
   const data = useContext(AppDataContext);
 
-  // shorthand
-  const handleCloseSnackbar = () =>
-    dispatch({
-      type: "setSnackbar",
-      snackbar: null,
-    });
+  // // shorthand
+  // const handleCloseSnackbar = () =>
+  //   dispatch({
+  //     type: "setSnackbar",
+  //     snackbar: null,
+  //   });
 
   return (
     <Stack minHeight={500}>
@@ -31,7 +31,7 @@ const App = () => {
         {data.rows && <DataGridDemo />}
         {/* {data.cols && <MRTdata />} */}
       </Box>
-      {!!data.snackbar && (
+      {/* {!!data.snackbar && (
         <Snackbar
           open
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
@@ -40,7 +40,7 @@ const App = () => {
         >
           <Alert {...data.snackbar} onClose={handleCloseSnackbar} />
         </Snackbar>
-      )}
+      )} */}
     </Stack>
   );
 };

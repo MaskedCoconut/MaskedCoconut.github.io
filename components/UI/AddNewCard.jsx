@@ -50,7 +50,9 @@ export default function OutlinedCard() {
 }
 
 const handleNewProcessor = (data, dispatch) => {
-  const newkey = "process" + (Object.keys(data.terminal).length + 1);
+  const newkey =
+    "process" + (data.terminal ? Object.keys(data.terminal).length + 1 : 1);
+
   data.terminal[newkey] = {
     isFirstStep: true,
     name: "new process",

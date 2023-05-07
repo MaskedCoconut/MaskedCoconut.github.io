@@ -70,7 +70,7 @@ export const getRowError = (row) => {
 
 // recalculate all processors queues and output successively
 export const runSecurity = (data) => {
-  if (data.simresult) {
+  if (data?.simresult?.showup && data.terminal) {
     const numberofprocessor = Object.keys(data.terminal).length;
     let previousstep = "showup";
 
@@ -219,3 +219,42 @@ export const timeFromatter = (slot5m) => {
 export function cdfNormal(x, mean, standardDeviation) {
   return (1 - erf((mean - x) / (Math.sqrt(2) * standardDeviation))) / 2;
 }
+
+export const exportData = (data) => {
+  const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
+    JSON.stringify(data)
+  )}`;
+  const link = document.createElement("a");
+  link.href = jsonString;
+  link.download = "ADRM-save.json";
+  link.click();
+};
+
+export const importData = (e, data, dispatch) => {
+  if (e.target.files.length) {
+    const inputFile = e.target.files[0];
+    const fileExtension = inputFile?.type.split("/")[1];
+
+    if (!["json"].includes(fileExtension)) {
+      dispatch({
+        type: "setSnackbar",
+        snackbar: { children: "Only .json are accepted", severity: "error" },
+      });
+    } else {
+      const reader = new FileReader();
+      reader.readAsText(inputFile);
+      reader.onload = ({ target }) => {
+        const parsedData = JSON.parse(target.result);
+        dispatch({
+          type: "setSnackbar",
+          snackbar: { children: "data loaded from file", severity: "success" },
+        });
+
+        data = structuredClone(parsedData);
+        dispatch({ type: "setRows", newrows: data.rows });
+        // Why do I need that?
+        dispatch({ type: "setTerminal", newterminal: parsedData.terminal });
+      };
+    }
+  }
+};

@@ -21,13 +21,14 @@ const App = () => {
         alignItems="center"
         justifyContent="center"
       >
-        {Object.keys(data.terminal).map((key) => (
-          <ProcessorCard
-            processor={data.terminal[key]}
-            keyprocessor={key}
-            prout={"yes"}
-          />
-        ))}
+        {data.terminal &&
+          Object.keys(data.terminal).map((key) => (
+            <ProcessorCard
+              processor={data.terminal[key]}
+              keyprocessor={key}
+              prout={"yes"}
+            />
+          ))}
 
         <AddNewCard />
       </Stack>

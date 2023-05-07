@@ -12,6 +12,7 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import Tabs from "@mui/material/Tabs";
+import { Input, Snackbar, Alert } from "@mui/material";
 import Tab from "@mui/material/Tab";
 import LocalAirportIcon from "@mui/icons-material/LocalAirport";
 import Link from "next/link";
@@ -21,8 +22,7 @@ import {
   AppDataDispatchContext,
 } from "../context/AppDataContext";
 import { useContext } from "react";
-
-const settings = ["Placeholder", "Placeholder"];
+import { exportData, importData } from "../utils";
 
 function a11yProps(index) {
   return {
@@ -58,6 +58,13 @@ function ResponsiveAppBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  // shorthand
+  const handleCloseSnackbar = () =>
+    dispatch({
+      type: "setSnackbar",
+      snackbar: null,
+    });
 
   return (
     <AppBar position="static">
@@ -125,15 +132,47 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem>
+                <Button
+                  onClick={() => {
+                    exportData(data);
+                    handleCloseUserMenu();
+                  }}
+                  size="medium"
+                  variant="contained"
+                  component="label"
+                >
+                  Save
+                </Button>
+              </MenuItem>
+              <MenuItem>
+                <Button size="medium" variant="contained" component="label">
+                  Load
+                  <input
+                    onChange={(e) => {
+                      importData(e, data, dispatch);
+                      handleCloseUserMenu();
+                    }}
+                    id="csvInput"
+                    hidden
+                    type="File"
+                  />
+                </Button>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
       </Container>
+      {!!data.snackbar && (
+        <Snackbar
+          open
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          onClose={handleCloseSnackbar}
+          autoHideDuration={3000}
+        >
+          <Alert {...data.snackbar} onClose={handleCloseSnackbar} />
+        </Snackbar>
+      )}
     </AppBar>
   );
 }
