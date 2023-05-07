@@ -1,6 +1,5 @@
-import { defaultShowUpProfile, timestep } from "./settings";
 import { erf } from "mathjs";
-import { SELECTLIST } from "./settings";
+import { SELECTLIST, defaultShowUpProfile, timestep } from "./settings";
 
 // Get keys (array) by value
 export const getKeyByValue = (object, value) => {
@@ -11,7 +10,7 @@ export const getKeyByValue = (object, value) => {
 // Assign "" to all values if isReinit = true
 export const FilterObjectOnValue = (obj, val, isReinit) => {
   const asArray = Object.entries(obj);
-  const filteredArray = asArray.filter(([key, value]) => value === val);
+  const filteredArray = asArray.filter(([, value]) => value === val);
   const filteredObject = Object.fromEntries(filteredArray);
   const result = Object.fromEntries(
     Object.keys(filteredObject).map((key) => [key, isReinit ? "" : obj.key])
@@ -69,45 +68,77 @@ export const getRowError = (row) => {
     : errors.join("|");
 };
 
-// recalculate security queue
+// recalculate all processors queues and output successively
 export const runSecurity = (data) => {
-  if (data.simresult) {
-    const empty = new Array((24 * 60) / timestep).fill(0);
+  if (data?.simresult?.showup && data.terminal) {
+    const numberofprocessor = Object.keys(data.terminal).length;
+    let previousstep = "showup";
 
-    // net Pax added to queue (when >0) or capacity left (when <0)
-    const net_diff = empty.map(
-      (val, id) =>
-        (data.simresult[id]["Show-up [Pax/h]"] * timestep) / 60 -
-        (data.terminal.security["processor number"][id] * timestep * 60) /
-          data.terminal.security["processing time"][id]
-    );
+    for (let step = 0; step < numberofprocessor; step++) {
+      // how to go through the processes in correct order?
+      const currentstep = Object.keys(data.terminal).filter(
+        (key) => data.terminal[key]["previous step"] == previousstep
+      )[0];
 
-    // cumsum of previous without negative queue
-    net_diff.forEach((val, id) => {
-      if (id > 0) {
-        if (empty[id - 1] + net_diff[id] > 0) {
-          empty[id] = empty[id - 1] + net_diff[id];
-        } else {
-          empty[id] = 0;
-        }
-      } else {
-        if (net_diff > 0) {
-          empty[id] = net_diff[id];
-        }
+      if (!currentstep) {
+        break;
       }
-    });
 
-    const newchartdata = data.simresult.map((row, id) => {
-      return { ...row, ...{ "Security queue [Pax]": empty[id] } };
-    });
+      const queue = new Array((24 * 60) / timestep).fill(0);
+      const output = new Array((24 * 60) / timestep).fill(0);
 
-    return newchartdata;
+      const showuparray =
+        previousstep == "showup"
+          ? data.simresult.showup.map((obj) => obj["Show-up [Pax/h]"])
+          : data.simresult[previousstep].map((obj) => obj["Output [Pax/h]"]);
+
+      // net Pax added to queue (when >0) or capacity left (when <0)
+      const net_diff = queue.map(
+        (val, id) =>
+          (showuparray[id] * timestep) / 60 -
+          (data.terminal[currentstep]["processor number"][id] * timestep * 60) /
+            data.terminal[currentstep]["processing time"][id]
+      );
+
+      // cumsum of previous without negative queue
+      net_diff.forEach((val, id) => {
+        if (id > 0) {
+          if (queue[id - 1] + val > 0) {
+            queue[id] = queue[id - 1] + val;
+          } else {
+            queue[id] = 0;
+          }
+        } else {
+          if (net_diff > 0) {
+            queue[id] = val;
+          }
+        }
+      });
+
+      // calcualte output
+      net_diff.forEach((val, id) => {
+        output[id] =
+          val <= 0 && queue[id] == 0
+            ? showuparray[id]
+            : data.terminal[currentstep]["processor number"][id] /
+              (data.terminal[currentstep]["processing time"][id] / 3600);
+      });
+
+      const newsimresultsecurity = data.simresult.showup.map((row, id) => {
+        return Object.fromEntries([
+          ["slot", data.simresult.showup[id]["slot"]],
+          ["Show-up [Pax/h]", showuparray[id]],
+          ["Output [Pax/h]", output[id]],
+          ["Queue [Pax]", queue[id]],
+        ]);
+      });
+
+      data.simresult[currentstep] = newsimresultsecurity;
+      previousstep = currentstep;
+    }
+
+    return { ...data.simresult };
   }
-};
-
-export const runAndUpdateSecurity = (data, dispatch) => {
-  const newchartdata = runSecurity(data);
-  dispatch({ type: "setSimresult", newsimresult: newchartdata });
 };
 
 // recalculate and update the show-up and profile
@@ -147,7 +178,7 @@ export const calculateShowUp = (data) => {
       });
 
     // format object for plot and state management
-    const chartdata = showuparray.map((val, id) =>
+    const showupdata = showuparray.map((val, id) =>
       Object.fromEntries([
         ["slot", timeFromatter(id)],
         ["Show-up [Pax/h]", (val * 60) / timestep],
@@ -161,15 +192,8 @@ export const calculateShowUp = (data) => {
     );
 
     // return result
-    return [chartdata, profiledata];
+    return [showupdata, profiledata];
   } else return ["", ""];
-};
-
-export const calculateAndUpdateShowUp = (data, dispatch) => {
-  const [chartdata, profiledata] = calculateShowUp(data);
-  // update state
-  dispatch({ type: "setSimresult", newsimresult: chartdata });
-  dispatch({ type: "setProfiledata", newprofiledata: profiledata });
 };
 
 export function generateNormShowupProfile(mean, stdev) {
@@ -195,3 +219,42 @@ export const timeFromatter = (slot5m) => {
 export function cdfNormal(x, mean, standardDeviation) {
   return (1 - erf((mean - x) / (Math.sqrt(2) * standardDeviation))) / 2;
 }
+
+export const exportData = (data) => {
+  const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
+    JSON.stringify(data)
+  )}`;
+  const link = document.createElement("a");
+  link.href = jsonString;
+  link.download = "ADRM-save.json";
+  link.click();
+};
+
+export const importData = (e, data, dispatch) => {
+  if (e.target.files.length) {
+    const inputFile = e.target.files[0];
+    const fileExtension = inputFile?.type.split("/")[1];
+
+    if (!["json"].includes(fileExtension)) {
+      dispatch({
+        type: "setSnackbar",
+        snackbar: { children: "Only .json are accepted", severity: "error" },
+      });
+    } else {
+      const reader = new FileReader();
+      reader.readAsText(inputFile);
+      reader.onload = ({ target }) => {
+        const parsedData = JSON.parse(target.result);
+        dispatch({
+          type: "setSnackbar",
+          snackbar: { children: "data loaded from file", severity: "success" },
+        });
+
+        data = structuredClone(parsedData);
+        dispatch({ type: "setRows", newrows: data.rows });
+        // Why do I need that?
+        dispatch({ type: "setTerminal", newterminal: parsedData.terminal });
+      };
+    }
+  }
+};

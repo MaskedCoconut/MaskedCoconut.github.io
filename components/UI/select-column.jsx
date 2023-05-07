@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { Stack, Paper } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
@@ -14,7 +14,7 @@ import {
 import { SELECTLIST } from "../settings";
 import { getRowError, FilterObjectOnValue, getKeyByValue } from "../utils";
 
-export default function BasicSelect({ buttonText, setButtonText }) {
+export default function BasicSelect() {
   // AppDataContext
   const dispatch = useContext(AppDataDispatchContext);
   const data = useContext(AppDataContext);
@@ -63,13 +63,13 @@ export default function BasicSelect({ buttonText, setButtonText }) {
 
       dispatch({ type: "setRows", newrows: updatedRows });
       dispatch({ type: "setIsValidated", isvalidated: true });
-      setButtonText("reload csv");
       dispatch({ type: "setMatch", match: "reinit" });
     }
   };
 
   return (
     <Stack
+      padding={1}
       spacing={{ xs: 1, sm: 2 }}
       direction="row"
       useFlexGap
@@ -98,7 +98,9 @@ export default function BasicSelect({ buttonText, setButtonText }) {
                 "& .MuiSelect-iconOutlined": {
                   display: "none",
                 },
-                "&.Mui-focused .MuiIconButton-root": { color: "primary.main" },
+                "&.Mui-focused .MuiIconButton-root": {
+                  color: "primary.main",
+                },
               }}
             >
               {choices.map((val) => (
@@ -118,7 +120,7 @@ export default function BasicSelect({ buttonText, setButtonText }) {
         onClick={handleMatchClick}
         disabled={data.isvalidated}
       >
-        {buttonText}
+        {data.isvalidated ? "reload .csv" : "update columns"}
       </Button>
     </Stack>
   );

@@ -1,6 +1,5 @@
-import { Chip, Stack } from "@mui/material";
+import { Chip, Stack, Paper } from "@mui/material";
 import Button from "@mui/material/Button";
-import Link from "next/link";
 import Papa from "papaparse";
 import { useContext } from "react";
 import {
@@ -9,7 +8,7 @@ import {
 } from "../context/AppDataContext";
 import * as Constants from "../settings";
 
-const UploadStack = ({ setButtonText }) => {
+const UploadStack = () => {
   // AppDataContext
   const dispatch = useContext(AppDataDispatchContext);
   const data = useContext(AppDataContext);
@@ -59,7 +58,6 @@ const UploadStack = ({ setButtonText }) => {
         dispatch({ type: "setRows", newrows: rows, option: "reinit" });
         dispatch({ type: "setMatch", match: "reinit" });
         dispatch({ type: "setIsValidated", isvalidated: false });
-        setButtonText("Update columns");
         dispatch({
           type: "setSnackbar",
           snackbar: { children: "data loaded from file", severity: "success" },

@@ -40,7 +40,7 @@ const options = {
   plugins: {
     title: {
       display: true,
-      text: "Show-up Profile",
+      text: "Calculated Show-up",
     },
     legend: {
       position: "chartArea",
@@ -66,6 +66,10 @@ const options = {
         display: false,
       },
       beginAtZero: true,
+      ticks: {
+        maxTicksLimit: 24,
+        minRotation: 45,
+      },
     },
     y: {
       type: "linear",
@@ -88,11 +92,13 @@ export default function App() {
   const data = useContext(AppDataContext);
 
   const graphdata = {
-    labels: data.simresult.map((row) => row["slot"]),
+    labels: data.simresult.showup.map((row) => row["slot"]),
     datasets: [
       {
         label: "Show-up Profile",
-        data: data.simresult.map((row) => Math.floor(row["Show-up [Pax/h]"])),
+        data: data.simresult.showup.map((row) =>
+          Math.floor(row["Show-up [Pax/h]"])
+        ),
         borderColor: theme.palette.info.main,
         backgroundColor: theme.palette.info.main,
         yAxisID: "y",

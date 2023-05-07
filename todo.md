@@ -57,7 +57,13 @@ Priority list:
   - Theme
   - Components clearly divided with Paper, background etc...
 
+- default schedule, process, show-up
 
+- gerer mieux l'ordre et le name/key des processors
+
+- add holding area?
+
+- add LoS
 
 advanced ideas:
 - Detailed show-up (per AL/Flight groups) (each group have profile and showup)
