@@ -28,8 +28,8 @@ const App = () => {
               const options = structuredClone(optionsProcessorGraph);
               options.plugins.title.text = data.terminal[key]["name"];
               return (
-                <Grid padding={1} xs={12}>
-                  <Testgraph processor={key} options={options} />
+                <Grid key={key} padding={1} xs={12}>
+                  <Testgraph key={key} processor={key} options={options} />
                 </Grid>
               );
             })}

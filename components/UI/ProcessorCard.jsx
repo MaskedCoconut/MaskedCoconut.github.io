@@ -21,7 +21,7 @@ import { processortypes } from "../settings";
 import MenuItem from "@mui/material/MenuItem";
 import { timestep } from "../settings";
 
-export default function OutlinedCard({ processor, keyprocessor, prout }) {
+export default function OutlinedCard({ processor, keyprocessor }) {
   const theme = useTheme();
   const data = useContext(AppDataContext);
   const dispatch = useContext(AppDataDispatchContext);

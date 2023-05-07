@@ -26,7 +26,7 @@ const App = () => {
             <ProcessorCard
               processor={data.terminal[key]}
               keyprocessor={key}
-              prout={"yes"}
+              key={key}
             />
           ))}
 
