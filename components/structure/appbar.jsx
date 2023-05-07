@@ -22,7 +22,7 @@ import {
 } from "../context/AppDataContext";
 import { useContext } from "react";
 
-const settings = ["History", "Logout"];
+const settings = ["Placeholder", "Placeholder"];
 
 function a11yProps(index) {
   return {
@@ -46,12 +46,13 @@ function ResponsiveAppBar() {
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
+  };
+
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
   };
 
   const handleCloseUserMenu = () => {
@@ -62,17 +63,14 @@ function ResponsiveAppBar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <LocalAirportIcon
-            sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-          />
+          <LocalAirportIcon href="/" sx={{ display: { xs: "flex" }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
             component="a"
-            href="/"
             sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
+              mr: { xs: 0.25, lg: 2 },
+              display: { xs: "none", sm: "flex" },
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
@@ -82,46 +80,21 @@ function ResponsiveAppBar() {
           >
             {appTitle}
           </Typography>
-
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-          </Box>
-          <LocalAirportIcon
-            sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-          />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href=""
+          <Box
             sx={{
-              mr: 2,
-              display: { xs: "flex", md: "none" },
               flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
+              display: { md: "flex" },
+              maxWidth: { xs: 300, md: 500, lg: 800, xl: 1000 },
+              margin: "auto",
             }}
           >
-            {appTitle}
-          </Typography>
-
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <Tabs
               value={tabNumber}
               onChange={handleTabChange}
               aria-label="basic tabs example"
+              variant="scrollable"
+              scrollButtons
+              allowScrollButtonsMobile
             >
               <Tab label="Schedule" {...a11yProps(0)} />
               <Tab label="Show-up" {...a11yProps(1)} />

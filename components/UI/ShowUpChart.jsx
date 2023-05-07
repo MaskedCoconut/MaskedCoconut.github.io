@@ -66,6 +66,10 @@ const options = {
         display: false,
       },
       beginAtZero: true,
+      ticks: {
+        maxTicksLimit: 24,
+        minRotation: 45,
+      },
     },
     y: {
       type: "linear",

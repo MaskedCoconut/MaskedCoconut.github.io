@@ -41,6 +41,7 @@ export const processortypes = ["check-in", "security", "immigration"];
 
 // Graphjs Options for Processor
 export const optionsProcessorGraph = {
+  animation: false,
   responsive: true,
   maintainAspectRatio: false,
   interaction: {
@@ -77,6 +78,10 @@ export const optionsProcessorGraph = {
         display: false,
       },
       beginAtZero: true,
+      ticks: {
+        maxTicksLimit: 24,
+        minRotation: 45,
+      },
     },
     y: {
       type: "linear",
@@ -96,7 +101,7 @@ export const optionsProcessorGraph = {
       beginAtZero: true,
       title: {
         display: true,
-        text: "Pax",
+        text: "Processor Number",
       },
       position: "right",
       grid: {
