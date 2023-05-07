@@ -5,6 +5,7 @@ import {
   FormControl,
   InputLabel,
   TextField,
+  Stack,
   Paper,
   MenuItem,
   Input,
@@ -64,51 +65,60 @@ export default function TerminalGraphEditor({ processor }) {
       alignItems="center"
       margin="auto"
     >
-      {/* validation button */}
-      <Button variant="contained" component="label" onClick={handleClick}>
-        bim
-      </Button>
-      {/* attribute select */}
-      <Box>
-        <TextField
-          select
-          size="small"
-          // value={attribute}
-          label="Attribute"
-          onChange={handleSelectAttribute}
-          sx={{ width: 200, margin: "auto" }}
-        >
-          <MenuItem value="processing time">processing time</MenuItem>
-          <MenuItem value="processor number">processor number</MenuItem>
-        </TextField>
-      </Box>
-      {/* number input */}
-      <Box sx={{ width: 50 }}>
-        <Input
-          value={value}
-          size="small"
-          onChange={handleInputChange}
-          onBlur={handleBlur}
-          inputProps={{
-            step: step,
-            type: "number",
-            "aria-labelledby": "input-slider",
-          }}
-        />
-      </Box>
+      <Stack
+        padding={1}
+        spacing={{ xs: 1, sm: 2, md: 4, xl: 6 }}
+        direction="row"
+        useFlexGap
+        flexWrap="wrap"
+        alignItems="center"
+        justifyContent="center"
+      >
+        {/* attribute select */}
+        <Box>
+          <TextField
+            select
+            size="small"
+            // value={attribute}
+            label="Attribute"
+            onChange={handleSelectAttribute}
+            sx={{ width: 200, margin: "auto" }}
+          >
+            <MenuItem value="processing time">processing time</MenuItem>
+            <MenuItem value="processor number">processor number</MenuItem>
+          </TextField>
+        </Box>
+        {/* number input */}
+        <Box sx={{ width: 150 }}>
+          <TextField
+            value={value}
+            size="small"
+            label="value"
+            onChange={handleInputChange}
+            onBlur={handleBlur}
+            inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+          />
+        </Box>
+        {/* validation button */}
+        <Button variant="contained" component="label" onClick={handleClick}>
+          Set value
+        </Button>
+      </Stack>
       {/* slider */}
-      <Box sx={{ minWidth: 300 }}>
-        <Slider
-          value={range}
-          onChange={handleRangeChange}
-          valueLabelDisplay="auto"
-          getAriaValueText={timeFromatter}
-          valueLabelFormat={timeFromatter}
-          min={min}
-          max={max}
-          step={step}
-        />
-      </Box>
+      <Grid xs={12}>
+        <Box sx={{ maxWidth: "94%", margin: "auto" }}>
+          <Slider
+            value={range}
+            onChange={handleRangeChange}
+            valueLabelDisplay="auto"
+            getAriaValueText={timeFromatter}
+            valueLabelFormat={timeFromatter}
+            min={min}
+            max={max}
+            step={step}
+          />
+        </Box>
+      </Grid>
     </Grid>
   );
 }

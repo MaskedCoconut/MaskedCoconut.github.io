@@ -5,7 +5,6 @@ import { AppDataContext } from "../context/AppDataContext";
 import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2";
 import { optionsProcessorGraph } from "../settings";
-import TerminalSimpleEditor from "../UI/TerminalSimpleEditor";
 import _ from "lodash";
 
 const App = () => {
@@ -34,10 +33,6 @@ const App = () => {
                 </Grid>
               );
             })}
-
-        {/* <Grid padding={1} margin="auto">
-          <TerminalSimpleEditor />
-        </Grid> */}
       </Grid>
     </>
   );

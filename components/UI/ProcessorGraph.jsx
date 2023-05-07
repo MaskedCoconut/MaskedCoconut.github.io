@@ -16,9 +16,9 @@ import { useTheme } from "@mui/material/styles";
 import { AppDataContext } from "../context/AppDataContext";
 import TerminalGraphEditor from "./TerminalGraphEditor";
 import { Box } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
 import EditIcon from "@mui/icons-material/Edit";
 import { IconButton } from "@mui/material";
+import DoneIcon from "@mui/icons-material/Done";
 
 ChartJS.register(
   CategoryScale,
@@ -33,6 +33,16 @@ ChartJS.register(
 export default function App({ processor, options }) {
   const theme = useTheme();
   const data = useContext(AppDataContext);
+
+  const [editing, setEditing] = React.useState(false);
+
+  const handleClickEditing = () => {
+    setEditing(true);
+  };
+
+  const handleClickStopEditing = () => {
+    setEditing(false);
+  };
 
   const graphdata = {
     labels: data.simresult[processor].map((row) => row["slot"]),
@@ -75,31 +85,47 @@ export default function App({ processor, options }) {
   };
 
   return (
-    <Paper>
-      <Grid
-        container
-        spacing={1}
-        disableEqualOverflow
-        justifyItems="center"
-        alignItems="center"
-        margin="auto"
+    <Paper sx={{ padding: 1 }}>
+      <Box
+        sx={{
+          height: "40vh",
+          width: "100%",
+          position: "relative",
+        }}
       >
-        <Grid xs={10}>
-          <Box>
-            <TerminalGraphEditor processor={processor} />
-          </Box>
-        </Grid>
-        <Grid xs={2}>
-          <IconButton color="primary" aria-label="add an alarm">
-            <EditIcon />
-          </IconButton>
-        </Grid>
-        <Grid xs={12}>
-          <div class="p2 min-h-[40vh]">
-            <Line options={options} data={graphdata} />
-          </div>
-        </Grid>
-      </Grid>
+        <Line options={options} data={graphdata} />
+        <Box
+          sx={{
+            width: 45,
+            position: "absolute",
+            bottom: "-3px",
+            right: "0px",
+          }}
+        >
+          {!editing && (
+            <IconButton
+              color="primary"
+              size="large"
+              aria-label="add an alarm"
+              onClick={handleClickEditing}
+            >
+              <EditIcon fontSize="inherit" />
+            </IconButton>
+          )}
+
+          {editing && (
+            <IconButton
+              color="success"
+              size="large"
+              aria-label="add an alarm"
+              onClick={handleClickStopEditing}
+            >
+              <DoneIcon fontSize="inherit" />
+            </IconButton>
+          )}
+        </Box>
+      </Box>
+      <Box>{editing && <TerminalGraphEditor processor={processor} />}</Box>
     </Paper>
   );
 }
