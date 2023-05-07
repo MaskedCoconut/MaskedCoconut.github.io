@@ -1,9 +1,9 @@
 import { Alert, Box, Snackbar } from "@mui/material";
 import { useContext } from "react";
-import Schedule from "../components/Tabs/schedule";
-import Showup from "../components/Tabs/showup";
-import Terminal from "../components/Tabs/terminal";
-import Terminal2 from "../components/Tabs/terminal2";
+import Schedule from "../components/Tabs/Schedule";
+import Showup from "../components/Tabs/Showup";
+import Results from "../components/Tabs/Results";
+import Terminal from "../components/Tabs/Terminal";
 import {
   AppDataContext,
   AppDataDispatchContext,
@@ -32,10 +32,10 @@ const App = () => {
         <Showup />
       </TabPanel>
       <TabPanel value={data.currenttab} index={2}>
-        <Terminal />
+        <Results />
       </TabPanel>
       <TabPanel value={data.currenttab} index={3}>
-        <Terminal2 />
+        <Terminal />
       </TabPanel>
       {!!data.snackbar && (
         <Snackbar

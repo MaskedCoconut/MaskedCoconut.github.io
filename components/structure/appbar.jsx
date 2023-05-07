@@ -20,6 +20,7 @@ import {
 } from "../context/AppDataContext";
 import { appTitle } from "../settings";
 import { exportData, importData } from "../utils";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 function a11yProps(index) {
   return {
@@ -88,15 +89,19 @@ function ResponsiveAppBar() {
             >
               <Tab label="Schedule" {...a11yProps(0)} />
               <Tab label="Show-up" {...a11yProps(1)} />
-              <Tab label="Terminal" {...a11yProps(2)} />
-              <Tab label="Terminal2" {...a11yProps(3)} />
+              <Tab label="Results" {...a11yProps(2)} />
+              <Tab label="Terminal" {...a11yProps(3)} />
             </Tabs>
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar />
+              <IconButton
+                size="large"
+                onClick={handleOpenUserMenu}
+                sx={{ p: 0 }}
+              >
+                <SettingsIcon sx={{ color: "#ffffff" }} fontSize="inherit" />
               </IconButton>
             </Tooltip>
             <Menu
