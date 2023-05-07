@@ -23,11 +23,13 @@ const App = () => {
       >
         <Grid padding={1} xs={12}>
           {data.simresult &&
-            Object.keys(data.terminal).map((key) => {
-              const options = structuredClone(optionsProcessorGraph);
-              options.plugins.title.text = key;
-              return <Testgraph processor={key} options={options} />;
-            })}
+            Object.keys(data.terminal)
+              .filter((key) => data.simresult[key])
+              .map((key) => {
+                const options = structuredClone(optionsProcessorGraph);
+                options.plugins.title.text = data.terminal[key]["name"];
+                return <Testgraph processor={key} options={options} />;
+              })}
         </Grid>
         <Grid padding={1} margin="auto">
           <TerminalSimpleEditor />

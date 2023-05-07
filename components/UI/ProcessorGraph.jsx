@@ -13,10 +13,7 @@ import { Line } from "react-chartjs-2";
 import * as React from "react";
 import { useContext } from "react";
 import { useTheme } from "@mui/material/styles";
-import {
-  AppDataContext,
-  AppDataDispatchContext,
-} from "../context/AppDataContext";
+import { AppDataContext } from "../context/AppDataContext";
 
 ChartJS.register(
   CategoryScale,
@@ -54,7 +51,7 @@ export default function App({ processor, options }) {
         yAxisID: "y",
       },
       {
-        label: "Security queue [Pax]",
+        label: "Queue [Pax]",
         data: data.simresult[processor].map((row) =>
           Math.floor(row["Queue [Pax]"])
         ),
@@ -63,8 +60,8 @@ export default function App({ processor, options }) {
         yAxisID: "y",
       },
       {
-        label: "Security lanes",
-        data: data.terminal.security["processor number"],
+        label: "Processor number",
+        data: data.terminal[processor]["processor number"],
         borderColor: theme.palette.secondary.main,
         backgroundColor: theme.palette.secondary.main,
         yAxisID: "y1",

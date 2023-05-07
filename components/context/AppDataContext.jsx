@@ -23,68 +23,77 @@ export default AppProvider;
 function appDataReducer(data, action) {
   switch (action.type) {
     case "setCurrenttab":
+      // Only updates current tab
       return { ...data, currenttab: action.newtab };
 
     case "setFile":
+      // Only updates file ref
       return { ...data, file: action.file };
 
     case "setSnackbar":
+      // Only update the snackbar
       return { ...data, snackbar: action.snackbar };
 
-    case "setRows":
-      const newdataRows = { ...data, rows: action.newrows };
-
-      // refresh showUp graphs
-      const [newshowupdata, newprofiledata1] = calculateShowUp(newdataRows);
-
-      const newdataRowsAndShowup = {
-        ...newdataRows,
-        profiledata: newprofiledata1,
-        simresult: { ...data.simresult, showup: newshowupdata },
-      };
-
-      // refresh simulation
-      const newchartdataRows = runSecurity(newdataRowsAndShowup);
-
-      return { ...newdataRowsAndShowup, simresult: newchartdataRows };
-
     case "setIsValidated":
+      // Only update the validation status of schedule columns
       return { ...data, isvalidated: action.isvalidated };
 
     case "setMatch":
+      // Only updated the match object
       if (action.match == "reinit") {
         return { ...data, match: initialAppData.match };
       } else {
         return { ...data, match: action.match };
       }
 
-    case "setShowup":
-      // updated showup parameters
-      const newdata = { ...data, showup: action.newshowup };
+    case "setRows":
+      // updated schedule
+      const newdataRows = { ...data, rows: action.newrows };
 
       // refresh showUp graphs
-      const [newsimresult, newprofiledata] = calculateShowUp(newdata);
+      const [newshowupdataRows, newprofiledataRows] =
+        calculateShowUp(newdataRows);
 
-      // return updated data
-      return {
-        ...newdata,
-        profiledata: newprofiledata,
-        simresult: newsimresult,
+      // merge into a updated object
+      const newdataRowsAndShowup = {
+        ...newdataRows,
+        profiledata: newprofiledataRows,
+        simresult: { ...data.simresult, showup: newshowupdataRows },
       };
 
-    case "setProfiledata":
-      return { ...data, profiledata: action.newprofiledata };
+      // refresh simulation
+      const newchartdataRows = runSecurity(newdataRowsAndShowup);
+
+      // return updated object
+      return { ...newdataRowsAndShowup, simresult: newchartdataRows };
+
+    case "setShowup":
+      // updated showup parameters
+      const newdataShowup = { ...data, showup: action.newshowup };
+
+      // refresh showUp graphs
+      const [newsimresultShowup, newprofiledataShowup] =
+        calculateShowUp(newdataShowup);
+
+      const newdataShowupAndShowup = {
+        ...newdataShowup,
+        profiledata: newprofiledataShowup,
+        simresult: { ...data.simresult, showup: newsimresultShowup },
+      };
+
+      // refresh simulation
+      const newchartdataShowup = runSecurity(newdataShowupAndShowup);
+
+      // return updated object
+      return { ...newdataShowupAndShowup, simresult: newchartdataShowup };
 
     case "setTerminal":
       // updated terminal parameters
-      const newnewdata = { ...data, terminal: action.newterminal };
+      const newdataTerminal = { ...data, terminal: action.newterminal };
 
       // refresh simulation
-      const newchartdata = runSecurity(newnewdata);
-      return { ...newnewdata, simresult: newchartdata };
-
-    case "setSimresult":
-      return { ...data, simresult: action.newsimresult };
+      const newchartdataTerminal = runSecurity(newdataTerminal);
+      return { ...newdataTerminal, simresult: newchartdataTerminal };
 
     default: {
       return {
@@ -118,7 +127,7 @@ const initialAppData = Object.fromEntries([
   [
     "terminal",
     {
-      security: {
+      process0: {
         isFirstStep: true,
         name: "security",
         type: "security",

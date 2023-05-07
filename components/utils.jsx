@@ -1,6 +1,5 @@
-import { defaultShowUpProfile, timestep } from "./settings";
 import { erf } from "mathjs";
-import { SELECTLIST } from "./settings";
+import { SELECTLIST, defaultShowUpProfile, timestep } from "./settings";
 
 // Get keys (array) by value
 export const getKeyByValue = (object, value) => {
@@ -11,7 +10,7 @@ export const getKeyByValue = (object, value) => {
 // Assign "" to all values if isReinit = true
 export const FilterObjectOnValue = (obj, val, isReinit) => {
   const asArray = Object.entries(obj);
-  const filteredArray = asArray.filter(([key, value]) => value === val);
+  const filteredArray = asArray.filter(([, value]) => value === val);
   const filteredObject = Object.fromEntries(filteredArray);
   const result = Object.fromEntries(
     Object.keys(filteredObject).map((key) => [key, isReinit ? "" : obj.key])
@@ -142,11 +141,6 @@ export const runSecurity = (data) => {
   }
 };
 
-export const runAndUpdateSecurity = (data, dispatch) => {
-  const newsimresult = runSecurity(data);
-  dispatch({ type: "setSimresult", newsimresult: newsimresult });
-};
-
 // recalculate and update the show-up and profile
 export const calculateShowUp = (data) => {
   if (data.rows) {
@@ -200,14 +194,6 @@ export const calculateShowUp = (data) => {
     // return result
     return [showupdata, profiledata];
   } else return ["", ""];
-};
-
-export const calculateAndUpdateShowUp = (data, dispatch) => {
-  const [newshowupdata, profiledata] = calculateShowUp(data);
-  const newsimresult = { ...data.simresult, showup: newshowupdata };
-  // update state
-  dispatch({ type: "setSimresult", newsimresult: newsimresult });
-  dispatch({ type: "setProfiledata", newprofiledata: profiledata });
 };
 
 export function generateNormShowupProfile(mean, stdev) {
