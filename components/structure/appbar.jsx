@@ -1,28 +1,26 @@
-import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
-import Tabs from "@mui/material/Tabs";
-import { Input, Snackbar, Alert } from "@mui/material";
-import Tab from "@mui/material/Tab";
 import LocalAirportIcon from "@mui/icons-material/LocalAirport";
-import Link from "next/link";
-import { appTitle } from "../settings";
+import AppBar from "@mui/material/AppBar";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
+import Toolbar from "@mui/material/Toolbar";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+import * as React from "react";
+import { useContext } from "react";
 import {
   AppDataContext,
   AppDataDispatchContext,
 } from "../context/AppDataContext";
-import { useContext } from "react";
+import { appTitle } from "../settings";
 import { exportData, importData } from "../utils";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 function a11yProps(index) {
   return {
@@ -35,20 +33,11 @@ function ResponsiveAppBar() {
   const data = useContext(AppDataContext);
   const dispatch = useContext(AppDataDispatchContext);
 
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const tabNumber = data.currenttab;
 
   const handleTabChange = (event, newTab) => {
     dispatch({ type: "setCurrenttab", newtab: newTab });
-  };
-
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
   };
 
   const handleOpenUserMenu = (event) => {
@@ -60,11 +49,6 @@ function ResponsiveAppBar() {
   };
 
   // shorthand
-  const handleCloseSnackbar = () =>
-    dispatch({
-      type: "setSnackbar",
-      snackbar: null,
-    });
 
   return (
     <AppBar position="static">
@@ -105,15 +89,19 @@ function ResponsiveAppBar() {
             >
               <Tab label="Schedule" {...a11yProps(0)} />
               <Tab label="Show-up" {...a11yProps(1)} />
-              <Tab label="Terminal" {...a11yProps(2)} />
-              <Tab label="Terminal2" {...a11yProps(3)} />
+              <Tab label="Results" {...a11yProps(2)} />
+              <Tab label="Terminal" {...a11yProps(3)} />
             </Tabs>
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar />
+              <IconButton
+                size="large"
+                onClick={handleOpenUserMenu}
+                sx={{ p: 0 }}
+              >
+                <SettingsIcon sx={{ color: "#ffffff" }} fontSize="inherit" />
               </IconButton>
             </Tooltip>
             <Menu
@@ -163,16 +151,6 @@ function ResponsiveAppBar() {
           </Box>
         </Toolbar>
       </Container>
-      {!!data.snackbar && (
-        <Snackbar
-          open
-          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-          onClose={handleCloseSnackbar}
-          autoHideDuration={3000}
-        >
-          <Alert {...data.snackbar} onClose={handleCloseSnackbar} />
-        </Snackbar>
-      )}
     </AppBar>
   );
 }

@@ -61,6 +61,26 @@ export const optionsProcessorGraph = {
         boxWidth: 8,
         boxHeight: 8,
       },
+      cursor: "pointer",
+      onHover: (event, ChartElement) => {
+        event.native.target.style.cursor = "pointer";
+      },
+
+      onLeave: (event, ChartElement) => {
+        event.native.target.style.cursor = "default";
+      },
+      itemclick: function (e) {
+        if (
+          typeof e.dataSeries.visible === "undefined" ||
+          e.dataSeries.visible
+        ) {
+          e.dataSeries.visible = false;
+        } else {
+          e.dataSeries.visible = true;
+        }
+
+        e.chart.render();
+      },
     },
   },
   elements: {

@@ -59,7 +59,7 @@ const handleNewProcessor = (data, dispatch) => {
     type: "security",
     "previous step": "showup",
     "processing time": new Array((24 * 60) / timestep).fill(10),
-    "processor number": new Array((24 * 60) / timestep).fill(10),
+    "processor number": new Array((24 * 60) / timestep).fill(13),
   };
 
   dispatch({ type: "setTerminal", newterminal: data.terminal });

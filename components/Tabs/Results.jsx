@@ -1,12 +1,11 @@
 import * as React from "react";
 import { useContext } from "react";
-import TerminalSimpleEditor from "../UI/terminalSimpleEditor";
 import Testgraph from "../UI/ProcessorGraph";
 import { AppDataContext } from "../context/AppDataContext";
-import { Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2";
 import { optionsProcessorGraph } from "../settings";
+import _ from "lodash";
 
 const App = () => {
   const theme = useTheme();
@@ -25,7 +24,8 @@ const App = () => {
           Object.keys(data.terminal)
             .filter((key) => data.simresult[key])
             .map((key) => {
-              const options = structuredClone(optionsProcessorGraph);
+              const options = _.cloneDeep(optionsProcessorGraph);
+              // const options = optionsProcessorGraph;
               options.plugins.title.text = data.terminal[key]["name"];
               return (
                 <Grid key={key} padding={1} xs={12}>
@@ -33,10 +33,6 @@ const App = () => {
                 </Grid>
               );
             })}
-
-        <Grid padding={1} margin="auto">
-          {/* <TerminalSimpleEditor /> */}
-        </Grid>
       </Grid>
     </>
   );

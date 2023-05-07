@@ -1,30 +1,20 @@
-import { Alert, Snackbar, Stack, Box, Typography } from "@mui/material";
+import { Alert, Box, Snackbar } from "@mui/material";
 import { useContext } from "react";
-import DataGridDemo from "../components/UI/datagrid";
-import SelectColumn from "../components/UI/select-column";
-import UploadStack from "../components/UI/uploadstack";
-import MRTdata from "../components/UI/MRTdata";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
+import Schedule from "../components/Tabs/Schedule";
+import Showup from "../components/Tabs/Showup";
+import Results from "../components/Tabs/Results";
+import Terminal from "../components/Tabs/Terminal";
 import {
   AppDataContext,
   AppDataDispatchContext,
 } from "../components/context/AppDataContext";
-import Schedule from "../components/Tabs/schedule";
-import Showup from "../components/Tabs/showup";
-import Terminal from "../components/Tabs/terminal";
-import Terminal2 from "../components/Tabs/terminal2";
 
 import { useState } from "react";
-import Slide from "@mui/material/Slide";
 
 const App = () => {
   // AppDataContext
   const dispatch = useContext(AppDataDispatchContext);
   const data = useContext(AppDataContext);
-
-  // text change for the update columns button
-  const [buttonText, setButtonText] = useState("Update columns");
 
   // shorthand
   const handleCloseSnackbar = () =>
@@ -42,11 +32,21 @@ const App = () => {
         <Showup />
       </TabPanel>
       <TabPanel value={data.currenttab} index={2}>
-        <Terminal />
+        <Results />
       </TabPanel>
       <TabPanel value={data.currenttab} index={3}>
-        <Terminal2 />
+        <Terminal />
       </TabPanel>
+      {!!data.snackbar && (
+        <Snackbar
+          open
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          onClose={handleCloseSnackbar}
+          autoHideDuration={3000}
+        >
+          <Alert {...data.snackbar} onClose={handleCloseSnackbar} />
+        </Snackbar>
+      )}
     </Box>
   );
 };
