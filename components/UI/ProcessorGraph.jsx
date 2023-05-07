@@ -81,6 +81,13 @@ export default function App({ processor, options }) {
         backgroundColor: theme.palette.secondary.main,
         yAxisID: "y1",
       },
+      {
+        label: "Processing time",
+        data: data.terminal[processor]["processing time"],
+        borderColor: theme.palette.secondary.main,
+        backgroundColor: theme.palette.secondary.main,
+        yAxisID: "y1",
+      },
     ],
   };
 
