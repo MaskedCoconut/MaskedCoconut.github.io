@@ -5,7 +5,7 @@ import { AppDataContext } from "../context/AppDataContext";
 import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2";
 import { optionsProcessorGraph } from "../settings";
-import _ from "lodash";
+import cloneDeep from "lodash.clonedeep";
 
 const App = () => {
   const theme = useTheme();
@@ -24,7 +24,7 @@ const App = () => {
           Object.keys(data.terminal)
             .filter((key) => data.simresult[key])
             .map((key) => {
-              const options = _.cloneDeep(optionsProcessorGraph);
+              const options = cloneDeep(optionsProcessorGraph);
               // const options = optionsProcessorGraph;
               options.plugins.title.text = data.terminal[key]["name"];
               return (

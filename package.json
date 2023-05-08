@@ -22,7 +22,7 @@
     "chart.js": "^4.3.0",
     "eslint": "8.38.0",
     "eslint-config-next": "13.3.0",
-    "lodash": "^4.17.21",
+    "lodash.clonedeep": "^4.5.0",
     "material-react-table": "^1.10.0",
     "mathjs": "^11.8.0",
     "next": "13.3.0",
@@ -37,6 +37,8 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
-    "@types/papaparse": "^5.3.7"
+    "@next/bundle-analyzer": "^13.4.1",
+    "@types/papaparse": "^5.3.7",
+    "cross-env": "^7.0.3"
   }
 }
