@@ -7,7 +7,6 @@ import {
   Title,
   Tooltip,
   Legend,
-  // defaults,
 } from "chart.js";
 import { Paper } from "@mui/material";
 import { Line } from "react-chartjs-2";
@@ -31,8 +30,6 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-// defaults.font.size = 16;
-// defaults.font.family = "Cascadia Code";
 
 export default function App({ processor, options }) {
   const theme = useTheme();
