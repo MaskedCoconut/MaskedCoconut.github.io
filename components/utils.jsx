@@ -86,6 +86,12 @@ export const runSecurity = (data) => {
 
       const queue = new Array((24 * 60) / timestep).fill(0);
       const output = new Array((24 * 60) / timestep).fill(0);
+      const wait = new Array((24 * 60) / timestep).fill(0);
+      const throughput5min = queue.map(
+        (id) =>
+          (data.terminal[currentstep]["processor number"][id] * timestep * 60) /
+          data.terminal[currentstep]["processing time"][id]
+      );
 
       const showuparray =
         previousstep == "showup"
@@ -94,10 +100,7 @@ export const runSecurity = (data) => {
 
       // net Pax added to queue (when >0) or capacity left (when <0)
       const net_diff = queue.map(
-        (val, id) =>
-          (showuparray[id] * timestep) / 60 -
-          (data.terminal[currentstep]["processor number"][id] * timestep * 60) /
-            data.terminal[currentstep]["processing time"][id]
+        (val, id) => (showuparray[id] * timestep) / 60 - throughput5min[id]
       );
 
       // cumsum of previous without negative queue
@@ -115,7 +118,7 @@ export const runSecurity = (data) => {
         }
       });
 
-      // calcualte output
+      // calculate output
       net_diff.forEach((val, id) => {
         output[id] =
           val <= 0 && queue[id] == 0
@@ -124,12 +127,33 @@ export const runSecurity = (data) => {
               (data.terminal[currentstep]["processing time"][id] / 3600);
       });
 
+      // calculate queue duration
+      wait.map((val, id) => {
+        let pax = queue[id];
+        while (true) {
+          if (pax > 0) {
+            pax -= throughput5min[id + 1];
+            if (pax > 0) {
+              wait[id] += timestep;
+            } else {
+              wait[id] +=
+                timestep *
+                ((pax + throughput5min[id + 1]) / throughput5min[id + 1]);
+              break;
+            }
+          } else {
+            break;
+          }
+        }
+      });
+
       const newsimresultsecurity = data.simresult.showup.map((row, id) => {
         return Object.fromEntries([
           ["slot", data.simresult.showup[id]["slot"]],
           ["Show-up [Pax/h]", showuparray[id]],
           ["Output [Pax/h]", output[id]],
           ["Queue [Pax]", queue[id]],
+          ["Queue [min]", wait[id]],
         ]);
       });
 

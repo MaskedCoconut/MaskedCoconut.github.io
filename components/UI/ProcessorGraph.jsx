@@ -75,6 +75,13 @@ export default function App({ processor, options }) {
         yAxisID: "y",
       },
       {
+        label: "Queue [min]",
+        data: data.simresult[processor].map((row) => row["Queue [min]"]),
+        borderColor: theme.palette.warning.main,
+        backgroundColor: theme.palette.warning.main,
+        yAxisID: "y1",
+      },
+      {
         label: "Processor number",
         data: data.terminal[processor]["processor number"],
         borderColor: theme.palette.secondary.main,
@@ -82,7 +89,7 @@ export default function App({ processor, options }) {
         yAxisID: "y1",
       },
       {
-        label: "Processing time",
+        label: "Processing time [sec]",
         data: data.terminal[processor]["processing time"],
         borderColor: theme.palette.secondary.main,
         backgroundColor: theme.palette.secondary.main,
