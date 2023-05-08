@@ -1,6 +1,6 @@
 import { createContext, useReducer } from "react";
 import { SELECTLIST } from "../settings";
-import { calculateShowUp, runSecurity } from "../utils";
+import { calculateProfile, calculateShowUp, runSecurity } from "../utils";
 import { timestep } from "../settings";
 
 export const AppDataContext = createContext(null);
@@ -50,14 +50,12 @@ function appDataReducer(data, action) {
       // updated schedule
       const newdataRows = { ...data, rows: action.newrows };
 
-      // refresh showUp graphs
-      const [newshowupdataRows, newprofiledataRows] =
-        calculateShowUp(newdataRows);
+      // refresh showup
+      const newshowupdataRows = calculateShowUp(newdataRows);
 
       // merge into a updated object
       const newdataRowsAndShowup = {
         ...newdataRows,
-        profiledata: newprofiledataRows,
         simresult: { ...data.simresult, showup: newshowupdataRows },
       };
 
@@ -67,13 +65,19 @@ function appDataReducer(data, action) {
       // return updated object
       return { ...newdataRowsAndShowup, simresult: newchartdataRows };
 
+    // should be called set profile...
     case "setShowup":
       // updated showup parameters
       const newdataShowup = { ...data, showup: action.newshowup };
 
+      // update profile
+      const newprofiledataShowup = calculateProfile(newdataShowup);
+
       // refresh showUp graphs
-      const [newsimresultShowup, newprofiledataShowup] =
-        calculateShowUp(newdataShowup);
+      const newsimresultShowup = calculateShowUp({
+        ...newdataShowup,
+        profiledata: newprofiledataShowup,
+      });
 
       const newdataShowupAndShowup = {
         ...newdataShowup,
@@ -122,7 +126,10 @@ const initialAppData = Object.fromEntries([
       ["stdev", 30],
     ]),
   ],
-  ["profiledata", null],
+  [
+    "profiledata",
+    calculateProfile({ showup: { type: "default", mean: 60, stdev: 30 } }),
+  ],
   ["simresult", null],
   ["terminal", {}],
 ]);
