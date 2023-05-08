@@ -32,8 +32,12 @@ const App = () => {
       <Card>
         <Paper sx={{ width: 250, margin: "auto" }}>
           <CardContent>
-            <Typography sx={{ fontSize: 14, margin: "auto" }} gutterBottom>
-              <EditIcon />
+            <Typography
+              variant="body1"
+              sx={{ margin: "auto", paddingBottom: 1 }}
+              gutterBottom
+            >
+              <EditIcon color="primary" sx={{ marginRight: 2 }} />
               Edit Show-up Profile
             </Typography>
             <Stack

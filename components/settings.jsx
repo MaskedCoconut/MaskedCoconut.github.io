@@ -4,14 +4,14 @@ export const ALLOWEDEXTENSIONS = ["csv"];
 // List of destination columns to match
 export const SELECTLIST = [
   "Flight Number",
-  "Flight Date",
+  // "Flight Date",
   "Scheduled Time",
-  "Arr./Dep.",
-  "Int./Dom.",
-  "T1/T2",
-  "Intl Regions",
-  "Category(P/C/O)",
-  "Seats",
+  // "Arr./Dep.",
+  // "Int./Dom.",
+  // "T1/T2",
+  // "Intl Regions",
+  // "Category(P/C/O)",
+  // "Seats",
   "Pax",
 ];
 
@@ -37,7 +37,15 @@ export const timestep = 5;
 export const appTitle = "ADRM-App";
 
 // Types of processor
-export const processortypes = ["check-in", "security", "immigration"];
+export const processortypes = [
+  "Public dep./arr. halls",
+  "Check-in",
+  "Security",
+  "Border control",
+  "Gate / lounges",
+  "Baggage reclaim",
+  "Customs control",
+];
 
 // Graphjs Options for Processor
 export const optionsProcessorGraph = {
@@ -55,7 +63,7 @@ export const optionsProcessorGraph = {
       text: "Security area",
     },
     legend: {
-      position: "chartArea",
+      position: "top",
       labels: {
         usePointStyle: true,
         boxWidth: 8,
@@ -108,7 +116,7 @@ export const optionsProcessorGraph = {
       beginAtZero: true,
       title: {
         display: true,
-        text: "Pax/h",
+        text: "[Pax/h]",
       },
       position: "left",
       border: {
@@ -121,7 +129,7 @@ export const optionsProcessorGraph = {
       beginAtZero: true,
       title: {
         display: true,
-        text: "Processor Number",
+        text: "[n]  [sec]  [min]",
       },
       position: "right",
       grid: {

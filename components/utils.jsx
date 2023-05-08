@@ -86,6 +86,12 @@ export const runSecurity = (data) => {
 
       const queue = new Array((24 * 60) / timestep).fill(0);
       const output = new Array((24 * 60) / timestep).fill(0);
+      const wait = new Array((24 * 60) / timestep).fill(0);
+      const throughput5min = queue.map(
+        (id) =>
+          (data.terminal[currentstep]["processor number"][id] * timestep * 60) /
+          data.terminal[currentstep]["processing time"][id]
+      );
 
       const showuparray =
         previousstep == "showup"
@@ -94,10 +100,7 @@ export const runSecurity = (data) => {
 
       // net Pax added to queue (when >0) or capacity left (when <0)
       const net_diff = queue.map(
-        (val, id) =>
-          (showuparray[id] * timestep) / 60 -
-          (data.terminal[currentstep]["processor number"][id] * timestep * 60) /
-            data.terminal[currentstep]["processing time"][id]
+        (val, id) => (showuparray[id] * timestep) / 60 - throughput5min[id]
       );
 
       // cumsum of previous without negative queue
@@ -115,7 +118,7 @@ export const runSecurity = (data) => {
         }
       });
 
-      // calcualte output
+      // calculate output
       net_diff.forEach((val, id) => {
         output[id] =
           val <= 0 && queue[id] == 0
@@ -124,12 +127,33 @@ export const runSecurity = (data) => {
               (data.terminal[currentstep]["processing time"][id] / 3600);
       });
 
+      // calculate queue duration
+      wait.map((val, id) => {
+        let pax = queue[id];
+        while (true) {
+          if (pax > 0) {
+            pax -= throughput5min[id + 1];
+            if (pax > 0) {
+              wait[id] += timestep;
+            } else {
+              wait[id] +=
+                timestep *
+                ((pax + throughput5min[id + 1]) / throughput5min[id + 1]);
+              break;
+            }
+          } else {
+            break;
+          }
+        }
+      });
+
       const newsimresultsecurity = data.simresult.showup.map((row, id) => {
         return Object.fromEntries([
           ["slot", data.simresult.showup[id]["slot"]],
           ["Show-up [Pax/h]", showuparray[id]],
           ["Output [Pax/h]", output[id]],
           ["Queue [Pax]", queue[id]],
+          ["Queue [min]", wait[id]],
         ]);
       });
 
@@ -141,23 +165,37 @@ export const runSecurity = (data) => {
   }
 };
 
-// recalculate and update the show-up and profile
+// calculate Showup Profile
+export const calculateProfile = (data) => {
+  // case default or normal distribution
+  var usedShowUpProfile = [];
+  switch (data.showup.type) {
+    case "default":
+      usedShowUpProfile = defaultShowUpProfile;
+      break;
+
+    case "normdist":
+      usedShowUpProfile = generateNormShowupProfile(
+        data.showup.mean,
+        data.showup.stdev
+      );
+      break;
+  }
+
+  // format object for plot and state management
+  const profiledata = usedShowUpProfile.map((val, id) =>
+    Object.fromEntries([
+      ["slot", timeFromatter(id)],
+      ["Show-up Profile", val],
+    ])
+  );
+
+  return profiledata;
+};
+
+// calculate the show-up and profile
 export const calculateShowUp = (data) => {
   if (data.rows) {
-    // case default or normal distribution
-    var usedShowUpProfile = [];
-    switch (data.showup.type) {
-      case "default":
-        usedShowUpProfile = defaultShowUpProfile;
-        break;
-
-      case "normdist":
-        usedShowUpProfile = generateNormShowupProfile(
-          data.showup.mean,
-          data.showup.stdev
-        );
-    }
-
     // calculate the show-up
     const showuparray = Array((24 * 60) / timestep).fill(0);
     data.rows
@@ -169,7 +207,11 @@ export const calculateShowUp = (data) => {
           (date.getMinutes() + date.getHours() * 60) / timestep
         );
 
-        usedShowUpProfile.forEach((sup, idx) => {
+        const profileArray = data.profiledata.map(
+          (obj) => obj["Show-up Profile"]
+        );
+
+        profileArray.forEach((sup, idx) => {
           const destIndex = (std5Minutes - idx) % ((24 * 60) / timestep);
           showuparray[
             destIndex < 0 ? showuparray.length + destIndex : destIndex
@@ -184,16 +226,10 @@ export const calculateShowUp = (data) => {
         ["Show-up [Pax/h]", (val * 60) / timestep],
       ])
     );
-    const profiledata = usedShowUpProfile.map((val, id) =>
-      Object.fromEntries([
-        ["slot", timeFromatter(id)],
-        ["Show-up Profile", val],
-      ])
-    );
 
     // return result
-    return [showupdata, profiledata];
-  } else return ["", ""];
+    return showupdata;
+  }
 };
 
 export function generateNormShowupProfile(mean, stdev) {

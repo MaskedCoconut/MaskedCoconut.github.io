@@ -32,10 +32,10 @@ const App = () => {
         <Showup />
       </TabPanel>
       <TabPanel value={data.currenttab} index={2}>
-        <Results />
+        <Terminal />
       </TabPanel>
       <TabPanel value={data.currenttab} index={3}>
-        <Terminal />
+        <Results />
       </TabPanel>
       {!!data.snackbar && (
         <Snackbar

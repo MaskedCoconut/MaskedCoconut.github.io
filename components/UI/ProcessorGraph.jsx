@@ -70,19 +70,28 @@ export default function App({ processor, options }) {
         data: data.simresult[processor].map((row) =>
           Math.floor(row["Queue [Pax]"])
         ),
-        borderColor: theme.palette.info.dark,
-        backgroundColor: theme.palette.info.dark,
+        borderColor: theme.palette.warning.light,
+        backgroundColor: theme.palette.warning.light,
         yAxisID: "y",
       },
       {
-        label: "Processor number",
+        label: "Queue [min]",
+        data: data.simresult[processor].map(
+          (row) => Math.floor(row["Queue [min]"] * 10) / 10
+        ),
+        borderColor: theme.palette.warning.main,
+        backgroundColor: theme.palette.warning.main,
+        yAxisID: "y1",
+      },
+      {
+        label: "Processor number [n]",
         data: data.terminal[processor]["processor number"],
         borderColor: theme.palette.secondary.main,
         backgroundColor: theme.palette.secondary.main,
         yAxisID: "y1",
       },
       {
-        label: "Processing time",
+        label: "Processing time [sec]",
         data: data.terminal[processor]["processing time"],
         borderColor: theme.palette.secondary.main,
         backgroundColor: theme.palette.secondary.main,
