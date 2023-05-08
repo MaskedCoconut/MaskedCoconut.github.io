@@ -108,7 +108,7 @@ export const optionsProcessorGraph = {
       beginAtZero: true,
       title: {
         display: true,
-        text: "Pax/h",
+        text: "[Pax/h]",
       },
       position: "left",
       border: {
@@ -121,7 +121,7 @@ export const optionsProcessorGraph = {
       beginAtZero: true,
       title: {
         display: true,
-        text: "Processor Number",
+        text: "[n]  [sec]  [min]",
       },
       position: "right",
       grid: {
