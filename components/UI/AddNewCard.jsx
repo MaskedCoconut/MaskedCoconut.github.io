@@ -12,7 +12,7 @@ import {
   AppDataDispatchContext,
 } from "../context/AppDataContext";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { timestep } from "../settings";
+import { timestep, processortypes } from "../settings";
 
 export default function OutlinedCard() {
   const theme = useTheme();
@@ -56,10 +56,11 @@ const handleNewProcessor = (data, dispatch) => {
   data.terminal[newkey] = {
     isFirstStep: true,
     name: "new process",
-    type: "security",
+    type: processortypes[0].name,
     "previous step": "showup",
-    "processing time": new Array((24 * 60) / timestep).fill(10),
+    "processing time [s]": new Array((24 * 60) / timestep).fill(10),
     "processor number": new Array((24 * 60) / timestep).fill(13),
+    "dwell time [m]": new Array((24 * 60) / timestep).fill(10),
   };
 
   dispatch({ type: "setTerminal", newterminal: data.terminal });

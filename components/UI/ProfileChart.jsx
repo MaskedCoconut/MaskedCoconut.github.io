@@ -31,6 +31,7 @@ ChartJS.register(
 );
 
 const options = {
+  animation: false,
   responsive: true,
   maintainAspectRatio: false,
   interaction: {
@@ -49,6 +50,14 @@ const options = {
         usePointStyle: true,
         boxWidth: 8,
         boxHeight: 8,
+      },
+      cursor: "pointer",
+      onHover: (event, ChartElement) => {
+        event.native.target.style.cursor = "pointer";
+      },
+
+      onLeave: (event, ChartElement) => {
+        event.native.target.style.cursor = "default";
       },
     },
   },
@@ -71,10 +80,10 @@ const options = {
     y: {
       type: "linear",
       beginAtZero: true,
-      // title: {
-      //   display: true,
-      //   text: "Pax/h",
-      // },
+      title: {
+        display: true,
+        text: "[ % ]",
+      },
       position: "left",
       border: {
         display: false,
@@ -92,10 +101,10 @@ export default function App() {
     labels: data.profiledata.toReversed().map((row) => row["slot"]),
     datasets: [
       {
-        label: "Show-up Profile",
+        label: "Show-up Profile [%]",
         data: data.profiledata
           .toReversed()
-          .map((row) => row["Show-up Profile"]),
+          .map((row) => Math.floor(row["Show-up Profile"] * 100 * 100) / 100),
         borderColor: theme.palette.info.main,
         backgroundColor: theme.palette.info.main,
         yAxisID: "y",

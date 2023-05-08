@@ -1,5 +1,10 @@
 import { erf } from "mathjs";
-import { SELECTLIST, defaultShowUpProfile, timestep } from "./settings";
+import {
+  SELECTLIST,
+  defaultShowUpProfile,
+  timestep,
+  processortypes,
+} from "./settings";
 
 // Get keys (array) by value
 export const getKeyByValue = (object, value) => {
@@ -84,23 +89,54 @@ export const runSecurity = (data) => {
         break;
       }
 
-      const queue = new Array((24 * 60) / timestep).fill(0);
-      const output = new Array((24 * 60) / timestep).fill(0);
-      const wait = new Array((24 * 60) / timestep).fill(0);
-      const throughput5min = queue.map(
-        (id) =>
-          (data.terminal[currentstep]["processor number"][id] * timestep * 60) /
-          data.terminal[currentstep]["processing time"][id]
-      );
+      const halltypes = processortypes
+        .filter((obj) => obj.type == "hall")
+        .map((obj) => obj.name);
+
+      const isHall = halltypes.includes(data.terminal[currentstep].type);
 
       const showuparray =
         previousstep == "showup"
           ? data.simresult.showup.map((obj) => obj["Show-up [Pax/h]"])
           : data.simresult[previousstep].map((obj) => obj["Output [Pax/h]"]);
 
+      const queue = new Array((24 * 60) / timestep).fill(0);
+      const output = new Array((24 * 60) / timestep).fill(0);
+      const wait = new Array((24 * 60) / timestep).fill(0);
+
+      // calculate throughput5min
+      let throughput5min;
+      if (isHall) {
+        // if step is hall, calculate from dwell time
+        throughput5min = queue.map((_val, id) => {
+          const dwell_offset =
+            Math.floor(data.terminal[currentstep]["dwell time [m]"][id] / 5) +
+            1;
+
+          return (
+            (showuparray[
+              id - dwell_offset < 0
+                ? showuparray.length + (id - dwell_offset)
+                : id - dwell_offset
+            ] *
+              timestep) /
+            60
+          );
+        });
+      } else {
+        // if step is processor, calculate from proc. time and number
+        throughput5min = queue.map(
+          (_x, id) =>
+            (data.terminal[currentstep]["processor number"][id] *
+              timestep *
+              60) /
+            data.terminal[currentstep]["processing time [s]"][id]
+        );
+      }
+
       // net Pax added to queue (when >0) or capacity left (when <0)
       const net_diff = queue.map(
-        (val, id) => (showuparray[id] * timestep) / 60 - throughput5min[id]
+        (_val, id) => (showuparray[id] * timestep) / 60 - throughput5min[id]
       );
 
       // cumsum of previous without negative queue
@@ -119,41 +155,54 @@ export const runSecurity = (data) => {
       });
 
       // calculate output
-      net_diff.forEach((val, id) => {
-        output[id] =
-          val <= 0 && queue[id] == 0
-            ? showuparray[id]
-            : data.terminal[currentstep]["processor number"][id] /
-              (data.terminal[currentstep]["processing time"][id] / 3600);
-      });
+      if (isHall) {
+        throughput5min.forEach((val, id) => {
+          output[id] = (throughput5min[id] * 60) / timestep;
+        });
+      } else {
+        net_diff.forEach((val, id) => {
+          output[id] =
+            val <= 0 && queue[id] == 0
+              ? showuparray[id]
+              : data.terminal[currentstep]["processor number"][id] /
+                (data.terminal[currentstep]["processing time [s]"][id] / 3600);
+        });
+      }
 
       // calculate queue duration
-      wait.map((val, id) => {
-        let pax = queue[id];
-        while (true) {
-          if (pax > 0) {
-            pax -= throughput5min[id + 1];
+      if (!isHall) {
+        wait.map((_val, id) => {
+          let pax = queue[id];
+          while (true) {
             if (pax > 0) {
-              wait[id] += timestep;
+              pax -= throughput5min[id + 1];
+              if (pax > 0) {
+                wait[id] += timestep;
+              } else {
+                wait[id] +=
+                  timestep *
+                  ((pax + throughput5min[id + 1]) / throughput5min[id + 1]);
+                break;
+              }
             } else {
-              wait[id] +=
-                timestep *
-                ((pax + throughput5min[id + 1]) / throughput5min[id + 1]);
               break;
             }
-          } else {
-            break;
           }
-        }
-      });
+        });
+      }
 
-      const newsimresultsecurity = data.simresult.showup.map((row, id) => {
+      const newsimresultsecurity = data.simresult.showup.map((_row, id) => {
         return Object.fromEntries([
           ["slot", data.simresult.showup[id]["slot"]],
           ["Show-up [Pax/h]", showuparray[id]],
           ["Output [Pax/h]", output[id]],
           ["Queue [Pax]", queue[id]],
-          ["Queue [min]", wait[id]],
+          [
+            "Queue [min]",
+            isHall
+              ? data.terminal[currentstep]["dwell time [m]"][id]
+              : wait[id],
+          ],
         ]);
       });
 
@@ -235,7 +284,7 @@ export const calculateShowUp = (data) => {
 export function generateNormShowupProfile(mean, stdev) {
   const startArray = new Array((5 * 60) / timestep).fill(0);
   return startArray.map(
-    (val, idx) =>
+    (_val, idx) =>
       cdfNormal(idx * timestep, mean, stdev) -
       cdfNormal((idx - 1) * timestep, mean, stdev)
   );
