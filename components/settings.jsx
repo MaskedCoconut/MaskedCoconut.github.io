@@ -55,7 +55,7 @@ export const optionsProcessorGraph = {
       text: "Security area",
     },
     legend: {
-      position: "chartArea",
+      position: "top",
       labels: {
         usePointStyle: true,
         boxWidth: 8,
