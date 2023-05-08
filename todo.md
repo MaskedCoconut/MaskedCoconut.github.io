@@ -65,6 +65,9 @@ Priority list:
 
 - add LoS
 
+- visual cues as to what should be the next step
+- tooltips (with parcimony)
+
 advanced ideas:
 - Detailed show-up (per AL/Flight groups) (each group have profile and showup)
 - Pax ratio and bags ratio (per Airlines/Flight groups)
