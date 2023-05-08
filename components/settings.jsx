@@ -49,6 +49,7 @@ export const processortypes = [
 
 // Graphjs Options for Processor
 export const optionsProcessorGraph = {
+  font: { family: '"Georgia","Segoe UI","Helvetica","Arial","sans-serif"' },
   animation: false,
   responsive: true,
   maintainAspectRatio: false,
@@ -61,6 +62,13 @@ export const optionsProcessorGraph = {
     title: {
       display: true,
       text: "Security area",
+      font: {
+        size: 20,
+
+        weight: 400,
+      },
+      color: "#21222c",
+      padding: 0,
     },
     legend: {
       position: "top",
@@ -68,6 +76,12 @@ export const optionsProcessorGraph = {
         usePointStyle: true,
         boxWidth: 8,
         boxHeight: 8,
+        font: {
+          size: 14,
+
+          weight: 400,
+        },
+        color: "#21222c",
       },
       cursor: "pointer",
       onHover: (event, ChartElement) => {
@@ -97,6 +111,7 @@ export const optionsProcessorGraph = {
       ticks: {
         maxTicksLimit: 24,
         minRotation: 45,
+        color: "#21222c",
       },
     },
     y: {
@@ -104,13 +119,20 @@ export const optionsProcessorGraph = {
       beginAtZero: true,
       title: {
         display: true,
-        text: "[Pax/h]",
+        text: "[Pax/h]  [Pax]",
+        color: "#21222c",
+        font: {
+          size: 14,
+
+          weight: 400,
+        },
       },
       position: "left",
       border: {
         display: false,
         dash: [4, 4],
       },
+      ticks: { color: "#21222c" },
     },
     y1: {
       type: "linear",
@@ -118,6 +140,12 @@ export const optionsProcessorGraph = {
       title: {
         display: true,
         text: "[n]  [sec]  [min]",
+        color: "#21222c",
+        font: {
+          size: 14,
+
+          weight: 400,
+        },
       },
       position: "right",
       grid: {
@@ -128,6 +156,7 @@ export const optionsProcessorGraph = {
         display: false,
         drawborder: false,
       },
+      ticks: { color: "#21222c" },
     },
   },
 };
