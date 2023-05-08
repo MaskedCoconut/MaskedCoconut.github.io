@@ -89,8 +89,8 @@ function ResponsiveAppBar() {
             >
               <Tab label="Schedule" {...a11yProps(0)} />
               <Tab label="Show-up" {...a11yProps(1)} />
-              <Tab label="Results" {...a11yProps(2)} />
-              <Tab label="Terminal" {...a11yProps(3)} />
+              <Tab label="Terminal" {...a11yProps(2)} />
+              <Tab label="Results" {...a11yProps(3)} />
             </Tabs>
           </Box>
 
