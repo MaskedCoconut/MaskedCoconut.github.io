@@ -1,5 +1,10 @@
 import { erf } from "mathjs";
-import { SELECTLIST, defaultShowUpProfile, timestep } from "./settings";
+import {
+  SELECTLIST,
+  defaultShowUpProfile,
+  timestep,
+  processortypes,
+} from "./settings";
 
 // Get keys (array) by value
 export const getKeyByValue = (object, value) => {
@@ -84,13 +89,31 @@ export const runSecurity = (data) => {
         break;
       }
 
+      const halltypes = processortypes
+        .filter((obj) => obj.type == "hall")
+        .map((obj) => obj.name);
+
       const queue = new Array((24 * 60) / timestep).fill(0);
       const output = new Array((24 * 60) / timestep).fill(0);
       const wait = new Array((24 * 60) / timestep).fill(0);
+
+      if (halltypes.includes(data.terminal[currentstep].type)) {
+        const dwell_offset =
+          Math.floor(data.terminal[currentstep]["dwell time [m]"] / 5) + 1;
+        const throughput5min = queue.map(
+          (id) =>
+            (data.terminal[currentstep]["processor number"][id] *
+              timestep *
+              60) /
+            data.terminal[currentstep]["processing time [s]"][id]
+        );
+        break;
+      }
+
       const throughput5min = queue.map(
         (id) =>
           (data.terminal[currentstep]["processor number"][id] * timestep * 60) /
-          data.terminal[currentstep]["processing time"][id]
+          data.terminal[currentstep]["processing time [s]"][id]
       );
 
       const showuparray =
@@ -124,7 +147,7 @@ export const runSecurity = (data) => {
           val <= 0 && queue[id] == 0
             ? showuparray[id]
             : data.terminal[currentstep]["processor number"][id] /
-              (data.terminal[currentstep]["processing time"][id] / 3600);
+              (data.terminal[currentstep]["processing time [s]"][id] / 3600);
       });
 
       // calculate queue duration

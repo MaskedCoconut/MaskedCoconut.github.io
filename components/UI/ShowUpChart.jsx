@@ -30,6 +30,7 @@ ChartJS.register(
 );
 
 const options = {
+  animation: false,
   responsive: true,
   maintainAspectRatio: false,
   interaction: {
@@ -48,6 +49,14 @@ const options = {
         usePointStyle: true,
         boxWidth: 8,
         boxHeight: 8,
+      },
+      cursor: "pointer",
+      onHover: (event, ChartElement) => {
+        event.native.target.style.cursor = "pointer";
+      },
+
+      onLeave: (event, ChartElement) => {
+        event.native.target.style.cursor = "default";
       },
     },
   },
@@ -74,10 +83,10 @@ const options = {
     y: {
       type: "linear",
       beginAtZero: true,
-      // title: {
-      //   display: true,
-      //   text: "Pax/h",
-      // },
+      title: {
+        display: true,
+        text: "[ Pax/h ]",
+      },
       position: "left",
       border: {
         display: false,
@@ -95,7 +104,7 @@ export default function App() {
     labels: data.simresult.showup.map((row) => row["slot"]),
     datasets: [
       {
-        label: "Show-up Profile",
+        label: "Show-up [Pax/h]",
         data: data.simresult.showup.map((row) =>
           Math.floor(row["Show-up [Pax/h]"])
         ),

@@ -91,8 +91,8 @@ export default function App({ processor, options }) {
         yAxisID: "y1",
       },
       {
-        label: "Processing time [sec]",
-        data: data.terminal[processor]["processing time"],
+        label: "processing time [s]",
+        data: data.terminal[processor]["processing time [s]"],
         borderColor: theme.palette.secondary.main,
         backgroundColor: theme.palette.secondary.main,
         yAxisID: "y1",

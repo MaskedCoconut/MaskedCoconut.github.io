@@ -20,6 +20,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { processortypes } from "../settings";
 import MenuItem from "@mui/material/MenuItem";
 import { timestep } from "../settings";
+import { useState } from "react";
+
+const halltypes = processortypes
+  .filter((obj) => obj.type == "hall")
+  .map((obj) => obj.name);
 
 export default function OutlinedCard({ processor, keyprocessor }) {
   const theme = useTheme();
@@ -27,7 +32,8 @@ export default function OutlinedCard({ processor, keyprocessor }) {
   const dispatch = useContext(AppDataDispatchContext);
   const [editing, setEditing] = React.useState(false);
 
-  const editedprocessor = { ...processor };
+  const [editedprocessor, setEditedprocessor] = useState({ ...processor });
+
   return (
     <Card
       sx={{
@@ -38,6 +44,8 @@ export default function OutlinedCard({ processor, keyprocessor }) {
     >
       <CardContent>
         <Stack spacing={1} margin="auto">
+          {/* NAME */}
+
           <Stack direction="row">
             {!editing && <Typography>name:</Typography>}
             {editing ? (
@@ -47,12 +55,14 @@ export default function OutlinedCard({ processor, keyprocessor }) {
                 }}
                 label="name"
                 size="small"
-                defaultValue={formatvalue(processor["name"])}
+                defaultValue={arrayAvg(processor["name"])}
               />
             ) : (
-              <Typography>{formatvalue(processor["name"])}</Typography>
+              <Typography>{arrayAvg(processor["name"])}</Typography>
             )}
           </Stack>
+
+          {/* TYPE */}
 
           <Stack direction="row">
             {!editing && <Typography>type:</Typography>}
@@ -60,23 +70,26 @@ export default function OutlinedCard({ processor, keyprocessor }) {
               <TextField
                 onChange={(e) => {
                   editedprocessor["type"] = e.target.value;
+                  setEditedprocessor({ ...editedprocessor });
                 }}
                 select
                 label="type"
                 size="small"
-                defaultValue={formatvalue(processor["type"])}
+                defaultValue={arrayAvg(processor["type"])}
                 sx={{ minWidth: 225 }}
               >
                 {processortypes.map((option) => (
-                  <MenuItem key={option} value={option}>
-                    {option}
+                  <MenuItem key={option.name} value={option.name}>
+                    {option.name}
                   </MenuItem>
                 ))}
               </TextField>
             ) : (
-              <Typography>{formatvalue(processor["type"])}</Typography>
+              <Typography>{arrayAvg(processor["type"])}</Typography>
             )}
           </Stack>
+
+          {/* PREVIOUS STEP */}
 
           <Stack direction="row">
             {!editing && <Typography>previous step:</Typography>}
@@ -89,7 +102,7 @@ export default function OutlinedCard({ processor, keyprocessor }) {
                 sx={{ minWidth: 225 }}
                 label="previous step"
                 size="small"
-                defaultValue={formatvalue(
+                defaultValue={arrayAvg(
                   processor["previous step"] == "showup"
                     ? "first step"
                     : data.terminal[processor["previous step"].toString()][
@@ -102,12 +115,11 @@ export default function OutlinedCard({ processor, keyprocessor }) {
                     {data.terminal[processor].name}
                   </MenuItem>
                 ))}
-
                 <MenuItem value="showup">first step</MenuItem>
               </TextField>
             ) : (
               <Typography>
-                {formatvalue(
+                {arrayAvg(
                   processor["previous step"] == "showup"
                     ? "first step"
                     : data.terminal[processor["previous step"].toString()][
@@ -118,49 +130,81 @@ export default function OutlinedCard({ processor, keyprocessor }) {
             )}
           </Stack>
 
-          <Stack direction="row">
-            {!editing && <Typography>processing time:</Typography>}
-            {editing ? (
-              <TextField
-                onChange={(e) => {
-                  editedprocessor["processing time"] = new Array(
-                    (24 * 60) / timestep
-                  ).fill(Number(e.target.value));
-                }}
-                size="small"
-                label="processing time"
-                defaultValue={formatvalue(processor["processing time"])}
-                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-              />
-            ) : (
-              <Typography>
-                {formatvalue(processor["processing time"])}
-              </Typography>
-            )}
-          </Stack>
+          {!halltypes.includes(editedprocessor.type) && (
+            <>
+              <Stack direction="row">
+                {!editing && <Typography>processing time [s]:</Typography>}
+                {editing ? (
+                  <TextField
+                    onChange={(e) => {
+                      editedprocessor["processing time [s]"] = new Array(
+                        (24 * 60) / timestep
+                      ).fill(Number(e.target.value));
+                    }}
+                    size="small"
+                    label="processing time [s]"
+                    defaultValue={arrayAvg(processor["processing time [s]"])}
+                    inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                  />
+                ) : (
+                  <Typography>
+                    {arrayAvg(processor["processing time [s]"])}
+                  </Typography>
+                )}
+              </Stack>
 
-          <Stack direction="row">
-            {!editing && <Typography>processor number:</Typography>}
-            {editing ? (
-              <TextField
-                onChange={(e) => {
-                  editedprocessor["processor number"] = new Array(
-                    (24 * 60) / timestep
-                  ).fill(Number(e.target.value));
-                }}
-                label="processor number"
-                size="small"
-                defaultValue={formatvalue(processor["processor number"])}
-                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-              />
-            ) : (
-              <Typography>
-                {formatvalue(processor["processor number"])}
-              </Typography>
-            )}
-          </Stack>
+              <Stack direction="row">
+                {!editing && <Typography>processor number:</Typography>}
+                {editing ? (
+                  <TextField
+                    onChange={(e) => {
+                      editedprocessor["processor number"] = new Array(
+                        (24 * 60) / timestep
+                      ).fill(Number(e.target.value));
+                    }}
+                    label="processor number"
+                    size="small"
+                    defaultValue={arrayAvg(processor["processor number"])}
+                    inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                  />
+                ) : (
+                  <Typography>
+                    {arrayAvg(processor["processor number"])}
+                  </Typography>
+                )}
+              </Stack>
+            </>
+          )}
+
+          {halltypes.includes(editedprocessor.type) && (
+            <>
+              <Stack direction="row">
+                {!editing && <Typography>dwell time [m]:</Typography>}
+                {editing ? (
+                  <TextField
+                    onChange={(e) => {
+                      editedprocessor["dwell time [m]"] = new Array(
+                        (24 * 60) / timestep
+                      ).fill(Number(e.target.value));
+                    }}
+                    size="small"
+                    label="dwell time [m]"
+                    defaultValue={arrayAvg(processor["dwell time [m]"])}
+                    inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                  />
+                ) : (
+                  <Typography>
+                    {arrayAvg(processor["dwell time [m]"])}
+                  </Typography>
+                )}
+              </Stack>
+            </>
+          )}
         </Stack>
       </CardContent>
+
+      {/* ACTIONS */}
+
       <CardActions>
         {!editing && (
           <Button
@@ -211,7 +255,7 @@ export default function OutlinedCard({ processor, keyprocessor }) {
   );
 }
 
-const formatvalue = (val) => {
+const arrayAvg = (val) => {
   if (Array.isArray(val)) {
     return val.reduce((a, b) => a + b, 0) / val.length;
   } else {

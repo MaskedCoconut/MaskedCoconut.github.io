@@ -38,13 +38,13 @@ export const appTitle = "ADRM-App";
 
 // Types of processor
 export const processortypes = [
-  "Public dep./arr. halls",
-  "Check-in",
-  "Security",
-  "Border control",
-  "Gate / lounges",
-  "Baggage reclaim",
-  "Customs control",
+  { name: "Public dep./arr. halls", type: "hall" },
+  { name: "Check-in", type: "processor" },
+  { name: "Security", type: "processor" },
+  { name: "Border control", type: "processor" },
+  { name: "Gate / lounges", type: "hall" },
+  { name: "Bag claim", type: "hall" },
+  { name: "Customs control", type: "processor" },
 ];
 
 // Graphjs Options for Processor
@@ -76,18 +76,6 @@ export const optionsProcessorGraph = {
 
       onLeave: (event, ChartElement) => {
         event.native.target.style.cursor = "default";
-      },
-      itemclick: function (e) {
-        if (
-          typeof e.dataSeries.visible === "undefined" ||
-          e.dataSeries.visible
-        ) {
-          e.dataSeries.visible = false;
-        } else {
-          e.dataSeries.visible = true;
-        }
-
-        e.chart.render();
       },
     },
   },
