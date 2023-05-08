@@ -7,6 +7,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  // defaults,
 } from "chart.js";
 import { Paper } from "@mui/material";
 import { Line } from "react-chartjs-2";
@@ -19,6 +20,7 @@ import { Box } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { IconButton } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
+import { processortypes } from "../settings";
 
 ChartJS.register(
   CategoryScale,
@@ -29,12 +31,19 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+// defaults.font.size = 16;
+// defaults.font.family = "Cascadia Code";
 
 export default function App({ processor, options }) {
   const theme = useTheme();
   const data = useContext(AppDataContext);
 
   const [editing, setEditing] = React.useState(false);
+  const halltypes = processortypes
+    .filter((obj) => obj.type == "hall")
+    .map((obj) => obj.name);
+
+  const isHall = halltypes.includes(data.terminal[processor].type);
 
   const handleClickEditing = () => {
     setEditing(true);
@@ -66,29 +75,37 @@ export default function App({ processor, options }) {
         yAxisID: "y",
       },
       {
-        label: "Queue [Pax]",
-        data: data.simresult[processor].map((row) =>
-          Math.floor(row["Queue [Pax]"])
-        ),
-        borderColor: theme.palette.warning.light,
-        backgroundColor: theme.palette.warning.light,
-        yAxisID: "y",
-      },
-      {
-        label: "Queue [min]",
+        label: isHall ? "Dwell time [min]" : "Queue [min]",
         data: data.simresult[processor].map(
           (row) => Math.floor(row["Queue [min]"] * 10) / 10
         ),
         borderColor: theme.palette.warning.main,
         backgroundColor: theme.palette.warning.main,
         yAxisID: "y1",
+        hidden: isHall,
       },
+      {
+        label: isHall ? "Dwelling Pax [Pax]" : "Queue [Pax]",
+        data: data.simresult[processor].map((row) =>
+          Math.floor(row["Queue [Pax]"])
+        ),
+        borderColor: theme.palette.warning.light,
+        backgroundColor: theme.palette.warning.light,
+        yAxisID: "y",
+        hidden: !isHall,
+      },
+    ],
+  };
+
+  if (!isHall)
+    graphdata.datasets.push(
       {
         label: "Processor number [n]",
         data: data.terminal[processor]["processor number"],
         borderColor: theme.palette.secondary.main,
         backgroundColor: theme.palette.secondary.main,
         yAxisID: "y1",
+        hidden: true,
       },
       {
         label: "processing time [s]",
@@ -96,9 +113,9 @@ export default function App({ processor, options }) {
         borderColor: theme.palette.secondary.main,
         backgroundColor: theme.palette.secondary.main,
         yAxisID: "y1",
-      },
-    ],
-  };
+        hidden: true,
+      }
+    );
 
   return (
     <Paper sx={{ padding: 1 }}>
@@ -118,7 +135,7 @@ export default function App({ processor, options }) {
             right: "0px",
           }}
         >
-          {!editing && (
+          {!editing && !isHall && (
             <IconButton
               color="primary"
               size="large"
@@ -141,7 +158,9 @@ export default function App({ processor, options }) {
           )}
         </Box>
       </Box>
-      <Box>{editing && <TerminalGraphEditor processor={processor} />}</Box>
+      <Box>
+        {editing && !isHall && <TerminalGraphEditor processor={processor} />}
+      </Box>
     </Paper>
   );
 }
