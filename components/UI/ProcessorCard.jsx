@@ -132,6 +132,8 @@ export default function OutlinedCard({ processor, keyprocessor }) {
 
           {!halltypes.includes(editedprocessor.type) && (
             <>
+              {/* PROCESSING TIME */}
+
               <Stack direction="row">
                 {!editing && <Typography>processing time [s]:</Typography>}
                 {editing ? (
@@ -152,6 +154,8 @@ export default function OutlinedCard({ processor, keyprocessor }) {
                   </Typography>
                 )}
               </Stack>
+
+              {/* PROCESSOR NUMBER */}
 
               <Stack direction="row">
                 {!editing && <Typography>processor number:</Typography>}
@@ -178,6 +182,8 @@ export default function OutlinedCard({ processor, keyprocessor }) {
 
           {halltypes.includes(editedprocessor.type) && (
             <>
+              {/* DWELL TIME */}
+
               <Stack direction="row">
                 {!editing && <Typography>dwell time [m]:</Typography>}
                 {editing ? (
@@ -200,6 +206,25 @@ export default function OutlinedCard({ processor, keyprocessor }) {
               </Stack>
             </>
           )}
+
+          {/* AREA */}
+
+          <Stack direction="row">
+            {!editing && <Typography>area [sqm]:</Typography>}
+            {editing ? (
+              <TextField
+                onChange={(e) => {
+                  editedprocessor["area [sqm]"] = Number(e.target.value);
+                }}
+                size="small"
+                label="area [m]"
+                defaultValue={processor["area [m]"]}
+                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+              />
+            ) : (
+              <Typography>{processor["area [m]"]}</Typography>
+            )}
+          </Stack>
         </Stack>
       </CardContent>
 

@@ -60,7 +60,8 @@ const handleNewProcessor = (data, dispatch) => {
     "previous step": "showup",
     "processing time [s]": new Array((24 * 60) / timestep).fill(10),
     "processor number": new Array((24 * 60) / timestep).fill(13),
-    "dwell time [m]": new Array((24 * 60) / timestep).fill(10),
+    "dwell time [sqm]": new Array((24 * 60) / timestep).fill(10),
+    "area [m]": 100,
   };
 
   dispatch({ type: "setTerminal", newterminal: data.terminal });
