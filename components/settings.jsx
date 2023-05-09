@@ -60,8 +60,8 @@ export const optionsProcessorGraph = {
   stacked: false,
   plugins: {
     title: {
-      display: true,
-      text: "Security area",
+      display: false,
+      text: "Title",
       font: {
         size: 20,
 

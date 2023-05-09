@@ -8,7 +8,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { Paper } from "@mui/material";
+import { Paper, Stack, Typography } from "@mui/material";
 import { Line } from "react-chartjs-2";
 import * as React from "react";
 import { useContext } from "react";
@@ -20,6 +20,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { IconButton } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import { processortypes } from "../settings";
+import LoSGraph from "./LoSGraph";
 
 ChartJS.register(
   CategoryScale,
@@ -115,15 +116,22 @@ export default function App({ processor, options }) {
     );
 
   return (
-    <Paper sx={{ padding: 1 }}>
+    <Paper sx={{ padding: 1.5 }}>
       <Box
         sx={{
-          height: "40vh",
           width: "100%",
           position: "relative",
         }}
       >
-        <Line options={options} data={graphdata} />
+        <Typography variant="h6" textAlign="center" sx={{ pt: 0, mt: 0 }}>
+          {data.terminal[processor].name}
+        </Typography>
+        <Box sx={{ height: "40vh" }}>
+          <Line options={options} data={graphdata} />
+        </Box>
+        <Box>
+          <LoSGraph processor={processor} />
+        </Box>
         <Box
           sx={{
             width: 45,

@@ -217,12 +217,12 @@ export default function OutlinedCard({ processor, keyprocessor }) {
                   editedprocessor["area [sqm]"] = Number(e.target.value);
                 }}
                 size="small"
-                label="area [m]"
-                defaultValue={processor["area [m]"]}
+                label="area [sqm]"
+                defaultValue={processor["area [sqm]"]}
                 inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
               />
             ) : (
-              <Typography>{processor["area [m]"]}</Typography>
+              <Typography>{processor["area [sqm]"]}</Typography>
             )}
           </Stack>
         </Stack>

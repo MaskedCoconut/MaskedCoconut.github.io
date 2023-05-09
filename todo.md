@@ -68,6 +68,8 @@ Priority list:
 - visual cues as to what should be the next step
 - tooltips (with parcimony)
 
+- fix cases when initial value of select is wrong
+
 advanced ideas:
 - Detailed show-up (per AL/Flight groups) (each group have profile and showup)
 - Pax ratio and bags ratio (per Airlines/Flight groups)

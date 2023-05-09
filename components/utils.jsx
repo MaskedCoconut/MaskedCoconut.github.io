@@ -203,6 +203,15 @@ export const runSecurity = (data) => {
               ? data.terminal[currentstep]["dwell time [m]"][id]
               : wait[id],
           ],
+          [
+            "LoS",
+            calculateLoS(
+              queue[id],
+              wait[id],
+              data.terminal[currentstep]["area [sqm]"],
+              isHall
+            ),
+          ],
         ]);
       });
 
@@ -212,6 +221,47 @@ export const runSecurity = (data) => {
 
     return { ...data.simresult };
   }
+};
+
+// LoS calculation
+const calculateLoS = (queuePax, queueMinutes, areaSqm, isHall) => {
+  // IATA optimum recomendations example for security
+  const [sqmPaxlow, sqmPaxhigh] = [1, 1.2];
+  const [waitLow, waitHigh] = [5, 10];
+  const sqmPax = areaSqm / queuePax;
+
+  // wait criteria
+  const waitLOS =
+    queueMinutes < waitLow
+      ? "Over-Design"
+      : queueMinutes > waitHigh
+      ? "Sub-Optimal"
+      : "Optimal";
+
+  // space criteria
+  const spaceLOS =
+    sqmPax < sqmPaxlow
+      ? "Sub-Optimal"
+      : sqmPax > sqmPaxhigh
+      ? "Over-Design"
+      : "Optimal";
+
+  // final LoS
+  let LoS;
+  if (isHall) {
+    LoS = sqmPax <= 0.8 * sqmPaxlow ? "Under-Provided" : spaceLOS;
+  } else {
+    if (waitLOS == "Over-Design" && spaceLOS == "Over-Design") {
+      LoS = "Over-Design";
+    } else if (waitLOS == "Sub-Optimal" && spaceLOS == "Sub-Optimal") {
+      LoS = "Under-Provided";
+    } else if (waitLOS == "Sub-Optimal" || spaceLOS == "Sub-Optimal") {
+      LoS = "Sub-Optimal";
+    } else {
+      LoS = "Optimal";
+    }
+  }
+  return LoS;
 };
 
 // calculate Showup Profile
