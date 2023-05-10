@@ -89,14 +89,16 @@ export default function OutlinedCard({ processor, keyprocessor }) {
               defaultValue={arrayAvg(
                 processor["previous step"] == "showup"
                   ? "first step"
-                  : data.terminal[processor["previous step"].toString()]["name"]
+                  : data.terminal?.[processor["previous step"]]?.["name"]
               )}
             >
-              {Object.keys(data.terminal).map((processor) => (
-                <MenuItem key={processor} value={processor}>
-                  {data.terminal[processor].name}
-                </MenuItem>
-              ))}
+              {Object.keys(data.terminal)
+                .filter((id) => id != keyprocessor)
+                .map((processor) => (
+                  <MenuItem key={processor} value={processor}>
+                    {data.terminal[processor].name}
+                  </MenuItem>
+                ))}
               <MenuItem value="showup">first step</MenuItem>
             </TextField>
           )}

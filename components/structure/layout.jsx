@@ -60,6 +60,9 @@ export default function Layout({ children }) {
             pl: 1,
             pb: 1,
             minHeight: 500,
+            display: "flex",
+            alignItems: "center",
+            justifyItems: "center",
           }}
         >
           {children}

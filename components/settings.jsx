@@ -162,5 +162,5 @@ export const optionsProcessorGraph = {
 };
 
 // UI size constants
-export const processorcardWidth = 275;
-export const stepminheight = 400;
+export const processorcardWidth = 150;
+export const stepminheight = 300;

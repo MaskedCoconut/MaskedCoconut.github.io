@@ -25,11 +25,27 @@ import { deleteprocessor } from "./ProcessorCard";
 
 import ProcessorCard from "./ProcessorCard";
 import AddNewCard from "./AddNewCard";
+import { ArcherElement } from "react-archer";
 
 export default function TerminalStep({ stepID }) {
   const theme = useTheme();
   const data = useContext(AppDataContext);
   const dispatch = useContext(AppDataDispatchContext);
+
+  const relationsprocessors = (currentprocessor) => {
+    return Object.keys(data.terminal)
+      .filter(
+        (processor) =>
+          data.terminal[processor]["previous step"] == currentprocessor
+      )
+      .map((processor) =>
+        Object.fromEntries([
+          ["targetId", processor],
+          ["targetAnchor", "left"],
+          ["sourceAnchor", "right"],
+        ])
+      );
+  };
 
   return (
     <Paper
@@ -46,12 +62,20 @@ export default function TerminalStep({ stepID }) {
         {data.terminal &&
           Object.keys(data.terminal)
             .filter((processor) => data.terminal[processor].stepID == stepID)
-            .map((key) => (
-              <ProcessorCard
-                processor={data.terminal[key]}
-                keyprocessor={key}
-                key={key}
-              />
+            .map((processor) => (
+              <ArcherElement
+                key={processor}
+                id={processor}
+                relations={relationsprocessors(processor)}
+              >
+                <Box>
+                  <ProcessorCard
+                    processor={data.terminal[processor]}
+                    keyprocessor={processor}
+                    key={processor}
+                  />
+                </Box>
+              </ArcherElement>
             ))}
         <Box>
           <AddNewCard stepID={stepID} />
