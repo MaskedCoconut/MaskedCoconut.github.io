@@ -5,6 +5,7 @@ import { Stack, Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import TerminalStep from "../UI/TerminalStep";
 import TerminalStepAddNew from "../UI/TerminalStepAddNew";
+import GroupsIcon from "@mui/icons-material/Groups";
 
 const App = () => {
   const theme = useTheme();
@@ -19,6 +20,9 @@ const App = () => {
         alignItems="center"
         justifyContent="center"
       >
+        <Box sx={{ mr: 10 }}>
+          <GroupsIcon sx={{ fontSize: 100 }} color="primary" />
+        </Box>
         {data?.terminalsteps.map((stepID) => (
           <TerminalStep key={stepID} stepID={stepID} />
         ))}
