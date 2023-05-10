@@ -1,18 +1,19 @@
 import * as React from "react";
 import { useContext } from "react";
 import { AppDataContext } from "../context/AppDataContext";
-import { Stack, Box, Typography } from "@mui/material";
+import { Stack, Box, Typography, Input } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import TerminalStep from "../UI/TerminalStep";
 import TerminalStepAddNew from "../UI/TerminalStepAddNew";
 import GroupsIcon from "@mui/icons-material/Groups";
-
+import TextField from "@mui/material";
 import { ArcherContainer, ArcherElement } from "react-archer";
 
 const App = () => {
   const theme = useTheme();
   const data = useContext(AppDataContext);
   const archerRef = React.useRef(null);
+  const hello = "hello";
 
   const relationsShowup = Object.keys(data.terminal)
     .filter(
@@ -23,6 +24,7 @@ const App = () => {
         ["targetId", processor],
         ["targetAnchor", "left"],
         ["sourceAnchor", "right"],
+        ["label", <Input key={processor} />],
       ])
     );
 
@@ -37,9 +39,10 @@ const App = () => {
         <ArcherContainer
           strokeColor={theme.palette.primary.dark}
           ref={archerRef}
+          svgContainerStyle={{ pointerEvents: "none" }}
         >
           <Stack
-            spacing={{ xs: 2, sm: 5 }}
+            spacing={{ xs: 15 }}
             direction="row"
             useFlexGap
             flexWrap="wrap"
