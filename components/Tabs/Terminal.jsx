@@ -6,14 +6,13 @@ import { useTheme } from "@mui/material/styles";
 import TerminalStep from "../UI/TerminalStep";
 import TerminalStepAddNew from "../UI/TerminalStepAddNew";
 import GroupsIcon from "@mui/icons-material/Groups";
-import TextField from "@mui/material";
 import { ArcherContainer, ArcherElement } from "react-archer";
+import RouteRatioInput from "../UI/RouteRatioInput";
 
 const App = () => {
   const theme = useTheme();
   const data = useContext(AppDataContext);
   const archerRef = React.useRef(null);
-  const hello = "hello";
 
   const relationsShowup = Object.keys(data.terminal)
     .filter((processor) =>
@@ -24,7 +23,10 @@ const App = () => {
         ["targetId", processor],
         ["targetAnchor", "left"],
         ["sourceAnchor", "right"],
-        ["label", <Input key={processor} />],
+        [
+          "label",
+          <RouteRatioInput key={processor} parent="showup" child={processor} />,
+        ],
       ])
     );
 

@@ -42,6 +42,10 @@ function appDataReducer(data, action) {
       // Only update the number of steps
       return { ...data, terminalsteps: action.newterminalsteps };
 
+    case "setRoutes":
+      // Only update the number of steps
+      return { ...data, routes: action.newroutes };
+
     case "setMatch":
       // Only updated the match object
       if (action.match == "reinit") {
@@ -137,4 +141,5 @@ const initialAppData = Object.fromEntries([
   ["simresult", null],
   ["terminal", {}],
   ["terminalsteps", []],
+  ["routes", []],
 ]);
