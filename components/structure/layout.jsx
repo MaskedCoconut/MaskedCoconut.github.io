@@ -59,7 +59,7 @@ export default function Layout({ children }) {
             pr: 1,
             pl: 1,
             pb: 1,
-            minHeight: 500,
+            minHeight: "87vh",
             display: "flex",
             alignItems: "center",
             justifyItems: "center",
