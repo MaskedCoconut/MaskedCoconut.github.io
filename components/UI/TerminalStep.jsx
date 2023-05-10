@@ -26,6 +26,7 @@ import { deleteprocessor } from "./ProcessorCard";
 import ProcessorCard from "./ProcessorCard";
 import AddNewCard from "./AddNewCard";
 import { ArcherElement } from "react-archer";
+import RouteRatioInput from "../UI/RouteRatioInput";
 
 export default function TerminalStep({ stepID }) {
   const theme = useTheme();
@@ -42,7 +43,15 @@ export default function TerminalStep({ stepID }) {
           ["targetId", processor],
           ["targetAnchor", "left"],
           ["sourceAnchor", "right"],
-          ["label", <Input key={processor} />],
+          [
+            "label",
+            <RouteRatioInput
+              key={processor}
+              parent={currentprocessor}
+              child={processor}
+            />,
+          ],
+          ["style", { strokeDasharray: "3,3" }],
         ])
       );
   };

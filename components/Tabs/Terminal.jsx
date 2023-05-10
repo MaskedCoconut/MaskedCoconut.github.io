@@ -27,6 +27,7 @@ const App = () => {
           "label",
           <RouteRatioInput key={processor} parent="showup" child={processor} />,
         ],
+        ["style", { strokeDasharray: "3,3" }],
       ])
     );
 
