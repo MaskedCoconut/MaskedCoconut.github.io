@@ -35,7 +35,7 @@ export default function TerminalStep({ stepID }) {
   const relationsprocessors = (currentprocessor) => {
     return Object.keys(data.terminal)
       .filter((processor) =>
-        data.terminal[processor]["previous step"].includes(currentprocessor)
+        data.terminal[processor]["previous steps"].includes(currentprocessor)
       )
       .map((processor) =>
         Object.fromEntries([

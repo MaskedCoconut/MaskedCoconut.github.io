@@ -32,7 +32,18 @@ export default function OutlinedCard({ processor, keyprocessor }) {
   const dispatch = useContext(AppDataDispatchContext);
   const [editing, setEditing] = React.useState(false);
 
-  const [editedprocessor, setEditedprocessor] = useState({ ...processor });
+  const [editedprocessor, setEditedprocessor] = useState(processor);
+
+  const handleMultiSelectChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setEditedprocessor({
+      ...editedprocessor,
+      // On autofill we get a stringified value.
+      "previous steps": typeof value === "string" ? value.split(",") : value,
+    });
+  };
 
   return (
     <Card elevation={2} sx={{ minWidth: processorcardWidth }}>
@@ -64,7 +75,7 @@ export default function OutlinedCard({ processor, keyprocessor }) {
               select
               label="type"
               size="small"
-              defaultValue={arrayAvg(processor["type"])}
+              defaultValue={processor["type"]}
               sx={{ minWidth: 225 }}
             >
               {processortypes.map((option) => (
@@ -75,28 +86,34 @@ export default function OutlinedCard({ processor, keyprocessor }) {
             </TextField>
           )}
 
-          {/* PREVIOUS STEP */}
+          {/* previous steps */}
 
           {editing && (
             <TextField
-              onChange={(e) => {
-                editedprocessor["previous step"] = e.target.value;
-              }}
               select
               SelectProps={{
                 multiple: true,
+                onChange: handleMultiSelectChange,
+                value: editedprocessor["previous steps"],
                 renderValue: (selected) => (
                   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                     {selected.map((value) => (
-                      <Chip key={value} label={value} />
+                      <Chip
+                        key={value}
+                        label={
+                          value == "showup"
+                            ? "Show-up"
+                            : data.terminal[value].name
+                        }
+                      />
                     ))}
                   </Box>
                 ),
               }}
               sx={{ minWidth: 225 }}
-              label="previous step"
+              label="previous steps"
               size="small"
-              defaultValue={[processor["previous step"]]}
+              // defaultValue={[processor["previous steps"]]}
             >
               {Object.keys(data.terminal)
                 .filter((id) => id != keyprocessor)
@@ -105,7 +122,7 @@ export default function OutlinedCard({ processor, keyprocessor }) {
                     {data.terminal[processor].name}
                   </MenuItem>
                 ))}
-              <MenuItem value="showup">first step</MenuItem>
+              <MenuItem value="showup">Show-up</MenuItem>
             </TextField>
           )}
 

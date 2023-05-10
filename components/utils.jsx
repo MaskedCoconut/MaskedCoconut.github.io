@@ -82,7 +82,7 @@ export const runSecurity = (data) => {
     for (let step = 0; step < numberofprocessor; step++) {
       // how to go through the processes in correct order?
       const currentstep = Object.keys(data.terminal).filter(
-        (key) => data.terminal[key]["previous step"] == previousstep
+        (key) => data.terminal[key]["previous steps"] == previousstep
       )[0];
 
       if (!currentstep) {
