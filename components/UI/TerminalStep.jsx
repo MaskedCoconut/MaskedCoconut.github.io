@@ -12,7 +12,7 @@ import {
   AppDataDispatchContext,
 } from "../context/AppDataContext";
 import TextField from "@mui/material/TextField";
-import { IconButton, Paper, Stack } from "@mui/material";
+import { IconButton, Paper, Stack, Input } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -42,6 +42,7 @@ export default function TerminalStep({ stepID }) {
           ["targetId", processor],
           ["targetAnchor", "left"],
           ["sourceAnchor", "right"],
+          ["label", <Input key={processor} />],
         ])
       );
   };
