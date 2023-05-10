@@ -12,7 +12,7 @@ import {
   AppDataDispatchContext,
 } from "../context/AppDataContext";
 import TextField from "@mui/material/TextField";
-import { Stack } from "@mui/material";
+import { Chip, Stack } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -83,10 +83,20 @@ export default function OutlinedCard({ processor, keyprocessor }) {
                 editedprocessor["previous step"] = e.target.value;
               }}
               select
+              SelectProps={{
+                multiple: true,
+                renderValue: (selected) => (
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </Box>
+                ),
+              }}
               sx={{ minWidth: 225 }}
               label="previous step"
               size="small"
-              defaultValue={processor["previous step"]}
+              defaultValue={[processor["previous step"]]}
             >
               {Object.keys(data.terminal)
                 .filter((id) => id != keyprocessor)

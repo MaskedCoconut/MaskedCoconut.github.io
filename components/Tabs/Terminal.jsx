@@ -16,8 +16,8 @@ const App = () => {
   const hello = "hello";
 
   const relationsShowup = Object.keys(data.terminal)
-    .filter(
-      (processor) => data.terminal[processor]["previous step"] == "showup"
+    .filter((processor) =>
+      data.terminal[processor]["previous step"].includes("showup")
     )
     .map((processor) =>
       Object.fromEntries([
