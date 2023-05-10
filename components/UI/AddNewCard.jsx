@@ -52,7 +52,7 @@ const handleNewProcessor = (data, dispatch, stepID) => {
     name: "new process",
     type: processortypes[0].name,
     stepID: stepID,
-    "previous step": null,
+    "previous step": "",
     "processing time [s]": new Array((24 * 60) / timestep).fill(10),
     "processor number": new Array((24 * 60) / timestep).fill(13),
     "dwell time [m]": new Array((24 * 60) / timestep).fill(10),

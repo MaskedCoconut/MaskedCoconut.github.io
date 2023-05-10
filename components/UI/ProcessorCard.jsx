@@ -86,11 +86,7 @@ export default function OutlinedCard({ processor, keyprocessor }) {
               sx={{ minWidth: 225 }}
               label="previous step"
               size="small"
-              defaultValue={arrayAvg(
-                processor["previous step"] == "showup"
-                  ? "first step"
-                  : data.terminal?.[processor["previous step"]]?.["name"]
-              )}
+              defaultValue={processor["previous step"]}
             >
               {Object.keys(data.terminal)
                 .filter((id) => id != keyprocessor)
