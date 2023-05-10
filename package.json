@@ -29,6 +29,7 @@
     "papaparse": "^5.4.1",
     "postcss": "8.4.22",
     "react": "18.2.0",
+    "react-archer": "^4.2.3",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "18.2.0",
     "resize-observer-polyfill": "^1.5.1",
