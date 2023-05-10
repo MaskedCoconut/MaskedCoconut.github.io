@@ -1,10 +1,10 @@
 import * as React from "react";
 import { useContext } from "react";
 import { AppDataContext } from "../context/AppDataContext";
-import { Stack } from "@mui/material";
+import { Stack, Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import ProcessorCard from "../UI/ProcessorCard";
-import AddNewCard from "../UI/AddNewCard";
+import TerminalStep from "../UI/TerminalStep";
+import TerminalStepAddNew from "../UI/TerminalStepAddNew";
 
 const App = () => {
   const theme = useTheme();
@@ -19,16 +19,10 @@ const App = () => {
         alignItems="center"
         justifyContent="center"
       >
-        {data.terminal &&
-          Object.keys(data.terminal).map((key) => (
-            <ProcessorCard
-              processor={data.terminal[key]}
-              keyprocessor={key}
-              key={key}
-            />
-          ))}
-
-        <AddNewCard />
+        {data?.terminalsteps.map((stepID) => (
+          <TerminalStep key={stepID} stepID={stepID} />
+        ))}
+        <TerminalStepAddNew />
       </Stack>
     </>
   );

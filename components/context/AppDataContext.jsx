@@ -38,6 +38,10 @@ function appDataReducer(data, action) {
       // Only update the validation status of schedule columns
       return { ...data, isvalidated: action.isvalidated };
 
+    case "setTerminalsteps":
+      // Only update the number of steps
+      return { ...data, terminalsteps: action.newterminalsteps };
+
     case "setMatch":
       // Only updated the match object
       if (action.match == "reinit") {
@@ -132,4 +136,5 @@ const initialAppData = Object.fromEntries([
   ],
   ["simresult", null],
   ["terminal", {}],
+  ["terminalsteps", []],
 ]);
