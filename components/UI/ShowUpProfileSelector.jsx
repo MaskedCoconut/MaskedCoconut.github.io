@@ -11,7 +11,8 @@ import Slider from "./slider";
 import { Stack, Card, Paper, Typography } from "@mui/material";
 import CardContent from "@mui/material/CardContent";
 
-import { Toggle, ToggleItem } from "@tremor/react";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
 const App = () => {
   const theme = useTheme();
@@ -19,10 +20,10 @@ const App = () => {
   const dispatch = useContext(AppDataDispatchContext);
 
   // handle show-up type change
-  const handleTypeChange = (type, data) => {
+  const handleTypeChange = (_event, newtype) => {
     const newShowup = {
       ...data.showup,
-      ...{ type: type },
+      ...{ type: newtype },
     };
     dispatch({ type: "setShowup", newshowup: newShowup });
   };
@@ -46,19 +47,16 @@ const App = () => {
               alignItems="center"
               spacing={1}
             >
-              <Toggle
-                defaultValue={data.showup.type}
-                onValueChange={(value) => {
-                  handleTypeChange(value, { ...data });
-                }}
+              <ToggleButtonGroup
+                exclusive
+                value={data.showup.type}
+                onChange={handleTypeChange}
               >
-                <ToggleItem value="default" text="Default" />
-                <ToggleItem
-                  value="normdist"
-                  text="Norm. dist."
-                  icon={FunctionsIcon}
-                />
-              </Toggle>
+                <ToggleButton value="default">Default</ToggleButton>
+                <ToggleButton value="normdist">
+                  <FunctionsIcon /> Norm. dist.
+                </ToggleButton>
+              </ToggleButtonGroup>
               {data.showup.type == "normdist" && (
                 <>
                   <Slider
