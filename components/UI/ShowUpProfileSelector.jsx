@@ -21,11 +21,13 @@ const App = () => {
 
   // handle show-up type change
   const handleTypeChange = (_event, newtype) => {
-    const newShowup = {
-      ...data.showup,
-      ...{ type: newtype },
-    };
-    dispatch({ type: "setShowup", newshowup: newShowup });
+    if (newtype !== null) {
+      const newShowup = {
+        ...data.showup,
+        ...{ type: newtype },
+      };
+      dispatch({ type: "setShowup", newshowup: newShowup });
+    }
   };
 
   return (
@@ -52,8 +54,10 @@ const App = () => {
                 value={data.showup.type}
                 onChange={handleTypeChange}
               >
-                <ToggleButton value="default">Default</ToggleButton>
-                <ToggleButton value="normdist">
+                <ToggleButton value="default" sx={{ fontSize: 12 }}>
+                  Default
+                </ToggleButton>
+                <ToggleButton value="normdist" sx={{ fontSize: 12 }}>
                   <FunctionsIcon /> Norm. dist.
                 </ToggleButton>
               </ToggleButtonGroup>

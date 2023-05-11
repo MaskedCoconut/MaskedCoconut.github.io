@@ -48,10 +48,13 @@ export default function OutlinedCard({ processor, keyprocessor }) {
   return (
     <Card elevation={2} sx={{ minWidth: processorcardWidth }}>
       <CardContent sx={{ padding: 2, paddingBottom: 1 }}>
+        {!editing && (
+          <Typography variant="h6">{arrayAvg(processor["name"])}</Typography>
+        )}
         <Stack spacing={1}>
           {/* NAME */}
 
-          {editing ? (
+          {editing && (
             <TextField
               onChange={(e) => {
                 editedprocessor["name"] = e.target.value;
@@ -60,8 +63,6 @@ export default function OutlinedCard({ processor, keyprocessor }) {
               size="small"
               defaultValue={arrayAvg(processor["name"])}
             />
-          ) : (
-            <Typography variant="h6">{arrayAvg(processor["name"])}</Typography>
           )}
 
           {/* TYPE */}

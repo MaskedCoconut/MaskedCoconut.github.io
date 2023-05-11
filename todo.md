@@ -28,8 +28,6 @@
 - icons
 
 
-- get rid of tremor
-
 - fix cases when initial value of select is wrong (showup)
 - no input on route if only one child
 - reorganize show-up charts (move up, down, first, last)

@@ -42,13 +42,70 @@ export const timestep = 5;
 
 // Types of processor
 export const processortypes = [
-  { name: "Public dep./arr. halls", type: "hall" },
-  { name: "Check-in", type: "processor" },
-  { name: "Security", type: "processor" },
-  { name: "Border control", type: "processor" },
-  { name: "Gate / lounges", type: "hall" },
-  { name: "Bag claim", type: "hall" },
-  { name: "Customs control", type: "processor" },
+  {
+    name: "Public dep./arr. halls",
+    type: "hall",
+    sqmPaxlow: 2,
+    sqmPaxhigh: 2.3,
+  },
+  {
+    name: "Check-in - SSK",
+    type: "processor",
+    sqmPaxlow: 1.3,
+    sqmPaxhigh: 1.8,
+    waitLow: 1,
+    waitHigh: 2,
+  },
+  {
+    name: "Check-in - Bag Drop",
+    type: "processor",
+    sqmPaxlow: 1.3,
+    sqmPaxhigh: 1.8,
+    waitLow: 1,
+    waitHigh: 5,
+  },
+  {
+    name: "Check-in - Desk",
+    type: "processor",
+    sqmPaxlow: 1.3,
+    sqmPaxhigh: 1.8,
+    waitLow: 10,
+    waitHigh: 20,
+  },
+  {
+    name: "Security",
+    type: "processor",
+    sqmPaxlow: 1.2,
+    sqmPaxhigh: 1,
+    waitLow: 5,
+    waitHigh: 10,
+  },
+  {
+    name: "Border control - auto",
+    type: "processor",
+    sqmPaxlow: 1.2,
+    sqmPaxhigh: 1,
+    waitLow: 1,
+    waitHigh: 5,
+  },
+  {
+    name: "Border control - staffed",
+    type: "processor",
+    sqmPaxlow: 1.2,
+    sqmPaxhigh: 1,
+    waitLow: 5,
+    waitHigh: 10,
+  },
+  { name: "Gate / lounges", type: "hall", sqmPaxlow: 1.2, sqmPaxhigh: 2.2 },
+  { name: "Bag claim", type: "hall", sqmPaxlow: 1.5, sqmPaxhigh: 1.7 },
+  {
+    name: "Customs control",
+    type: "processor",
+    sqmPaxlow: 1.8,
+    sqmPaxhigh: 1.3,
+    waitLow: 1,
+    waitHigh: 5,
+  },
 ];
 
 // Graphjs Options for Processor

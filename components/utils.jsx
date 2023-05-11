@@ -73,12 +73,12 @@ export const getRowError = (row) => {
     : errors.join("|");
 };
 
+const halltypes = processortypes
+  .filter((obj) => obj.type == "hall")
+  .map((obj) => obj.name);
+
 // recalculate all processors queues and output successively
 export const runSecurity = (data) => {
-  const halltypes = processortypes
-    .filter((obj) => obj.type == "hall")
-    .map((obj) => obj.name);
-
   // change this to first line return
   if (data?.simresult?.showup && data.terminal) {
     const alreadyUpdatedFacilities = ["showup"];
@@ -251,7 +251,8 @@ export const runSecurity = (data) => {
                       queue[id],
                       wait[id],
                       data.terminal[child]["area [sqm]"],
-                      isHall
+                      isHall,
+                      child
                     ),
                   ],
                 ]);
@@ -271,10 +272,17 @@ export const runSecurity = (data) => {
 };
 
 // LoS calculation
-const calculateLoS = (queuePax, queueMinutes, areaSqm, isHall) => {
+const calculateLoS = (queuePax, queueMinutes, child, data) => {
   // IATA optimum recomendations example for security
-  const [sqmPaxlow, sqmPaxhigh] = [1, 1.2];
-  const [waitLow, waitHigh] = [5, 10];
+  const areaSqm = data.terminal[child]["area [sqm]"];
+  const isHall = halltypes.includes(data.terminal[child].type);
+  const processortype = processortypes.filter(
+    (type) => type.name == data.terminal[child].type
+  )[0];
+  const sqmPaxlow = processortype.sqmPaxlow;
+  const sqmPaxhigh = processortype.sqmPaxhigh;
+  const waitLow = processortype.waitLow;
+  const waitHigh = processortype.waitHigh;
   const sqmPax = areaSqm / queuePax;
 
   // wait criteria
