@@ -1,6 +1,14 @@
 import * as React from "react";
 import { useContext } from "react";
-import { Stack, Box, Typography, Input } from "@mui/material";
+import {
+  Stack,
+  Box,
+  Typography,
+  Input,
+  TextField,
+  InputAdornment,
+  FormHelperText,
+} from "@mui/material";
 import { percentageFormatter } from "../utils";
 import { useTheme } from "@mui/material/styles";
 import {
@@ -28,22 +36,27 @@ export default function RouteRatioInput({ parent, child }) {
   };
 
   return (
-    <Input
+    <TextField
       onChange={handleInputChange}
       defaultValue={
         data.routes.filter(
           (route) => route.parent == parent && route.child == child
         )?.[0]?.ratio
       }
-      endAdornment="%"
-      sx={{ width: 50 }}
+      sx={{ width: 71 }}
+      variant="standard"
       size="small"
       inputProps={{
-        step: 1,
         min: 0,
         max: 100,
         type: "number",
-        "aria-labelledby": "input-slider",
+        style: { textAlign: "center" },
+        // alternative to "number"
+        // inputMode: "numeric",
+        // pattern: "[0-9]*",
+      }}
+      InputProps={{
+        endAdornment: <InputAdornment position="end">%</InputAdornment>,
       }}
     />
   );
