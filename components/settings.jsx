@@ -1,5 +1,12 @@
+// App title
+export const appTitle = "LoS-App";
+
 // Allowed extensions for input file
 export const ALLOWEDEXTENSIONS = ["csv"];
+
+// UI size constants
+export const processorcardWidth = 150;
+export const stepminheight = 300;
 
 // List of destination columns to match
 export const SELECTLIST = [
@@ -32,9 +39,6 @@ export const defaultShowUpProfile = [
 
 // default timestep in minutes
 export const timestep = 5;
-
-// App title
-export const appTitle = "ADRM-App";
 
 // Types of processor
 export const processortypes = [
@@ -160,7 +164,3 @@ export const optionsProcessorGraph = {
     },
   },
 };
-
-// UI size constants
-export const processorcardWidth = 150;
-export const stepminheight = 300;

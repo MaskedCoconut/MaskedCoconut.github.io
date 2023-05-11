@@ -51,7 +51,7 @@ function ResponsiveAppBar() {
   // shorthand
 
   return (
-    <AppBar position="static" sx={{ maxHeight: "8vh" }}>
+    <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <LocalAirportIcon href="/" sx={{ display: { xs: "flex" }, mr: 1 }} />

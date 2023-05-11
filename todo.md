@@ -3,23 +3,13 @@
 - empty column header in papa parse
 
 - headername and its match should be managed in a 1-to-1 updatable object for convenience
-- no way to modify element at -2 position of array in js ?!
 
 - typescript
 - tailwind css
 - nextjs13 & app folder
 
-- migrate to react table fully?
-
-- full example for security
-- also single page app?
-
-Priority list:
-- graph js: 2 axis, styling, draggable components
 - table: highlight matched headers
 
-- user settings for terminal (2 modes: constant/variable -- modified by )
-- Create light and dracula mode to the App
 - Work on UI:
   - SPA: with tabs and animations
   - Theme
@@ -35,12 +25,17 @@ Priority list:
 
 - visual cues as to what should be the next step
 - tooltips (with parcimony)
+- icons
 
-- fix cases when initial value of select is wrong
 
 - get rid of tremor
 
+- fix cases when initial value of select is wrong (showup)
+- no input on route if only one child
 - reorganize show-up charts (move up, down, first, last)
+
+- load should refresh terminal steps and all
+- change in % should recalculate results
 
 advanced ideas:
 - Detailed show-up (per AL/Flight groups) (each group have profile and showup)
@@ -57,6 +52,5 @@ advanced ideas:
        2. nextFacilities.push(child)
 
 
-- no input on route if only one child
 
 
