@@ -32,7 +32,7 @@ const App = () => {
           {data.profiledata && <ProfileChart />}
         </Grid>
         <Grid xs={12} padding={1}>
-          {data.simresult && <ShowUpChart />}
+          {data?.simresult?.showup && <ShowUpChart />}
         </Grid>
       </Grid>
     </>

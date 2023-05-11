@@ -40,15 +40,23 @@ Priority list:
 
 - get rid of tremor
 
+- reorganize show-up charts (move up, down, first, last)
+
 advanced ideas:
 - Detailed show-up (per AL/Flight groups) (each group have profile and showup)
 - Pax ratio and bags ratio (per Airlines/Flight groups)
+- Histogram view for queueing time distribution
+
+ notes on runSecurity:
+
+ 1. start at currentfacilities = [show up]
+ 2. loop through the list of currentFacilitie
+    1. create nextFacilities = []
+    2. loop through the list of their currentFacilities'children
+       1. calculate all bases on routes (if no route, 100%)
+       2. nextFacilities.push(child)
 
 
-
-
-
-
-
+- no input on route if only one child
 
 
