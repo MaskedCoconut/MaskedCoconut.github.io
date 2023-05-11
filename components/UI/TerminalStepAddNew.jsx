@@ -48,9 +48,14 @@ export default function TerminalStepAddNew() {
 }
 
 const handleNewStep = (data, dispatch) => {
-  const newStepID = "step" + (data?.terminalsteps.length + 1);
+  const newKey =
+    "id" +
+    Date.now().toString(36) +
+    Math.floor(
+      Math.pow(10, 12) + Math.random() * 9 * Math.pow(10, 12)
+    ).toString(36);
 
-  data.terminalsteps.push(newStepID);
+  data.terminalsteps.push(newKey);
 
   dispatch({ type: "setTerminalsteps", newterminalsteps: data.terminalsteps });
 };

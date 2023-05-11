@@ -141,5 +141,6 @@ const initialAppData = Object.fromEntries([
   ["simresult", null],
   ["terminal", {}],
   ["terminalsteps", []],
+  // {parent: string, child: string, ration: number}
   ["routes", []],
 ]);

@@ -45,7 +45,11 @@ export default function OutlinedCard({ stepID }) {
 
 const handleNewProcessor = (data, dispatch, stepID) => {
   const newkey =
-    "process" + (data.terminal ? Object.keys(data.terminal).length + 1 : 1);
+    "id" +
+    Date.now().toString(36) +
+    Math.floor(
+      Math.pow(10, 12) + Math.random() * 9 * Math.pow(10, 12)
+    ).toString(36);
 
   data.terminal[newkey] = {
     isFirstStep: true,

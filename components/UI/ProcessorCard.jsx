@@ -104,7 +104,7 @@ export default function OutlinedCard({ processor, keyprocessor }) {
                         label={
                           value == "showup"
                             ? "Show-up"
-                            : data.terminal[value].name
+                            : data.terminal[value]?.name
                         }
                       />
                     ))}
@@ -255,10 +255,21 @@ const arrayAvg = (val) => {
 };
 
 export const deleteprocessor = (data, dispatch, keyprocessor) => {
+  // remove processor from other processor previous step
+  Object.entries(data.terminal).forEach(([_id, processor]) => {
+    processor["previous steps"] = processor["previous steps"].filter(
+      (step) => step != keyprocessor
+    );
+  });
+  // remove routes involving the processor
+  data.routes = data.routes.filter(
+    (route) => route.parent != keyprocessor && route.child != keyprocessor
+  );
+
   delete data.terminal[keyprocessor];
   delete data?.simresult?.[keyprocessor];
-
   dispatch({ type: "setTerminal", newterminal: data.terminal });
+  dispatch({ type: "setRoutes", newroutes: data.routes });
 };
 
 const saveprocessor = (data, dispatch, editedprocessor, keyprocessor) => {

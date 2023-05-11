@@ -245,16 +245,7 @@ export const runSecurity = (data) => {
                       ? data.terminal[child]["dwell time [m]"][id]
                       : wait[id],
                   ],
-                  [
-                    "LoS",
-                    calculateLoS(
-                      queue[id],
-                      wait[id],
-                      data.terminal[child]["area [sqm]"],
-                      isHall,
-                      child
-                    ),
-                  ],
+                  ["LoS", calculateLoS(queue[id], wait[id], child, data)],
                 ]);
               }
             );
@@ -272,12 +263,12 @@ export const runSecurity = (data) => {
 };
 
 // LoS calculation
-const calculateLoS = (queuePax, queueMinutes, child, data) => {
+const calculateLoS = (queuePax, queueMinutes, facility, data) => {
   // IATA optimum recomendations example for security
-  const areaSqm = data.terminal[child]["area [sqm]"];
-  const isHall = halltypes.includes(data.terminal[child].type);
+  const areaSqm = data.terminal[facility]["area [sqm]"];
+  const isHall = halltypes.includes(data.terminal[facility].type);
   const processortype = processortypes.filter(
-    (type) => type.name == data.terminal[child].type
+    (type) => type.name == data.terminal[facility].type
   )[0];
   const sqmPaxlow = processortype.sqmPaxlow;
   const sqmPaxhigh = processortype.sqmPaxhigh;
