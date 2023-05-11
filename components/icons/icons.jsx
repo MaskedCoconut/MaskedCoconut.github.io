@@ -1,9 +1,7 @@
 import Customs from "./customs.svg";
-import { SvgIcon } from "@mui/material";
+import { Box, SvgIcon } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 
-export const CustomsIcon = () => (
-  <IconButton>
-    <SvgIcon color="primary" component={Customs} inheritViewBox />
-  </IconButton>
+export const CustomsIcon = (props) => (
+  <SvgIcon sx={props.sx} color="secondary" component={Customs} inheritViewBox />
 );

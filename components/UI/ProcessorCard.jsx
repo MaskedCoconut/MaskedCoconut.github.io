@@ -12,7 +12,7 @@ import {
   AppDataDispatchContext,
 } from "../context/AppDataContext";
 import TextField from "@mui/material/TextField";
-import { Chip, Stack } from "@mui/material";
+import { Chip, IconButton, Stack } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -47,15 +47,26 @@ export default function OutlinedCard({ processor, keyprocessor }) {
   };
 
   return (
-    <Card elevation={2} sx={{ minWidth: processorcardWidth }}>
-      <CardContent sx={{ padding: 2, paddingBottom: 1 }}>
-        {!editing && (
-          <Typography variant="h6">
-            <CustomsIcon />
-            {arrayAvg(processor["name"])}
-          </Typography>
-        )}
+    <Card elevation={4} sx={{ minWidth: processorcardWidth }}>
+      <CardContent
+        sx={{
+          padding: 2,
+          paddingBottom: 0,
+        }}
+      >
         <Stack spacing={1}>
+          {!editing && (
+            <Stack spacing={1}>
+              <CustomsIcon
+                sx={{
+                  alignSelf: "flex-end",
+                }}
+              />
+              <Typography variant="h6" color="secondary">
+                {arrayAvg(processor["name"])}
+              </Typography>
+            </Stack>
+          )}
           {/* NAME */}
 
           {editing && (
@@ -200,51 +211,53 @@ export default function OutlinedCard({ processor, keyprocessor }) {
 
       {/* ACTIONS */}
 
-      <CardActions sx={{ paddingTop: 0 }}>
-        {!editing && (
-          <Button
-            startIcon={<EditIcon />}
-            onClick={() => setEditing(true)}
-            variant="outlined"
-          >
-            Edit
-          </Button>
-        )}
-        {editing && (
-          <Button
-            startIcon={<CancelIcon />}
-            onClick={() => setEditing(false)}
-            variant="outlined"
-          >
-            Cancel
-          </Button>
-        )}
-        {editing && (
-          <Button
-            color="success"
-            startIcon={<SaveIcon />}
-            onClick={() => {
-              setEditing(false);
-              saveprocessor(data, dispatch, editedprocessor, keyprocessor);
-            }}
-            variant="outlined"
-          >
-            Save
-          </Button>
-        )}
-        {editing && (
-          <Button
-            color="error"
-            startIcon={<DeleteIcon />}
-            onClick={() => {
-              setEditing(false);
-              deleteprocessor(data, dispatch, keyprocessor);
-            }}
-            variant="outlined"
-          >
-            Delete
-          </Button>
-        )}
+      <CardActions>
+        <Box>
+          {!editing && (
+            <IconButton
+              sx={{ pt: 0 }}
+              color="primary"
+              onClick={() => setEditing(true)}
+            >
+              <EditIcon />
+            </IconButton>
+          )}
+          {editing && (
+            <Button
+              startIcon={<CancelIcon />}
+              onClick={() => setEditing(false)}
+              variant="outlined"
+            >
+              Cancel
+            </Button>
+          )}
+          {editing && (
+            <Button
+              color="success"
+              startIcon={<SaveIcon />}
+              onClick={() => {
+                setEditing(false);
+                saveprocessor(data, dispatch, editedprocessor, keyprocessor);
+              }}
+              variant="outlined"
+            >
+              Save
+            </Button>
+          )}
+          {editing && (
+            <Button
+              color="error"
+              startIcon={<DeleteIcon />}
+              onClick={() => {
+                setEditing(false);
+                deleteprocessor(data, dispatch, keyprocessor);
+              }}
+              variant="outlined"
+            >
+              Delete
+            </Button>
+          )}
+        </Box>
       </CardActions>
     </Card>
   );
