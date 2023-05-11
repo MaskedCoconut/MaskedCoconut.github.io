@@ -21,6 +21,7 @@ import { processortypes } from "../settings";
 import MenuItem from "@mui/material/MenuItem";
 import { timestep, processorcardWidth } from "../settings";
 import { useState } from "react";
+import { CustomsIcon } from "../icons/icons";
 
 const halltypes = processortypes
   .filter((obj) => obj.type == "hall")
@@ -49,7 +50,10 @@ export default function OutlinedCard({ processor, keyprocessor }) {
     <Card elevation={2} sx={{ minWidth: processorcardWidth }}>
       <CardContent sx={{ padding: 2, paddingBottom: 1 }}>
         {!editing && (
-          <Typography variant="h6">{arrayAvg(processor["name"])}</Typography>
+          <Typography variant="h6">
+            <CustomsIcon />
+            {arrayAvg(processor["name"])}
+          </Typography>
         )}
         <Stack spacing={1}>
           {/* NAME */}
