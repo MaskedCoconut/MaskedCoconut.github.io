@@ -22,6 +22,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { timestep, processorcardWidth } from "../settings";
 import { useState } from "react";
 import { CustomsIcon } from "../icons/icons";
+import Collapse from "@mui/material/Collapse";
 
 const halltypes = processortypes
   .filter((obj) => obj.type == "hall")
@@ -47,29 +48,28 @@ export default function OutlinedCard({ processor, keyprocessor }) {
   };
 
   return (
-    <Card elevation={4} sx={{ minWidth: processorcardWidth }}>
+    <Card elevation={4} sx={{ width: processorcardWidth }}>
       <CardContent
         sx={{
           padding: 2,
           paddingBottom: 0,
         }}
       >
-        <Stack spacing={1}>
-          {!editing && (
-            <Stack spacing={1}>
-              <CustomsIcon
-                sx={{
-                  alignSelf: "flex-end",
-                }}
-              />
-              <Typography variant="h6" color="secondary">
-                {arrayAvg(processor["name"])}
-              </Typography>
-            </Stack>
-          )}
-          {/* NAME */}
+        <Stack direction="row" spacing={1}>
+          <CustomsIcon />
+          <Typography
+            variant="h6"
+            color="secondary"
+            align="center"
+            flexGrow={1}
+          >
+            {arrayAvg(processor["name"])}
+          </Typography>
+        </Stack>
+        {/* NAME */}
 
-          {editing && (
+        <Collapse in={editing}>
+          <Stack spacing={1}>
             <TextField
               onChange={(e) => {
                 editedprocessor["name"] = e.target.value;
@@ -78,11 +78,9 @@ export default function OutlinedCard({ processor, keyprocessor }) {
               size="small"
               defaultValue={arrayAvg(processor["name"])}
             />
-          )}
 
-          {/* TYPE */}
+            {/* TYPE */}
 
-          {editing && (
             <TextField
               onChange={(e) => {
                 editedprocessor["type"] = e.target.value;
@@ -100,11 +98,9 @@ export default function OutlinedCard({ processor, keyprocessor }) {
                 </MenuItem>
               ))}
             </TextField>
-          )}
 
-          {/* previous steps */}
+            {/* previous steps */}
 
-          {editing && (
             <TextField
               select
               SelectProps={{
@@ -129,7 +125,6 @@ export default function OutlinedCard({ processor, keyprocessor }) {
               sx={{ minWidth: 225 }}
               label="previous steps"
               size="small"
-              // defaultValue={[processor["previous steps"]]}
             >
               {Object.keys(data.terminal)
                 .filter((id) => id != keyprocessor)
@@ -140,13 +135,10 @@ export default function OutlinedCard({ processor, keyprocessor }) {
                 ))}
               <MenuItem value="showup">Show-up</MenuItem>
             </TextField>
-          )}
 
-          {!halltypes.includes(editedprocessor.type) && (
-            <>
-              {/* PROCESSING TIME */}
-
-              {editing && (
+            {!halltypes.includes(editedprocessor.type) && (
+              <>
+                {/* PROCESSING TIME */}
                 <TextField
                   onChange={(e) => {
                     editedprocessor["processing time [s]"] = new Array(
@@ -158,11 +150,7 @@ export default function OutlinedCard({ processor, keyprocessor }) {
                   defaultValue={arrayAvg(processor["processing time [s]"])}
                   inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                 />
-              )}
-
-              {/* PROCESSOR NUMBER */}
-
-              {editing && (
+                {/* PROCESSOR NUMBER */}
                 <TextField
                   onChange={(e) => {
                     editedprocessor["processor number"] = new Array(
@@ -174,28 +162,26 @@ export default function OutlinedCard({ processor, keyprocessor }) {
                   defaultValue={arrayAvg(processor["processor number"])}
                   inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                 />
-              )}
-            </>
-          )}
+              </>
+            )}
 
-          {/* DWELL TIME */}
-          {halltypes.includes(editedprocessor.type) && editing && (
-            <TextField
-              onChange={(e) => {
-                editedprocessor["dwell time [m]"] = new Array(
-                  (24 * 60) / timestep
-                ).fill(Number(e.target.value));
-              }}
-              size="small"
-              label="dwell time [m]"
-              defaultValue={arrayAvg(processor["dwell time [m]"])}
-              inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-            />
-          )}
+            {/* DWELL TIME */}
+            {halltypes.includes(editedprocessor.type) && (
+              <TextField
+                onChange={(e) => {
+                  editedprocessor["dwell time [m]"] = new Array(
+                    (24 * 60) / timestep
+                  ).fill(Number(e.target.value));
+                }}
+                size="small"
+                label="dwell time [m]"
+                defaultValue={arrayAvg(processor["dwell time [m]"])}
+                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+              />
+            )}
 
-          {/* AREA */}
+            {/* AREA */}
 
-          {editing && (
             <TextField
               onChange={(e) => {
                 editedprocessor["area [sqm]"] = Number(e.target.value);
@@ -205,14 +191,14 @@ export default function OutlinedCard({ processor, keyprocessor }) {
               defaultValue={processor["area [sqm]"]}
               inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
             />
-          )}
-        </Stack>
+          </Stack>
+        </Collapse>
       </CardContent>
 
       {/* ACTIONS */}
 
       <CardActions>
-        <Box>
+        <Stack direction="row" justifyContent="flex-start" spacing={0}>
           {!editing && (
             <IconButton
               sx={{ pt: 0 }}
@@ -257,7 +243,7 @@ export default function OutlinedCard({ processor, keyprocessor }) {
               Delete
             </Button>
           )}
-        </Box>
+        </Stack>
       </CardActions>
     </Card>
   );

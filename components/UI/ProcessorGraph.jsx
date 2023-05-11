@@ -8,7 +8,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { Paper, Stack, Typography } from "@mui/material";
+import { Collapse, Paper, Stack, Typography } from "@mui/material";
 import { Line } from "react-chartjs-2";
 import * as React from "react";
 import { useContext } from "react";
@@ -151,7 +151,7 @@ export default function App({ processor, options }) {
             </IconButton>
           )}
 
-          {editing && (
+          <Collapse in={editing}>
             <IconButton
               color="success"
               size="large"
@@ -160,11 +160,13 @@ export default function App({ processor, options }) {
             >
               <DoneIcon fontSize="inherit" />
             </IconButton>
-          )}
+          </Collapse>
         </Box>
       </Box>
       <Box>
-        {editing && !isHall && <TerminalGraphEditor processor={processor} />}
+        <Collapse in={editing}>
+          <TerminalGraphEditor processor={processor} />
+        </Collapse>
       </Box>
     </Paper>
   );

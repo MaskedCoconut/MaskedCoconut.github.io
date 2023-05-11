@@ -17,7 +17,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { processortypes } from "../settings";
+import { processorcardWidth, processortypes } from "../settings";
 import MenuItem from "@mui/material/MenuItem";
 import { timestep, stepminheight } from "../settings";
 import { useState } from "react";
@@ -60,6 +60,7 @@ export default function TerminalStep({ stepID }) {
     <Paper
       sx={{
         backgroundColor: "#f5f9fd",
+        minWidth: processorcardWidth,
       }}
       elevation={2}
     >

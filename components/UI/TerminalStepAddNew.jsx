@@ -33,8 +33,7 @@ export default function TerminalStepAddNew() {
       sx={{
         border: 3,
         borderStyle: "dashed",
-        minHeight: stepminheight,
-        width: processorcardWidth * 1.1,
+        minHeight: stepminheight / 2,
         "&:hover": {
           border: 3,
           borderStyle: "dashed",

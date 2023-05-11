@@ -55,7 +55,8 @@ const App = () => {
             <ArcherElement id="showup" relations={relationsShowup}>
               <Box
                 sx={{
-                  mr: 5,
+                  mr: 0,
+                  ml: 0,
                   border: 1,
                   borderColor: theme.palette.primary.main,
                   borderRadius: 3,

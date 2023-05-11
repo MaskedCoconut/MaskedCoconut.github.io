@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import Slider from "@mui/material/Slider";
 import MuiInput from "@mui/material/Input";
 import VolumeUp from "@mui/icons-material/VolumeUp";
+import { Stack, TextField } from "@mui/material";
 
 const Input = styled(MuiInput)`
   width: 42px;
@@ -36,37 +37,36 @@ export default function InputSlider({
   };
 
   return (
-    <Box sx={{ width: 200 }}>
+    <Box sx={{ padding: 2, width: "100%" }}>
       <Typography variant="subtitle2" gutterBottom>
         {title}
       </Typography>
-      <Grid container spacing={2} alignItems="center">
-        <Grid item xs>
-          <Slider
-            value={typeof value === "number" ? value : 0}
-            onChange={handleSliderChange}
-            aria-labelledby="input-slider"
-            min={min}
-            max={max}
-            step={step}
-          />
-        </Grid>
-        <Grid item>
-          <Input
-            value={value}
-            size="small"
-            onChange={handleInputChange}
-            onBlur={handleBlur}
-            inputProps={{
-              step: step,
-              min: min,
-              max: max,
-              type: "number",
-              "aria-labelledby": "input-slider",
-            }}
-          />
-        </Grid>
-      </Grid>
+      <Stack direction="row">
+        <Slider
+          value={typeof value === "number" ? value : 0}
+          onChange={handleSliderChange}
+          aria-labelledby="input-slider"
+          min={min}
+          max={max}
+          step={step}
+        />
+
+        <TextField
+          value={value}
+          size="small"
+          sx={{ width: 71 }}
+          variant="standard"
+          onChange={handleInputChange}
+          onBlur={handleBlur}
+          inputProps={{
+            step: step,
+            min: min,
+            max: max,
+            type: "number",
+            style: { textAlign: "center" },
+          }}
+        />
+      </Stack>
     </Box>
   );
 }

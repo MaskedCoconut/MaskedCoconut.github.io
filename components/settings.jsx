@@ -5,7 +5,7 @@ export const appTitle = "LoS-App";
 export const ALLOWEDEXTENSIONS = ["csv"];
 
 // UI size constants
-export const processorcardWidth = 150;
+export const processorcardWidth = 333;
 export const stepminheight = 300;
 
 // List of destination columns to match

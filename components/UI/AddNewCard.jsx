@@ -28,8 +28,6 @@ export default function OutlinedCard({ stepID }) {
       sx={{
         border: 3,
         borderStyle: "dashed",
-        width: processorcardWidth,
-        height: 100,
         margin: "auto",
         "&:hover": {
           border: 3,

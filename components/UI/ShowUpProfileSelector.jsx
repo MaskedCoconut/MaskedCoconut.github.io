@@ -8,11 +8,12 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import { useTheme } from "@mui/material/styles";
 import Slider from "./slider";
-import { Stack, Card, Paper, Typography } from "@mui/material";
+import { Box, Stack, Card, Paper, Typography } from "@mui/material";
 import CardContent from "@mui/material/CardContent";
 
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import { Collapse } from "@mui/material";
 
 const App = () => {
   const theme = useTheme();
@@ -33,22 +34,16 @@ const App = () => {
   return (
     <>
       <Card>
-        <Paper sx={{ width: 250, margin: "auto" }}>
+        <Paper sx={{ width: 350, margin: "auto" }}>
           <CardContent>
             <Typography
-              variant="body1"
-              sx={{ margin: "auto", paddingBottom: 1 }}
-              gutterBottom
+              variant="h6"
+              sx={{ margin: "auto", mb: 2, textAlign: "center" }}
             >
-              <EditIcon color="primary" sx={{ marginRight: 2 }} />
+              <EditIcon />
               Edit Show-up Profile
             </Typography>
-            <Stack
-              direction="column"
-              justifyItems="center"
-              alignItems="center"
-              spacing={1}
-            >
+            <Stack justifyItems="center" alignItems="center" spacing={1}>
               <ToggleButtonGroup
                 exclusive
                 value={data.showup.type}
@@ -61,36 +56,42 @@ const App = () => {
                   <FunctionsIcon /> Norm. dist.
                 </ToggleButton>
               </ToggleButtonGroup>
-              {data.showup.type == "normdist" && (
-                <>
-                  <Slider
-                    title="mean"
-                    step={1}
-                    min={0}
-                    max={150}
-                    value={data.showup.mean}
-                    setValue={(mean) => {
-                      dispatch({
-                        type: "setShowup",
-                        newshowup: { ...data.showup, ...{ mean: mean } },
-                      });
-                    }}
-                  />
-                  <Slider
-                    title="std dev"
-                    step={1}
-                    min={0}
-                    max={60}
-                    value={data.showup.stdev}
-                    setValue={(stdev) => {
-                      dispatch({
-                        type: "setShowup",
-                        newshowup: { ...data.showup, ...{ stdev: stdev } },
-                      });
-                    }}
-                  />
-                </>
-              )}
+
+              <Box sx={{ width: "100%" }}>
+                <Collapse
+                  sx={{ width: "100%" }}
+                  in={data.showup.type == "normdist"}
+                >
+                  <Stack sx={{ width: "100%" }} spacing={0}>
+                    <Slider
+                      title="mean"
+                      step={1}
+                      min={0}
+                      max={150}
+                      value={data.showup.mean}
+                      setValue={(mean) => {
+                        dispatch({
+                          type: "setShowup",
+                          newshowup: { ...data.showup, ...{ mean: mean } },
+                        });
+                      }}
+                    />
+                    <Slider
+                      title="std dev"
+                      step={1}
+                      min={0}
+                      max={60}
+                      value={data.showup.stdev}
+                      setValue={(stdev) => {
+                        dispatch({
+                          type: "setShowup",
+                          newshowup: { ...data.showup, ...{ stdev: stdev } },
+                        });
+                      }}
+                    />
+                  </Stack>
+                </Collapse>
+              </Box>
             </Stack>
           </CardContent>
         </Paper>
