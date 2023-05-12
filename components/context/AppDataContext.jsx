@@ -38,6 +38,14 @@ function appDataReducer(data, action) {
       // Only update the validation status of schedule columns
       return { ...data, isvalidated: action.isvalidated };
 
+    case "setTerminalsteps":
+      // Only update the number of steps
+      return { ...data, terminalsteps: action.newterminalsteps };
+
+    case "setRoutes":
+      // Only update the number of steps
+      return { ...data, routes: action.newroutes };
+
     case "setMatch":
       // Only updated the match object
       if (action.match == "reinit") {
@@ -122,14 +130,17 @@ const initialAppData = Object.fromEntries([
     "showup",
     Object.fromEntries([
       ["type", "default"],
-      ["mean", 60],
-      ["stdev", 30],
+      ["mean", 120],
+      ["stdev", 20],
     ]),
   ],
   [
     "profiledata",
-    calculateProfile({ showup: { type: "default", mean: 60, stdev: 30 } }),
+    calculateProfile({ showup: { type: "default", mean: 120, stdev: 20 } }),
   ],
   ["simresult", null],
   ["terminal", {}],
+  ["terminalsteps", []],
+  // {parent: string, child: string, ration: number}
+  ["routes", []],
 ]);

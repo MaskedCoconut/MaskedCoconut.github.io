@@ -1,5 +1,4 @@
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
+import { Box, Button, Stack } from "@mui/material";
 import {
   DataGrid,
   GridToolbarContainer,
@@ -15,6 +14,8 @@ import {
 } from "../context/AppDataContext";
 
 import { getRowError } from "../utils";
+import FullscreenIcon from "@mui/icons-material/Fullscreen";
+import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 
 export default function DataGridDemo() {
   // AppDataContext
@@ -26,6 +27,8 @@ export default function DataGridDemo() {
       ["field", col],
       ["headerName", col],
       ["editable", true],
+      ["flex", 1],
+      ["minWidth", 100],
     ])
   );
 
@@ -43,11 +46,22 @@ export default function DataGridDemo() {
     return updatedRow;
   };
 
+  const [isfullScreen, SetFullscreen] = React.useState(false);
+
+  const toggleFullscreen = () => SetFullscreen(!isfullScreen);
+
   function CustomToolbar() {
     return (
       <GridToolbarContainer>
+        <Button
+          color="primary"
+          startIcon={isfullScreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
+          onClick={toggleFullscreen}
+        >
+          fullscreen
+        </Button>
         <GridToolbarColumnsButton />
-        <GridToolbarFilterButton />
+        {/* <GridToolbarFilterButton /> */}
         <GridToolbarDensitySelector />
         <GridToolbarExport />
       </GridToolbarContainer>
@@ -61,6 +75,26 @@ export default function DataGridDemo() {
           backgroundColor: "#bd93f9",
           color: "#282a36",
         },
+        width: isfullScreen ? "100vw" : "95%",
+        position: isfullScreen && "absolute",
+        height: isfullScreen && "100vh",
+        top: isfullScreen && 0,
+        right: isfullScreen && 0,
+        backgroundColor: "white",
+        opacity: 1,
+        zIndex: isfullScreen && 999,
+      }}
+      style={{
+        ...(isfullScreen
+          ? {
+              height: "100vh",
+              margin: 0,
+              maxHeight: "100vh",
+              maxWidth: "100vw",
+              padding: 0,
+              width: "100vw",
+            }
+          : {}),
       }}
     >
       <DataGrid
@@ -74,6 +108,7 @@ export default function DataGridDemo() {
             },
           },
         }}
+        pagination={isfullScreen ? 50 : 10}
         pageSizeOptions={[10, 20, 50]}
         disableRowSelectionOnClick
         slots={{ toolbar: CustomToolbar }}

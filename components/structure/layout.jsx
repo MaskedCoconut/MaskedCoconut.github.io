@@ -6,6 +6,11 @@ import AppProvider from "../context/AppDataContext";
 import Box from "@mui/material/Box";
 import Head from "./head";
 
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
+
 const theme = createTheme({
   components: {
     MuiStack: {
@@ -59,7 +64,10 @@ export default function Layout({ children }) {
             pr: 1,
             pl: 1,
             pb: 1,
-            minHeight: 500,
+            minHeight: "87vh",
+            display: "flex",
+            alignItems: "center",
+            justifyItems: "center",
           }}
         >
           {children}

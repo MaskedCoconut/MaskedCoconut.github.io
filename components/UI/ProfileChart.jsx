@@ -8,7 +8,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { Card, Paper } from "@mui/material";
+import { Box, Card, Paper } from "@mui/material";
 
 import { Bar } from "react-chartjs-2";
 import * as React from "react";
@@ -114,9 +114,9 @@ export default function App() {
 
   return (
     <Paper>
-      <div class="p-2 min-h-[40vh]">
+      <Box sx={{ minHeight: "40vh" }}>
         <Bar options={options} data={graphdata} />
-      </div>
+      </Box>
     </Paper>
   );
 }

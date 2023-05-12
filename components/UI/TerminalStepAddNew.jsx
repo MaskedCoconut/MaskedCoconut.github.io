@@ -12,23 +12,28 @@ import {
   AppDataDispatchContext,
 } from "../context/AppDataContext";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { timestep, processortypes, processorcardWidth } from "../settings";
+import {
+  timestep,
+  processortypes,
+  stepminheight,
+  processorcardWidth,
+} from "../settings";
 
-export default function OutlinedCard({ stepID }) {
+export default function TerminalStepAddNew() {
   const theme = useTheme();
   const data = useContext(AppDataContext);
   const dispatch = useContext(AppDataDispatchContext);
   return (
     <Button
       onClick={() => {
-        handleNewProcessor(data, dispatch, stepID);
+        handleNewStep(data, dispatch);
       }}
       variant="outlined"
       size="large"
       sx={{
         border: 3,
         borderStyle: "dashed",
-        margin: "auto",
+        minHeight: stepminheight / 2,
         "&:hover": {
           border: 3,
           borderStyle: "dashed",
@@ -36,30 +41,20 @@ export default function OutlinedCard({ stepID }) {
       }}
       startIcon={<AddCircleOutlineIcon sx={{ fontSize: "large" }} />}
     >
-      Facility
+      Step
     </Button>
   );
 }
 
-const handleNewProcessor = (data, dispatch, stepID) => {
-  const newkey =
+const handleNewStep = (data, dispatch) => {
+  const newKey =
     "id" +
     Date.now().toString(36) +
     Math.floor(
       Math.pow(10, 12) + Math.random() * 9 * Math.pow(10, 12)
     ).toString(36);
 
-  data.terminal[newkey] = {
-    isFirstStep: true,
-    name: "new process",
-    type: processortypes[0].name,
-    stepID: stepID,
-    "previous steps": [],
-    "processing time [s]": new Array((24 * 60) / timestep).fill(10),
-    "processor number": new Array((24 * 60) / timestep).fill(13),
-    "dwell time [m]": new Array((24 * 60) / timestep).fill(10),
-    "area [sqm]": 100,
-  };
+  data.terminalsteps.push(newKey);
 
-  dispatch({ type: "setTerminal", newterminal: data.terminal });
+  dispatch({ type: "setTerminalsteps", newterminalsteps: data.terminalsteps });
 };

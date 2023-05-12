@@ -11,10 +11,10 @@ const Footer = () => {
         position: "static",
         width: "100%",
         bottom: 0,
-        // pt: "0.5em",
         pb: "0.5em",
         pl: "0.5em",
         pr: "0.5em",
+        maxHeight: "5vh",
       }}
     >
       <Divider />

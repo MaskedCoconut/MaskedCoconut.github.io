@@ -12,15 +12,19 @@ import {
   AppDataDispatchContext,
 } from "../context/AppDataContext";
 import TextField from "@mui/material/TextField";
-import { Stack } from "@mui/material";
+import { Chip, IconButton, Stack } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { processortypes } from "../settings";
 import MenuItem from "@mui/material/MenuItem";
-import { timestep } from "../settings";
+import { timestep, processorcardWidth } from "../settings";
 import { useState } from "react";
+import { AirportIcons } from "../icons/icons";
+import Collapse from "@mui/material/Collapse";
+
+const CustomsIcon = <AirportIcons type="CustomsIcon" />;
 
 const halltypes = processortypes
   .filter((obj) => obj.type == "hall")
@@ -32,224 +36,286 @@ export default function OutlinedCard({ processor, keyprocessor }) {
   const dispatch = useContext(AppDataDispatchContext);
   const [editing, setEditing] = React.useState(false);
 
-  const [editedprocessor, setEditedprocessor] = useState({ ...processor });
+  const [editedprocessor, setEditedprocessor] = useState(processor);
+
+  const handleMultiSelectChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setEditedprocessor({
+      ...editedprocessor,
+      // On autofill we get a stringified value.
+      "previous steps": typeof value === "string" ? value.split(",") : value,
+    });
+  };
 
   return (
-    <Card
-      sx={{
-        minWidth: 275,
-        minHeight: 200,
-      }}
-      elevation={2}
-    >
-      <CardContent>
-        <Stack spacing={1} margin="auto">
-          {/* NAME */}
+    <Card elevation={4} sx={{ width: processorcardWidth }}>
+      <CardContent
+        sx={{
+          padding: 2,
+          paddingBottom: 0,
+        }}
+      >
+        <Stack direction="row" spacing={1}>
+          <Typography variant="h5" color="primary" align="center" flexGrow={1}>
+            <CustomsIcon sx={{ mr: 1 }} />
+            {arrayAvg(processor["name"])}
+          </Typography>
+        </Stack>
+        {/* NAME */}
 
-          <Stack direction="row">
-            {!editing && <Typography>name:</Typography>}
-            {editing ? (
-              <TextField
-                onChange={(e) => {
-                  editedprocessor["name"] = e.target.value;
-                }}
-                label="name"
-                size="small"
-                defaultValue={arrayAvg(processor["name"])}
-              />
-            ) : (
-              <Typography>{arrayAvg(processor["name"])}</Typography>
-            )}
-          </Stack>
+        <Collapse in={editing}>
+          <Stack
+            alignContent="center"
+            justifyContent="center"
+            sx={{ mt: 1 }}
+            spacing={1.5}
+            paddingLeft={2}
+            paddingRight={2}
+          >
+            <TextField
+              onChange={(e) => {
+                editedprocessor["name"] = e.target.value;
+              }}
+              sx={{
+                width: "100%",
+              }}
+              inputProps={{
+                style: { textAlign: "center" },
+              }}
+              size="small"
+              label="name"
+              defaultValue={arrayAvg(processor["name"])}
+            />
 
-          {/* TYPE */}
+            {/* TYPE */}
 
-          <Stack direction="row">
-            {!editing && <Typography>type:</Typography>}
-            {editing ? (
-              <TextField
-                onChange={(e) => {
-                  editedprocessor["type"] = e.target.value;
-                  setEditedprocessor({ ...editedprocessor });
-                }}
-                select
-                label="type"
-                size="small"
-                defaultValue={arrayAvg(processor["type"])}
-                sx={{ minWidth: 225 }}
-              >
-                {processortypes.map((option) => (
-                  <MenuItem key={option.name} value={option.name}>
-                    {option.name}
-                  </MenuItem>
-                ))}
-              </TextField>
-            ) : (
-              <Typography>{arrayAvg(processor["type"])}</Typography>
-            )}
-          </Stack>
+            <TextField
+              onChange={(e) => {
+                editedprocessor["type"] = e.target.value;
+                setEditedprocessor({ ...editedprocessor });
+              }}
+              select
+              label="type"
+              sx={{
+                width: "100%",
+              }}
+              inputProps={{
+                style: { textAlign: "center" },
+              }}
+              size="small"
+              defaultValue={processor["type"]}
+            >
+              {processortypes.map((option) => (
+                <MenuItem key={option.name} value={option.name}>
+                  {option.name}
+                </MenuItem>
+              ))}
+            </TextField>
 
-          {/* PREVIOUS STEP */}
+            {/* Icon */}
 
-          <Stack direction="row">
-            {!editing && <Typography>previous step:</Typography>}
-            {editing ? (
-              <TextField
-                onChange={(e) => {
-                  editedprocessor["previous step"] = e.target.value;
-                }}
-                select
-                sx={{ minWidth: 225 }}
-                label="previous step"
-                size="small"
-                defaultValue={arrayAvg(
-                  processor["previous step"] == "showup"
-                    ? "first step"
-                    : data.terminal[processor["previous step"].toString()][
-                        "name"
-                      ]
-                )}
-              >
-                {Object.keys(data.terminal).map((processor) => (
+            <TextField
+              onChange={(e) => {
+                console.log(e);
+              }}
+              select
+              label="icon"
+              sx={{
+                width: "100%",
+              }}
+              inputProps={{
+                style: { textAlign: "center" },
+              }}
+              size="small"
+              defaultValue={processor["type"]}
+            >
+              {Object.keys(AirportIcons).map((icon) => (
+                <MenuItem key={icon} value={icon}>
+                  <CustomsIcon />
+                </MenuItem>
+              ))}
+            </TextField>
+
+            {/* previous steps */}
+
+            <TextField
+              select
+              SelectProps={{
+                multiple: true,
+                onChange: handleMultiSelectChange,
+                value: editedprocessor["previous steps"],
+                renderValue: (selected) => (
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip
+                        key={value}
+                        label={
+                          value == "showup"
+                            ? "Show-up"
+                            : data.terminal[value]?.name
+                        }
+                      />
+                    ))}
+                  </Box>
+                ),
+              }}
+              label="previous steps"
+              sx={{
+                width: "100%",
+              }}
+              inputProps={{
+                style: { textAlign: "center" },
+              }}
+              size="small"
+            >
+              {Object.keys(data.terminal)
+                .filter((id) => id != keyprocessor)
+                .map((processor) => (
                   <MenuItem key={processor} value={processor}>
                     {data.terminal[processor].name}
                   </MenuItem>
                 ))}
-                <MenuItem value="showup">first step</MenuItem>
-              </TextField>
-            ) : (
-              <Typography>
-                {arrayAvg(
-                  processor["previous step"] == "showup"
-                    ? "first step"
-                    : data.terminal[processor["previous step"].toString()][
-                        "name"
-                      ]
-                )}
-              </Typography>
+              <MenuItem value="showup">Show-up</MenuItem>
+            </TextField>
+
+            {!halltypes.includes(editedprocessor.type) && (
+              <>
+                {/* PROCESSING TIME */}
+                <TextField
+                  onChange={(e) => {
+                    editedprocessor["processing time [s]"] = new Array(
+                      (24 * 60) / timestep
+                    ).fill(Number(e.target.value));
+                  }}
+                  sx={{
+                    width: "100%",
+                  }}
+                  size="small"
+                  label="processing time [s]"
+                  defaultValue={arrayAvg(processor["processing time [s]"])}
+                  inputProps={{
+                    style: { textAlign: "center" },
+                    inputMode: "numeric",
+                    pattern: "[0-9]*",
+                  }}
+                />
+                {/* PROCESSOR NUMBER */}
+                <TextField
+                  onChange={(e) => {
+                    editedprocessor["processor number"] = new Array(
+                      (24 * 60) / timestep
+                    ).fill(Number(e.target.value));
+                  }}
+                  label="processor number"
+                  sx={{
+                    width: "100%",
+                  }}
+                  size="small"
+                  defaultValue={arrayAvg(processor["processor number"])}
+                  inputProps={{
+                    style: { textAlign: "center" },
+                    inputMode: "numeric",
+                    pattern: "[0-9]*",
+                  }}
+                />
+              </>
             )}
+
+            {/* DWELL TIME */}
+            {halltypes.includes(editedprocessor.type) && (
+              <TextField
+                onChange={(e) => {
+                  editedprocessor["dwell time [m]"] = new Array(
+                    (24 * 60) / timestep
+                  ).fill(Number(e.target.value));
+                }}
+                sx={{
+                  width: "100%",
+                }}
+                size="small"
+                label="dwell time [m]"
+                defaultValue={arrayAvg(processor["dwell time [m]"])}
+                inputProps={{
+                  style: { textAlign: "center" },
+                  inputMode: "numeric",
+                  pattern: "[0-9]*",
+                }}
+              />
+            )}
+
+            {/* AREA */}
+
+            <TextField
+              onChange={(e) => {
+                editedprocessor["area [sqm]"] = Number(e.target.value);
+              }}
+              sx={{
+                width: "100%",
+              }}
+              size="small"
+              label="area [sqm]"
+              defaultValue={processor["area [sqm]"]}
+              inputProps={{
+                style: { textAlign: "center" },
+                inputMode: "numeric",
+                pattern: "[0-9]*",
+              }}
+            />
           </Stack>
-
-          {!halltypes.includes(editedprocessor.type) && (
-            <>
-              <Stack direction="row">
-                {!editing && <Typography>processing time [s]:</Typography>}
-                {editing ? (
-                  <TextField
-                    onChange={(e) => {
-                      editedprocessor["processing time [s]"] = new Array(
-                        (24 * 60) / timestep
-                      ).fill(Number(e.target.value));
-                    }}
-                    size="small"
-                    label="processing time [s]"
-                    defaultValue={arrayAvg(processor["processing time [s]"])}
-                    inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-                  />
-                ) : (
-                  <Typography>
-                    {arrayAvg(processor["processing time [s]"])}
-                  </Typography>
-                )}
-              </Stack>
-
-              <Stack direction="row">
-                {!editing && <Typography>processor number:</Typography>}
-                {editing ? (
-                  <TextField
-                    onChange={(e) => {
-                      editedprocessor["processor number"] = new Array(
-                        (24 * 60) / timestep
-                      ).fill(Number(e.target.value));
-                    }}
-                    label="processor number"
-                    size="small"
-                    defaultValue={arrayAvg(processor["processor number"])}
-                    inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-                  />
-                ) : (
-                  <Typography>
-                    {arrayAvg(processor["processor number"])}
-                  </Typography>
-                )}
-              </Stack>
-            </>
-          )}
-
-          {halltypes.includes(editedprocessor.type) && (
-            <>
-              <Stack direction="row">
-                {!editing && <Typography>dwell time [m]:</Typography>}
-                {editing ? (
-                  <TextField
-                    onChange={(e) => {
-                      editedprocessor["dwell time [m]"] = new Array(
-                        (24 * 60) / timestep
-                      ).fill(Number(e.target.value));
-                    }}
-                    size="small"
-                    label="dwell time [m]"
-                    defaultValue={arrayAvg(processor["dwell time [m]"])}
-                    inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-                  />
-                ) : (
-                  <Typography>
-                    {arrayAvg(processor["dwell time [m]"])}
-                  </Typography>
-                )}
-              </Stack>
-            </>
-          )}
-        </Stack>
+        </Collapse>
       </CardContent>
 
       {/* ACTIONS */}
 
       <CardActions>
-        {!editing && (
-          <Button
-            startIcon={<EditIcon />}
-            onClick={() => setEditing(true)}
-            variant="outlined"
-          >
-            Edit
-          </Button>
-        )}
-        {editing && (
-          <Button
-            startIcon={<CancelIcon />}
-            onClick={() => setEditing(false)}
-            variant="outlined"
-          >
-            Cancel
-          </Button>
-        )}
-        {editing && (
-          <Button
-            color="success"
-            startIcon={<SaveIcon />}
-            onClick={() => {
-              setEditing(false);
-              saveprocessor(data, dispatch, editedprocessor, keyprocessor);
-            }}
-            variant="outlined"
-          >
-            Save
-          </Button>
-        )}
-        {editing && (
-          <Button
-            color="error"
-            startIcon={<DeleteIcon />}
-            onClick={() => {
-              setEditing(false);
-              deleteprocessor(data, dispatch, keyprocessor);
-            }}
-            variant="outlined"
-          >
-            Delete
-          </Button>
-        )}
+        <Stack direction="row" justifyContent="flex-start" spacing={0}>
+          {!editing && (
+            <IconButton
+              sx={{ pt: 0 }}
+              color="primary"
+              onClick={() => setEditing(true)}
+            >
+              <EditIcon />
+            </IconButton>
+          )}
+          {editing && (
+            <Button
+              startIcon={<CancelIcon />}
+              onClick={() => setEditing(false)}
+              variant="outlined"
+            >
+              Cancel
+            </Button>
+          )}
+          {editing && (
+            <Button
+              color="success"
+              startIcon={<SaveIcon />}
+              onClick={() => {
+                setEditing(false);
+                saveprocessor(data, dispatch, editedprocessor, keyprocessor);
+              }}
+              variant="outlined"
+            >
+              Save
+            </Button>
+          )}
+          {editing && (
+            <Button
+              color="error"
+              startIcon={<DeleteIcon />}
+              onClick={() => {
+                setEditing(false);
+                deleteprocessor(data, dispatch, keyprocessor);
+              }}
+              variant="outlined"
+            >
+              Delete
+            </Button>
+          )}
+        </Stack>
       </CardActions>
     </Card>
   );
@@ -263,14 +329,22 @@ const arrayAvg = (val) => {
   }
 };
 
-const deleteprocessor = (data, dispatch, keyprocessor) => {
+export const deleteprocessor = (data, dispatch, keyprocessor) => {
+  // remove processor from other processor previous step
+  Object.entries(data.terminal).forEach(([_id, processor]) => {
+    processor["previous steps"] = processor["previous steps"].filter(
+      (step) => step != keyprocessor
+    );
+  });
+  // remove routes involving the processor
+  data.routes = data.routes.filter(
+    (route) => route.parent != keyprocessor && route.child != keyprocessor
+  );
+
   delete data.terminal[keyprocessor];
-
-  if (data?.simresult?.[keyprocessor]) {
-    delete data.simresult[keyprocessor];
-  }
-
+  delete data?.simresult?.[keyprocessor];
   dispatch({ type: "setTerminal", newterminal: data.terminal });
+  dispatch({ type: "setRoutes", newroutes: data.routes });
 };
 
 const saveprocessor = (data, dispatch, editedprocessor, keyprocessor) => {

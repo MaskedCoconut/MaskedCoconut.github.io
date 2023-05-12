@@ -25,8 +25,6 @@ const App = () => {
             .filter((key) => data.simresult[key])
             .map((key) => {
               const options = cloneDeep(optionsProcessorGraph);
-              // const options = optionsProcessorGraph;
-              options.plugins.title.text = data.terminal[key]["name"];
               return (
                 <Grid key={key} padding={1} xs={12}>
                   <Testgraph key={key} processor={key} options={options} />
