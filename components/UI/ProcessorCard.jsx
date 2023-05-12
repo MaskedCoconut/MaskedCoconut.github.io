@@ -21,10 +21,9 @@ import { processortypes } from "../settings";
 import MenuItem from "@mui/material/MenuItem";
 import { timestep, processorcardWidth } from "../settings";
 import { useState } from "react";
-import { AirportIcons } from "../icons/icons";
 import Collapse from "@mui/material/Collapse";
 
-const CustomsIcon = <AirportIcons type="CustomsIcon" />;
+import { AirportIcons, AirportIconsNames } from "../icons/icons";
 
 const halltypes = processortypes
   .filter((obj) => obj.type == "hall")
@@ -59,7 +58,7 @@ export default function OutlinedCard({ processor, keyprocessor }) {
       >
         <Stack direction="row" spacing={1}>
           <Typography variant="h5" color="primary" align="center" flexGrow={1}>
-            <CustomsIcon sx={{ mr: 1 }} />
+            <AirportIcons type={processor["icon"]} sx={{ mr: 1 }} />
             {arrayAvg(processor["name"])}
           </Typography>
         </Stack>
@@ -118,7 +117,8 @@ export default function OutlinedCard({ processor, keyprocessor }) {
 
             <TextField
               onChange={(e) => {
-                console.log(e);
+                editedprocessor["icon"] = e.target.value;
+                setEditedprocessor({ ...editedprocessor });
               }}
               select
               label="icon"
@@ -129,11 +129,11 @@ export default function OutlinedCard({ processor, keyprocessor }) {
                 style: { textAlign: "center" },
               }}
               size="small"
-              defaultValue={processor["type"]}
+              defaultValue={processor["icon"]}
             >
-              {Object.keys(AirportIcons).map((icon) => (
+              {AirportIconsNames.map((icon) => (
                 <MenuItem key={icon} value={icon}>
-                  <CustomsIcon />
+                  <AirportIcons type={icon} />
                 </MenuItem>
               ))}
             </TextField>
