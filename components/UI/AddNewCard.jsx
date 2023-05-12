@@ -52,6 +52,7 @@ const handleNewProcessor = (data, dispatch, stepID) => {
   data.terminal[newkey] = {
     isFirstStep: true,
     name: "new process",
+    icon: "WaitingareaIcon",
     type: processortypes[0].name,
     stepID: stepID,
     "previous steps": [],
