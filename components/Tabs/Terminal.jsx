@@ -37,47 +37,45 @@ const App = () => {
   });
 
   return (
-    <>
-      <Box>
-        <ArcherContainer
-          strokeColor={theme.palette.primary.dark}
-          ref={archerRef}
-          svgContainerStyle={{ pointerEvents: "none" }}
+    <Box>
+      <ArcherContainer
+        strokeColor={theme.palette.primary.dark}
+        ref={archerRef}
+        svgContainerStyle={{ pointerEvents: "none" }}
+      >
+        <Stack
+          spacing={{ xs: 15 }}
+          direction="row"
+          useFlexGap
+          flexWrap="wrap"
+          alignItems="center"
+          justifyContent="center"
         >
-          <Stack
-            spacing={{ xs: 15 }}
-            direction="row"
-            useFlexGap
-            flexWrap="wrap"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <ArcherElement id="showup" relations={relationsShowup}>
-              <Box
-                sx={{
-                  mr: 0,
-                  ml: 0,
-                  border: 1,
-                  borderColor: theme.palette.primary.main,
-                  borderRadius: 3,
-                  padding: 2,
-                }}
-              >
-                <GroupsIcon sx={{ fontSize: 100 }} color="secondary" />
-                <Typography align="center" color="secondary" variant="h6">
-                  Show-up
-                </Typography>
-              </Box>
-            </ArcherElement>
+          <ArcherElement id="showup" relations={relationsShowup}>
+            <Box
+              sx={{
+                mr: 0,
+                ml: 0,
+                border: 1,
+                borderColor: theme.palette.primary.main,
+                borderRadius: 3,
+                padding: 2,
+              }}
+            >
+              <GroupsIcon sx={{ fontSize: 100 }} color="secondary" />
+              <Typography align="center" color="secondary" variant="h6">
+                Show-up
+              </Typography>
+            </Box>
+          </ArcherElement>
 
-            {data?.terminalsteps.map((stepID) => (
-              <TerminalStep key={stepID} stepID={stepID} />
-            ))}
-            <TerminalStepAddNew />
-          </Stack>
-        </ArcherContainer>
-      </Box>
-    </>
+          {data?.terminalsteps.map((stepID) => (
+            <TerminalStep key={stepID} stepID={stepID} />
+          ))}
+          <TerminalStepAddNew />
+        </Stack>
+      </ArcherContainer>
+    </Box>
   );
 };
 

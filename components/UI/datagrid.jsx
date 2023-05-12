@@ -61,7 +61,7 @@ export default function DataGridDemo() {
           fullscreen
         </Button>
         <GridToolbarColumnsButton />
-        <GridToolbarFilterButton />
+        {/* <GridToolbarFilterButton /> */}
         <GridToolbarDensitySelector />
         <GridToolbarExport />
       </GridToolbarContainer>

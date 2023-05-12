@@ -316,8 +316,7 @@ export const calculateProfile = (data) => {
   var usedShowUpProfile = [];
   switch (data.showup.type) {
     case "default":
-      usedShowUpProfile = defaultShowUpProfile;
-      break;
+      usedShowUpProfile = generateNormShowupProfile(120, 20);
 
     case "normdist":
       usedShowUpProfile = generateNormShowupProfile(
