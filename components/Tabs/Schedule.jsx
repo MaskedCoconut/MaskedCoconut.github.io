@@ -19,7 +19,7 @@ const App = () => {
     <Stack minHeight={500}>
       <UploadStack />
       {data.rows && <SelectColumn />}
-      <Box width="95%">{data.rows && <DataGridDemo />}</Box>
+      {data.rows && <DataGridDemo />}
     </Stack>
   );
 };
