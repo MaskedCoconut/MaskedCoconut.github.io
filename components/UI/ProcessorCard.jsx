@@ -56,26 +56,39 @@ export default function OutlinedCard({ processor, keyprocessor }) {
         }}
       >
         <Stack direction="row" spacing={1}>
-          <CustomsIcon />
           <Typography
-            variant="h6"
+            variant="h5"
             color="secondary"
             align="center"
             flexGrow={1}
           >
+            <CustomsIcon sx={{ mr: 1 }} />
             {arrayAvg(processor["name"])}
           </Typography>
         </Stack>
         {/* NAME */}
 
         <Collapse in={editing}>
-          <Stack spacing={1}>
+          <Stack
+            alignContent="center"
+            justifyContent="center"
+            sx={{ mt: 1 }}
+            spacing={1.5}
+            paddingLeft={2}
+            paddingRight={2}
+          >
             <TextField
               onChange={(e) => {
                 editedprocessor["name"] = e.target.value;
               }}
-              label="name"
+              sx={{
+                width: "100%",
+              }}
+              inputProps={{
+                style: { textAlign: "center" },
+              }}
               size="small"
+              label="name"
               defaultValue={arrayAvg(processor["name"])}
             />
 
@@ -88,9 +101,14 @@ export default function OutlinedCard({ processor, keyprocessor }) {
               }}
               select
               label="type"
+              sx={{
+                width: "100%",
+              }}
+              inputProps={{
+                style: { textAlign: "center" },
+              }}
               size="small"
               defaultValue={processor["type"]}
-              sx={{ minWidth: 225 }}
             >
               {processortypes.map((option) => (
                 <MenuItem key={option.name} value={option.name}>
@@ -122,8 +140,13 @@ export default function OutlinedCard({ processor, keyprocessor }) {
                   </Box>
                 ),
               }}
-              sx={{ minWidth: 225 }}
               label="previous steps"
+              sx={{
+                width: "100%",
+              }}
+              inputProps={{
+                style: { textAlign: "center" },
+              }}
               size="small"
             >
               {Object.keys(data.terminal)
@@ -145,10 +168,17 @@ export default function OutlinedCard({ processor, keyprocessor }) {
                       (24 * 60) / timestep
                     ).fill(Number(e.target.value));
                   }}
+                  sx={{
+                    width: "100%",
+                  }}
                   size="small"
                   label="processing time [s]"
                   defaultValue={arrayAvg(processor["processing time [s]"])}
-                  inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                  inputProps={{
+                    style: { textAlign: "center" },
+                    inputMode: "numeric",
+                    pattern: "[0-9]*",
+                  }}
                 />
                 {/* PROCESSOR NUMBER */}
                 <TextField
@@ -158,9 +188,16 @@ export default function OutlinedCard({ processor, keyprocessor }) {
                     ).fill(Number(e.target.value));
                   }}
                   label="processor number"
+                  sx={{
+                    width: "100%",
+                  }}
                   size="small"
                   defaultValue={arrayAvg(processor["processor number"])}
-                  inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                  inputProps={{
+                    style: { textAlign: "center" },
+                    inputMode: "numeric",
+                    pattern: "[0-9]*",
+                  }}
                 />
               </>
             )}
@@ -173,10 +210,17 @@ export default function OutlinedCard({ processor, keyprocessor }) {
                     (24 * 60) / timestep
                   ).fill(Number(e.target.value));
                 }}
+                sx={{
+                  width: "100%",
+                }}
                 size="small"
                 label="dwell time [m]"
                 defaultValue={arrayAvg(processor["dwell time [m]"])}
-                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                inputProps={{
+                  style: { textAlign: "center" },
+                  inputMode: "numeric",
+                  pattern: "[0-9]*",
+                }}
               />
             )}
 
@@ -186,10 +230,17 @@ export default function OutlinedCard({ processor, keyprocessor }) {
               onChange={(e) => {
                 editedprocessor["area [sqm]"] = Number(e.target.value);
               }}
+              sx={{
+                width: "100%",
+              }}
               size="small"
               label="area [sqm]"
               defaultValue={processor["area [sqm]"]}
-              inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+              inputProps={{
+                style: { textAlign: "center" },
+                inputMode: "numeric",
+                pattern: "[0-9]*",
+              }}
             />
           </Stack>
         </Collapse>
