@@ -1,4 +1,4 @@
-import { Box, Button, Chip, Input, Collapse } from "@mui/material";
+import { Box, Button, Chip, Input, Collapse, Typography } from "@mui/material";
 import {
   DataGrid,
   GridToolbarColumnsButton,
@@ -100,6 +100,34 @@ export default function DataGridDemo() {
       )
     : [];
 
+  const MyCustomNoRowsOverlay = () => (
+    <Box
+      height="100%"
+      alignContent="center"
+      alignItems="stretch"
+      justifyContent="center"
+      justifyItems="center"
+      sx={{ display: "flex" }}
+    >
+      <Button component="label" sx={{ flexGrow: 1 }}>
+        <input
+          onChange={handleFileChange}
+          id="csvInput"
+          hidden
+          accept=".csv"
+          type="File"
+        />
+        <Typography variant="h2" sx={{ fontSize: 90 }} color="primary">
+          <AirportIcons
+            type="FlightscheduleIcon"
+            sx={{ fontSize: 90, mr: 3 }}
+          />
+          Import a Schedule
+        </Typography>
+      </Button>
+    </Box>
+  );
+
   const processRowUpdate = (newRow) => {
     newRow["error"] = getRowError(newRow);
     const updatedRow = { ...newRow };
@@ -136,17 +164,21 @@ export default function DataGridDemo() {
         <GridToolbarExport />
 
         {!data.file ? (
-          // <Button color="primary" startIcon={<UploadFileIcon />}>
-          //   Select .csv
-          <input
-            onChange={handleFileChange}
-            id="csvInput"
-            // hidden
-            accept=".csv"
-            type="File"
-          />
+          <Button
+            color="primary"
+            component="label"
+            startIcon={<UploadFileIcon />}
+          >
+            Select .csv
+            <input
+              onChange={handleFileChange}
+              id="csvInput"
+              hidden
+              accept=".csv"
+              type="File"
+            />
+          </Button>
         ) : (
-          // </Button>
           [
             <Chip label={`${data.file.name}`} onDelete={handleDeleteChip} />,
 
@@ -200,7 +232,10 @@ export default function DataGridDemo() {
       }}
     >
       <Collapse in={isMatchvisible}>
-        <ScheduleColsMatcher />
+        <ScheduleColsMatcher
+          isMatchvisible={isMatchvisible}
+          SetisMatchvisible={SetisMatchvisible}
+        />
       </Collapse>
 
       <DataGrid
@@ -219,7 +254,7 @@ export default function DataGridDemo() {
         pagination={isfullScreen ? 50 : 10}
         pageSizeOptions={[10, 20, 50]}
         disableRowSelectionOnClick
-        slots={{ toolbar: CustomToolbar }}
+        slots={{ toolbar: CustomToolbar, noRowsOverlay: MyCustomNoRowsOverlay }}
         // for editing
         processRowUpdate={processRowUpdate}
         // for the conditional formatting of cells

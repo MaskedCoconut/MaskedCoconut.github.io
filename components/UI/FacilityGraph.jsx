@@ -20,7 +20,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { IconButton } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import { processortypes } from "../settings";
-import LoSGraph from "./LoSGraph";
+import LoSGraph from "./FacilityLoSGraph";
 import { AirportIcons } from "../icons/icons";
 
 ChartJS.register(

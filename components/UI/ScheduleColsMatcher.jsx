@@ -14,7 +14,10 @@ import {
 import { SELECTLIST } from "../settings";
 import { getRowError, FilterObjectOnValue, getKeyByValue } from "../utils";
 
-export default function ScheduleColsMatcher() {
+export default function ScheduleColsMatcher({
+  isMatchvisible,
+  SetisMatchvisible,
+}) {
   // AppDataContext
   const dispatch = useContext(AppDataDispatchContext);
   const data = useContext(AppDataContext);
@@ -64,19 +67,23 @@ export default function ScheduleColsMatcher() {
       dispatch({ type: "setRows", newrows: updatedRows });
       dispatch({ type: "setIsValidated", isvalidated: true });
       dispatch({ type: "setMatch", match: "reinit" });
+      SetisMatchvisible(!isMatchvisible);
     }
   };
 
   return (
     <Stack
-      padding={0}
-      spacing={{ xs: 1, sm: 2 }}
+      padding={1}
+      spacing={{ xs: 2, sm: 4 }}
       direction="row"
       useFlexGap
       flexWrap="wrap"
       alignItems="center"
-      justifyContent="space evenly"
+      justifyContent="center"
       border={1}
+      borderRadius={1}
+      borderColor="#e0e0e0"
+      borderBottom="hidden"
     >
       {SELECTLIST.map((col) => (
         <Box key={"box" + col} sx={{ minWidth: 120 }}>
