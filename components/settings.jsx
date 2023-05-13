@@ -8,6 +8,9 @@ export const ALLOWEDEXTENSIONS = ["csv"];
 export const processorcardWidth = 333;
 export const stepminheight = 300;
 
+// default timestep in minutes
+export const timestep = 5;
+
 // List of destination columns to match
 export const SELECTLIST = [
   // "Flight Number",
@@ -21,9 +24,6 @@ export const SELECTLIST = [
   // "Seats",
   "Pax",
 ];
-
-// default timestep in minutes
-export const timestep = 5;
 
 // Types of processor
 export const processortypes = [

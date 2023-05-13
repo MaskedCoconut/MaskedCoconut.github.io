@@ -1,10 +1,10 @@
 import { erf } from "mathjs";
-import {
-  SELECTLIST,
-  defaultShowUpProfile,
-  timestep,
-  processortypes,
-} from "./settings";
+import { SELECTLIST, timestep, processortypes } from "./settings";
+
+// Should be moved to settings
+const halltypes = processortypes
+  .filter((obj) => obj.type == "hall")
+  .map((obj) => obj.name);
 
 // Get keys (array) by value
 export const getKeyByValue = (object, value) => {
@@ -72,10 +72,6 @@ export const getRowError = (row) => {
     ? "valid row"
     : errors.join("|");
 };
-
-const halltypes = processortypes
-  .filter((obj) => obj.type == "hall")
-  .map((obj) => obj.name);
 
 // recalculate all processors queues and output successively
 export const runSecurity = (data) => {
@@ -376,20 +372,33 @@ export const calculateShowUp = (data) => {
   }
 };
 
+// Showup profile, always sums to 100%, always stops at 0
 export function generateNormShowupProfile(mean, stdev) {
-  const startArray = new Array((5 * 60) / timestep).fill(0);
-  return startArray.map(
-    (_val, idx) =>
+  // at 0, we get all Pax that would arrive after 0 (=STD)
+  const profileArray = [
+    cdfNormal(0, mean, stdev) - cdfNormal(-99999 * timestep, mean, stdev),
+  ];
+
+  for (let idx = 1; cdfNormal(idx * timestep, mean, stdev) <= 1 - 1e-6; idx++) {
+    profileArray.push(
       cdfNormal(idx * timestep, mean, stdev) -
-      cdfNormal((idx - 1) * timestep, mean, stdev)
-  );
+        cdfNormal((idx - 1) * timestep, mean, stdev)
+    );
+  }
+  return profileArray;
 }
 
-export const dataFormatter = (number) =>
-  `${Intl.NumberFormat("us").format(Math.round(number)).toString()}`;
+// Simple date formatter, consider localeString()?
+export const dataFormatter = (number) => {
+  retusn(`${Intl.NumberFormat("us").format(Math.round(number)).toString()}`);
+};
 
-export const percentageFormatter = (number) => `${(number * 100).toFixed(2)}%`;
+// Simple percentage, should add significant digits and harmonize across App
+export const percentageFormatter = (number) => {
+  return `${(number * 100).toFixed(2)}%`;
+};
 
+// The Fromatter <3
 export const timeFromatter = (slot5m) => {
   const h = Math.floor((slot5m * timestep) / 60);
   const m = (slot5m * timestep) % 60;
@@ -400,6 +409,7 @@ export function cdfNormal(x, mean, standardDeviation) {
   return (1 - erf((mean - x) / (Math.sqrt(2) * standardDeviation))) / 2;
 }
 
+// all App data to JSON and downloaded by user
 export const exportData = (data) => {
   const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
     JSON.stringify(data)
@@ -410,6 +420,7 @@ export const exportData = (data) => {
   link.click();
 };
 
+// regenerate Appdata from JSON uploaded by user
 export const importData = (e, data, dispatch) => {
   if (e.target.files.length) {
     const inputFile = e.target.files[0];
@@ -432,8 +443,8 @@ export const importData = (e, data, dispatch) => {
 
         data = structuredClone(parsedData);
         dispatch({ type: "setRows", newrows: data.rows });
-        // Why do I need that?
         dispatch({ type: "setTerminal", newterminal: parsedData.terminal });
+        // many other dispatch!!!
       };
     }
   }
