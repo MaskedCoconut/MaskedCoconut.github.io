@@ -76,8 +76,8 @@ export default function LoSGraph({ processor }) {
         data: data.simresult[processor].map((row) =>
           row["LoS"] == "Optimal" ? 1 : ""
         ),
-        borderColor: theme.palette.success.light,
-        backgroundColor: theme.palette.success.light,
+        borderColor: theme.palette.LoS["Optimal"],
+        backgroundColor: theme.palette.LoS["Optimal"],
         barPercentage: 1,
         categoryPercentage: 1,
         inflateAmount: 2,
@@ -88,8 +88,8 @@ export default function LoSGraph({ processor }) {
         data: data.simresult[processor].map((row) =>
           row["LoS"] == "Sub-Optimal" ? 1 : ""
         ),
-        borderColor: theme.palette.warning.light,
-        backgroundColor: theme.palette.warning.light,
+        borderColor: theme.palette.LoS["Sub-Optimal"],
+        backgroundColor: theme.palette.LoS["Sub-Optimal"],
         barPercentage: 1,
         categoryPercentage: 1,
         inflateAmount: 2,
@@ -100,8 +100,8 @@ export default function LoSGraph({ processor }) {
         data: data.simresult[processor].map((row) =>
           row["LoS"] == "Over-Design" ? 1 : ""
         ),
-        borderColor: theme.palette.success.dark,
-        backgroundColor: theme.palette.success.dark,
+        borderColor: theme.palette.LoS["Over-Design"],
+        backgroundColor: theme.palette.LoS["Over-Design"],
         barPercentage: 1,
         categoryPercentage: 1,
         inflateAmount: 2,
@@ -112,8 +112,8 @@ export default function LoSGraph({ processor }) {
         data: data.simresult[processor].map((row) =>
           row["LoS"] == "Under-Provided" ? 1 : ""
         ),
-        borderColor: theme.palette.error.main,
-        backgroundColor: theme.palette.error.main,
+        borderColor: theme.palette.LoS["Under-Provided"],
+        backgroundColor: theme.palette.LoS["Under-Provided"],
         barPercentage: 1,
         categoryPercentage: 1,
         inflateAmount: 2,

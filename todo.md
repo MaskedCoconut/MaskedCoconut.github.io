@@ -12,8 +12,6 @@
 - tooltips (with parcimony)
 
 - Fact cards + gentle layout for results and fullscreen toggle
-
-
 - load should refresh terminal steps and all
 
 advanced ideas:
@@ -25,6 +23,7 @@ advanced ideas:
 things to improve in the future:
 - Order of process and steps managed
 - reorganize show-up charts (move up, down, first, last)
+- editable LoS parameters
 
 
 

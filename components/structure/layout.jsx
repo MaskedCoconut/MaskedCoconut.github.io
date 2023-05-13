@@ -46,6 +46,15 @@ const theme = createTheme({
   palette: {
     // primary: { main: "#21235b" },
     // secondary: { main: "#e90e8b" },
+    LoS: {
+      Optimal: "#10b981",
+      "Sub-Optimal": "#f97316",
+      "Over-Design": "#07d6fa",
+      "Under-Provided": "#f43f5e",
+    },
+    couldusethis: "#eab308",
+    anothercoolcolor: "",
+    coolcolor: "#06b6d4",
     background: {
       paper: "rgba(252,252,252,0.9)",
     },

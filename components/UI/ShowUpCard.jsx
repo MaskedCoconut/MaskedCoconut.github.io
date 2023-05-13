@@ -12,6 +12,7 @@ import { useContext } from "react";
 import { AppDataContext } from "../context/AppDataContext";
 import InfoIcon from "@mui/icons-material/Info";
 import { timestep, processortypes, processorcardWidth } from "../settings";
+import { MovingAverage } from "../utils";
 
 export default function ShowUpCard() {
   const theme = useTheme();
@@ -124,21 +125,3 @@ export default function ShowUpCard() {
     </Card>
   );
 }
-
-export const MovingAverage = (array, window) => {
-  // centered and considering a "rotating" array
-  const before = Math.floor(window / 2);
-  const after = Math.floor(window / 2) + (window % 2);
-
-  //...
-  const triplearray = [...array].concat([...array]).concat([...array]);
-
-  const result = array.map((_val, id) => {
-    const newid = id + array.length;
-    return triplearray
-      .slice(newid - before, newid + after)
-      .reduce((x, y) => x + y);
-  });
-
-  return result.map((x) => x / window);
-};

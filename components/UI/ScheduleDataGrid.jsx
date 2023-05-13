@@ -21,6 +21,7 @@ import ReplayIcon from "@mui/icons-material/Replay";
 import { getRowError } from "../utils";
 import { AirportIcons } from "../icons/icons";
 import ScheduleColsMatcher from "./ScheduleColsMatcher";
+import { DeleteForever } from "@mui/icons-material";
 
 export default function DataGridDemo() {
   // AppDataContext
@@ -85,6 +86,12 @@ export default function DataGridDemo() {
 
   // deleteable Chip with filename
   const handleDeleteChip = () => {
+    dispatch({ type: "setFile", file: null });
+  };
+
+  // delete the data
+  const handleDeletedata = () => {
+    dispatch({ type: "setRows", newrows: null });
     dispatch({ type: "setFile", file: null });
   };
 
@@ -179,25 +186,34 @@ export default function DataGridDemo() {
             />
           </Button>
         ) : (
-          [
-            <Chip label={`${data.file.name}`} onDelete={handleDeleteChip} />,
-
-            <Button
-              color="primary"
-              startIcon={<ReplayIcon />}
-              onClick={handleLoad}
-            >
-              reload .csv
-            </Button>,
-            <Button
-              color="primary"
-              startIcon={<AirportIcons type="FlightscheduleIcon" />}
-              onClick={toggleMatchvisible}
-            >
-              Match columns
-            </Button>,
-          ]
+          <Chip
+            label={`${data.file.name}`}
+            //  onDelete={handleDeleteChip}
+          />
         )}
+        {data.rows && [
+          <Button
+            color="primary"
+            startIcon={<DeleteForever />}
+            onClick={handleDeletedata}
+          >
+            Delete all
+          </Button>,
+          <Button
+            color="primary"
+            startIcon={<ReplayIcon />}
+            onClick={handleLoad}
+          >
+            reload .csv
+          </Button>,
+          <Button
+            color="primary"
+            startIcon={<AirportIcons type="FlightscheduleIcon" />}
+            onClick={toggleMatchvisible}
+          >
+            column menu
+          </Button>,
+        ]}
       </GridToolbarContainer>
     );
   }

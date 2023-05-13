@@ -3,16 +3,17 @@ import { useContext } from "react";
 import FacilityGraph from "../UI/FacilityGraph";
 import { AppDataContext } from "../context/AppDataContext";
 import { useTheme } from "@mui/material/styles";
-import Grid from "@mui/material/Unstable_Grid2";
 import { optionsProcessorGraph } from "../settings";
 import cloneDeep from "lodash.clonedeep";
+import FacilityResultCard from "../UI/FacilityResultsCard";
+import { Stack, Box } from "@mui/material";
 
 const App = () => {
   const theme = useTheme();
   const data = useContext(AppDataContext);
   return (
     <>
-      <Grid
+      <Stack
         container
         spacing={2}
         disableEqualOverflow
@@ -26,12 +27,21 @@ const App = () => {
             .map((key) => {
               const options = cloneDeep(optionsProcessorGraph);
               return (
-                <Grid key={key} padding={1} xs={12}>
-                  <FacilityGraph key={key} processor={key} options={options} />
-                </Grid>
+                <Box width="100%" key={key} padding={1}>
+                  <Stack direction="row">
+                    <Box flexGrow={1}>
+                      <FacilityGraph
+                        key={key}
+                        processor={key}
+                        options={options}
+                      />
+                    </Box>
+                    <FacilityResultCard processor={key} />
+                  </Stack>
+                </Box>
               );
             })}
-      </Grid>
+      </Stack>
     </>
   );
 };
