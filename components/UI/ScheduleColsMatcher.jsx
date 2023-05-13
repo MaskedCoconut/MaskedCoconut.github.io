@@ -14,14 +14,14 @@ import {
 import { SELECTLIST } from "../settings";
 import { getRowError, FilterObjectOnValue, getKeyByValue } from "../utils";
 
-export default function BasicSelect() {
+export default function ScheduleColsMatcher() {
   // AppDataContext
   const dispatch = useContext(AppDataDispatchContext);
   const data = useContext(AppDataContext);
 
-  const choices = Object.keys(data.rows[0]).filter(
-    (choice) => !["error"].includes(choice)
-  );
+  const choices = data.rows
+    ? Object.keys(data.rows[0]).filter((choice) => !["error"].includes(choice))
+    : [];
 
   const handleSelect = (e) => {
     // record the updated value
@@ -69,13 +69,14 @@ export default function BasicSelect() {
 
   return (
     <Stack
-      padding={1}
+      padding={0}
       spacing={{ xs: 1, sm: 2 }}
       direction="row"
       useFlexGap
       flexWrap="wrap"
       alignItems="center"
-      justifyContent="center"
+      justifyContent="space evenly"
+      border={1}
     >
       {SELECTLIST.map((col) => (
         <Box key={"box" + col} sx={{ minWidth: 120 }}>

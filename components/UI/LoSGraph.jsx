@@ -15,7 +15,7 @@ import * as React from "react";
 import { useContext } from "react";
 import { useTheme } from "@mui/material/styles";
 import { AppDataContext } from "../context/AppDataContext";
-import TerminalGraphEditor from "./TerminalGraphEditor";
+import FacilityGraphEditor from "./FacilityGraphEditor";
 import { Box } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { IconButton } from "@mui/material";

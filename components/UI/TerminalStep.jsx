@@ -21,10 +21,10 @@ import { processorcardWidth, processortypes } from "../settings";
 import MenuItem from "@mui/material/MenuItem";
 import { timestep, stepminheight } from "../settings";
 import { useState } from "react";
-import { deleteprocessor } from "./ProcessorCard";
+import { deleteprocessor } from "./FacilityCard";
 
-import ProcessorCard from "./ProcessorCard";
-import AddNewCard from "./AddNewCard";
+import ProcessorCard from "./FacilityCard";
+import AddNewCard from "./FacilityCardAddNew";
 import { ArcherElement } from "react-archer";
 import RouteRatioInput from "../UI/RouteRatioInput";
 

@@ -1,15 +1,22 @@
-import FunctionsIcon from "@mui/icons-material/Functions";
+import EditIcon from "@mui/icons-material/Edit";
+import { useTheme } from "@mui/material/styles";
 import * as React from "react";
 import { useContext } from "react";
 import {
   AppDataContext,
   AppDataDispatchContext,
 } from "../context/AppDataContext";
-import EditIcon from "@mui/icons-material/Edit";
-import { useTheme } from "@mui/material/styles";
-import Slider from "./slider";
-import { Box, Stack, Card, Paper, Typography, Button } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import CardContent from "@mui/material/CardContent";
+import Slider from "@mui/material/Slider";
 
 import { Collapse } from "@mui/material";
 
@@ -47,7 +54,7 @@ const App = () => {
             <Box sx={{ width: "100%" }}>
               <Collapse sx={{ width: "100%" }} in={selected}>
                 <Stack sx={{ width: "100%" }} spacing={0}>
-                  <Slider
+                  <InputSlider
                     title="mean"
                     step={1}
                     min={0}
@@ -60,7 +67,7 @@ const App = () => {
                       });
                     }}
                   />
-                  <Slider
+                  <InputSlider
                     title="std dev"
                     step={1}
                     min={0}
@@ -84,3 +91,55 @@ const App = () => {
 };
 
 export default App;
+
+function InputSlider({ title, step, min, max, value, setValue }) {
+  const handleSliderChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const handleInputChange = (event) => {
+    setValue(event.target.value === "" ? "" : Number(event.target.value));
+  };
+
+  const handleBlur = () => {
+    if (value < min) {
+      setValue(min);
+    } else if (value > max) {
+      setValue(max);
+    }
+  };
+
+  return (
+    <Box sx={{ padding: 2, width: "100%" }}>
+      <Typography variant="subtitle2" gutterBottom>
+        {title}
+      </Typography>
+      <Stack direction="row">
+        <Slider
+          value={typeof value === "number" ? value : 0}
+          onChange={handleSliderChange}
+          aria-labelledby="input-slider"
+          min={min}
+          max={max}
+          step={step}
+        />
+
+        <TextField
+          value={value}
+          size="small"
+          sx={{ width: 71 }}
+          variant="standard"
+          onChange={handleInputChange}
+          onBlur={handleBlur}
+          inputProps={{
+            step: step,
+            min: min,
+            max: max,
+            type: "number",
+            style: { textAlign: "center" },
+          }}
+        />
+      </Stack>
+    </Box>
+  );
+}

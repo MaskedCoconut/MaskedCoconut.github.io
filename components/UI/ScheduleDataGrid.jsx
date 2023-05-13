@@ -1,4 +1,4 @@
-import { Box, Button, Chip, Input } from "@mui/material";
+import { Box, Button, Chip, Input, Collapse } from "@mui/material";
 import {
   DataGrid,
   GridToolbarColumnsButton,
@@ -19,7 +19,8 @@ import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import ReplayIcon from "@mui/icons-material/Replay";
 import { getRowError } from "../utils";
-import { AirportIcons, AirportIconsNames } from "../icons/icons";
+import { AirportIcons } from "../icons/icons";
+import ScheduleColsMatcher from "./ScheduleColsMatcher";
 
 export default function DataGridDemo() {
   // AppDataContext
@@ -114,8 +115,10 @@ export default function DataGridDemo() {
   };
 
   const [isfullScreen, SetFullscreen] = React.useState(false);
-
   const toggleFullscreen = () => SetFullscreen(!isfullScreen);
+
+  const [isMatchvisible, SetisMatchvisible] = React.useState(false);
+  const toggleMatchvisible = () => SetisMatchvisible(!isMatchvisible);
 
   function CustomToolbar() {
     return (
@@ -131,32 +134,38 @@ export default function DataGridDemo() {
         {/* <GridToolbarFilterButton /> */}
         <GridToolbarDensitySelector />
         <GridToolbarExport />
-        <Box>
-          {!data.file ? (
-            // <Button color="primary" startIcon={<UploadFileIcon />}>
-            //   Select .csv
-            <input
-              onChange={handleFileChange}
-              id="csvInput"
-              // hidden
-              accept=".csv"
-              type="File"
-            />
-          ) : (
-            // </Button>
-            [
-              <Chip label={`${data.file.name}`} onDelete={handleDeleteChip} />,
 
-              <Button
-                color="primary"
-                startIcon={<ReplayIcon />}
-                onClick={handleLoad}
-              >
-                reload .csv
-              </Button>,
-            ]
-          )}
-        </Box>
+        {!data.file ? (
+          // <Button color="primary" startIcon={<UploadFileIcon />}>
+          //   Select .csv
+          <input
+            onChange={handleFileChange}
+            id="csvInput"
+            // hidden
+            accept=".csv"
+            type="File"
+          />
+        ) : (
+          // </Button>
+          [
+            <Chip label={`${data.file.name}`} onDelete={handleDeleteChip} />,
+
+            <Button
+              color="primary"
+              startIcon={<ReplayIcon />}
+              onClick={handleLoad}
+            >
+              reload .csv
+            </Button>,
+            <Button
+              color="primary"
+              startIcon={<AirportIcons type="FlightscheduleIcon" />}
+              onClick={toggleMatchvisible}
+            >
+              Match columns
+            </Button>,
+          ]
+        )}
       </GridToolbarContainer>
     );
   }
@@ -190,6 +199,10 @@ export default function DataGridDemo() {
           : {}),
       }}
     >
+      <Collapse in={isMatchvisible}>
+        <ScheduleColsMatcher />
+      </Collapse>
+
       <DataGrid
         columns={cols}
         rows={data.rows ? data.rows : []}

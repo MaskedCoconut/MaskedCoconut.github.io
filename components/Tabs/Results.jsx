@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useContext } from "react";
-import Testgraph from "../UI/ProcessorGraph";
+import FacilityGraph from "../UI/FacilityGraph";
 import { AppDataContext } from "../context/AppDataContext";
 import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2";
@@ -27,7 +27,7 @@ const App = () => {
               const options = cloneDeep(optionsProcessorGraph);
               return (
                 <Grid key={key} padding={1} xs={12}>
-                  <Testgraph key={key} processor={key} options={options} />
+                  <FacilityGraph key={key} processor={key} options={options} />
                 </Grid>
               );
             })}
