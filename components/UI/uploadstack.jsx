@@ -70,7 +70,13 @@ const UploadStack = () => {
     <Stack direction="row" flexWrap="wrap" padding={1}>
       <Button size="medium" variant="contained" component="label">
         Select .csv
-        <input onChange={handleFileChange} id="csvInput" hidden type="File" />
+        <input
+          onChange={handleFileChange}
+          id="csvInput"
+          hidden
+          accept=".csv"
+          type="File"
+        />
       </Button>
       {data.file && (
         <Chip size="small" label={data.file && `${data.file.name}`} />

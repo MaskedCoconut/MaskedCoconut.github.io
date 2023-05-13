@@ -141,6 +141,7 @@ function ResponsiveAppBar() {
                       handleCloseUserMenu();
                     }}
                     id="csvInput"
+                    accept=".json"
                     hidden
                     type="File"
                   />
