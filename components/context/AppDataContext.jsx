@@ -129,15 +129,11 @@ const initialAppData = Object.fromEntries([
   [
     "showup",
     Object.fromEntries([
-      ["type", "default"],
       ["mean", 120],
       ["stdev", 20],
     ]),
   ],
-  [
-    "profiledata",
-    calculateProfile({ showup: { type: "default", mean: 120, stdev: 20 } }),
-  ],
+  ["profiledata", calculateProfile({ showup: { mean: 120, stdev: 20 } })],
   ["simresult", null],
   ["terminal", {}],
   ["terminalsteps", []],

@@ -8,64 +8,44 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import { useTheme } from "@mui/material/styles";
 import Slider from "./slider";
-import { Box, Stack, Card, Paper, Typography } from "@mui/material";
+import { Box, Stack, Card, Paper, Typography, Button } from "@mui/material";
 import CardContent from "@mui/material/CardContent";
 
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { Collapse } from "@mui/material";
 
 const App = () => {
   const theme = useTheme();
   const data = useContext(AppDataContext);
   const dispatch = useContext(AppDataDispatchContext);
+  const [selected, setSelected] = React.useState(false);
 
-  // handle show-up type change
-  const handleTypeChange = (_event, newtype) => {
-    if (newtype !== null) {
-      const newShowup = {
-        ...data.showup,
-        ...{ type: newtype },
-      };
-      dispatch({ type: "setShowup", newshowup: newShowup });
-    }
+  const handleToggle = () => {
+    setSelected(!selected);
   };
 
   return (
     <Card>
       <Paper sx={{ width: 350, margin: "auto" }}>
         <CardContent>
-          <Typography
-            variant="h6"
-            sx={{
-              margin: "auto",
-              mb: 2,
-              textAlign: "center",
-            }}
-            color="primary"
-          >
-            <EditIcon sx={{ mr: 1 }} />
-            Edit Show-up Profile
-          </Typography>
           <Stack justifyItems="center" alignItems="center" spacing={1}>
-            <ToggleButtonGroup
-              exclusive
-              value={data.showup.type}
-              onChange={handleTypeChange}
-            >
-              <ToggleButton value="default" sx={{ fontSize: 12 }}>
-                Default
-              </ToggleButton>
-              <ToggleButton value="normdist" sx={{ fontSize: 12 }}>
-                <FunctionsIcon /> Norm. dist.
-              </ToggleButton>
-            </ToggleButtonGroup>
-
+            <Box>
+              <Button variant="outlined" onClick={handleToggle}>
+                <Typography
+                  // variant="h6"
+                  sx={{
+                    margin: "auto",
+                    //   mb: 2,
+                    textAlign: "center",
+                  }}
+                  color="primary"
+                >
+                  <EditIcon sx={{ mr: 1 }} />
+                  Edit Show-up Profile
+                </Typography>
+              </Button>
+            </Box>
             <Box sx={{ width: "100%" }}>
-              <Collapse
-                sx={{ width: "100%" }}
-                in={data.showup.type == "normdist"}
-              >
+              <Collapse sx={{ width: "100%" }} in={selected}>
                 <Stack sx={{ width: "100%" }} spacing={0}>
                   <Slider
                     title="mean"

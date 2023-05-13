@@ -308,19 +308,10 @@ const calculateLoS = (queuePax, queueMinutes, facility, data) => {
 
 // calculate Showup Profile
 export const calculateProfile = (data) => {
-  // case default or normal distribution
-  var usedShowUpProfile = [];
-  switch (data.showup.type) {
-    case "default":
-      usedShowUpProfile = generateNormShowupProfile(120, 20);
-
-    case "normdist":
-      usedShowUpProfile = generateNormShowupProfile(
-        data.showup.mean,
-        data.showup.stdev
-      );
-      break;
-  }
+  const usedShowUpProfile = generateNormShowupProfile(
+    data.showup.mean,
+    data.showup.stdev
+  );
 
   // format object for plot and state management
   const profiledata = usedShowUpProfile.map((val, id) =>
@@ -332,6 +323,22 @@ export const calculateProfile = (data) => {
 
   return profiledata;
 };
+
+// Showup profile, always sums to 100%, always stops at 0
+function generateNormShowupProfile(mean, stdev) {
+  // at 0, we get all Pax that would arrive after 0 (=STD)
+  const profileArray = [
+    cdfNormal(0, mean, stdev) - cdfNormal(-99999 * timestep, mean, stdev),
+  ];
+
+  for (let idx = 1; cdfNormal(idx * timestep, mean, stdev) <= 1 - 1e-6; idx++) {
+    profileArray.push(
+      cdfNormal(idx * timestep, mean, stdev) -
+        cdfNormal((idx - 1) * timestep, mean, stdev)
+    );
+  }
+  return profileArray;
+}
 
 // calculate the show-up and profile
 export const calculateShowUp = (data) => {
@@ -371,22 +378,6 @@ export const calculateShowUp = (data) => {
     return showupdata;
   }
 };
-
-// Showup profile, always sums to 100%, always stops at 0
-export function generateNormShowupProfile(mean, stdev) {
-  // at 0, we get all Pax that would arrive after 0 (=STD)
-  const profileArray = [
-    cdfNormal(0, mean, stdev) - cdfNormal(-99999 * timestep, mean, stdev),
-  ];
-
-  for (let idx = 1; cdfNormal(idx * timestep, mean, stdev) <= 1 - 1e-6; idx++) {
-    profileArray.push(
-      cdfNormal(idx * timestep, mean, stdev) -
-        cdfNormal((idx - 1) * timestep, mean, stdev)
-    );
-  }
-  return profileArray;
-}
 
 // Simple date formatter, consider localeString()?
 export const dataFormatter = (number) => {

@@ -7,10 +7,10 @@ import {
 import { useTheme } from "@mui/material/styles";
 import { Stack, Box } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-import ProfileChart from "../UI/ProfileChart";
 import ShowUpChart from "../UI/ShowUpChart";
 import ShowUpCard from "../UI/ShowUpCard";
-import ShowUpProfileSelector from "../UI/ShowUpProfileSelector";
+import ShowUpProfileChart from "../UI/ShowUpProfileChart";
+import ShowUpProfileCard from "../UI/ShowUpProfileCard";
 
 const App = () => {
   const theme = useTheme();
@@ -53,13 +53,13 @@ const App = () => {
           alignItems="center"
           flexWrap="wrap"
         >
-          <Box>{data.profiledata && <ShowUpProfileSelector />}</Box>
+          <Box>{data.profiledata && <ShowUpProfileCard />}</Box>
           <Box
             minWidth="50vw"
             maxWidth={{ xs: "100vw", md: "70vw" }}
             flexGrow={1}
           >
-            {data.profiledata && <ProfileChart />}
+            {data.profiledata && <ShowUpProfileChart />}
           </Box>
         </Stack>
       </Stack>
