@@ -1,36 +1,103 @@
-import { Box, Button, Stack } from "@mui/material";
+import { Box, Button, Chip, Input } from "@mui/material";
 import {
   DataGrid,
+  GridToolbarColumnsButton,
   GridToolbarContainer,
   GridToolbarDensitySelector,
   GridToolbarExport,
-  GridToolbarColumnsButton,
-  GridToolbarFilterButton,
 } from "@mui/x-data-grid";
+import Papa from "papaparse";
 import React, { useContext } from "react";
 import {
   AppDataContext,
   AppDataDispatchContext,
 } from "../context/AppDataContext";
+import * as Constants from "../settings";
 
-import { getRowError } from "../utils";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
+import ReplayIcon from "@mui/icons-material/Replay";
+import { getRowError } from "../utils";
+import { AirportIcons, AirportIconsNames } from "../icons/icons";
 
 export default function DataGridDemo() {
   // AppDataContext
   const data = useContext(AppDataContext);
   const dispatch = useContext(AppDataDispatchContext);
 
-  const cols = Object.keys(data.rows[0]).map((col) =>
-    Object.fromEntries([
-      ["field", col],
-      ["headerName", col],
-      ["editable", true],
-      ["flex", 1],
-      ["minWidth", 100],
-    ])
-  );
+  // File upload and refresh functions
+  // File input change
+  const handleFileChange = (event) => {
+    if (event.target.files.length) {
+      const inputFile = event.target.files[0];
+      const fileExtension = inputFile?.type.split("/")[1];
+
+      if (!Constants.ALLOWEDEXTENSIONS.includes(fileExtension)) {
+        dispatch({
+          type: "setSnackbar",
+          snackbar: { children: "Only .csv are accepted", severity: "error" },
+        });
+      } else {
+        dispatch({ type: "setFile", file: inputFile });
+        dispatch({
+          type: "setSnackbar",
+          snackbar: { children: ".csv file found", severity: "success" },
+        });
+        data["file"] = inputFile;
+        handleLoad();
+      }
+    }
+  };
+
+  // Parse and update data
+  const handleLoad = () => {
+    if (!data.file) {
+      dispatch({
+        type: "setSnackbar",
+        snackbar: { children: "select a csv file first", severity: "error" },
+      });
+    } else {
+      const reader = new FileReader();
+      reader.readAsText(data.file);
+      reader.onload = ({ target }) => {
+        const csv = Papa.parse(target.result, {
+          header: true,
+          dynamicTyping: true,
+          skipEmptyLines: "greedy",
+        });
+        const parsedData = csv?.data;
+        const rows = parsedData.map((row, idx) =>
+          Object.assign({ id: idx }, row)
+        );
+
+        dispatch({ type: "setRows", newrows: rows, option: "reinit" });
+        dispatch({ type: "setMatch", match: "reinit" });
+        dispatch({ type: "setIsValidated", isvalidated: false });
+        dispatch({
+          type: "setSnackbar",
+          snackbar: { children: "data loaded from file", severity: "success" },
+        });
+      };
+    }
+  };
+
+  // deleteable Chip with filename
+  const handleDeleteChip = () => {
+    dispatch({ type: "setFile", file: null });
+  };
+
+  const cols = data.rows
+    ? Object.keys(data.rows[0]).map((col) =>
+        Object.fromEntries([
+          ["field", col],
+          ["headerName", col],
+          ["editable", true],
+          ["flex", 1],
+          ["minWidth", 100],
+        ])
+      )
+    : [];
 
   const processRowUpdate = (newRow) => {
     newRow["error"] = getRowError(newRow);
@@ -64,6 +131,32 @@ export default function DataGridDemo() {
         {/* <GridToolbarFilterButton /> */}
         <GridToolbarDensitySelector />
         <GridToolbarExport />
+        <Box>
+          {!data.file ? (
+            // <Button color="primary" startIcon={<UploadFileIcon />}>
+            //   Select .csv
+            <input
+              onChange={handleFileChange}
+              id="csvInput"
+              // hidden
+              accept=".csv"
+              type="File"
+            />
+          ) : (
+            // </Button>
+            [
+              <Chip label={`${data.file.name}`} onDelete={handleDeleteChip} />,
+
+              <Button
+                color="primary"
+                startIcon={<ReplayIcon />}
+                onClick={handleLoad}
+              >
+                reload .csv
+              </Button>,
+            ]
+          )}
+        </Box>
       </GridToolbarContainer>
     );
   }
@@ -77,7 +170,7 @@ export default function DataGridDemo() {
         },
         width: isfullScreen ? "100vw" : "95%",
         position: isfullScreen && "absolute",
-        height: isfullScreen && "100vh",
+        height: isfullScreen ? "100vh" : "70vh",
         top: isfullScreen && 0,
         right: isfullScreen && 0,
         backgroundColor: "white",
@@ -98,16 +191,18 @@ export default function DataGridDemo() {
       }}
     >
       <DataGrid
-        rows={data.rows}
-        density="compact"
         columns={cols}
+        rows={data.rows ? data.rows : []}
+        density="compact"
         initialState={{
           pagination: {
             paginationModel: {
               pageSize: 10,
+              page: 0,
             },
           },
         }}
+        autoPageSize
         pagination={isfullScreen ? 50 : 10}
         pageSizeOptions={[10, 20, 50]}
         disableRowSelectionOnClick
