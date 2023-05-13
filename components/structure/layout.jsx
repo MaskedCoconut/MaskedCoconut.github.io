@@ -49,7 +49,7 @@ const theme = createTheme({
     LoS: {
       Optimal: "#10b981",
       "Sub-Optimal": "#f97316",
-      "Over-Design": "#07d6fa",
+      "Over-Design": "#0679d0",
       "Under-Provided": "#f43f5e",
     },
     couldusethis: "#eab308",
