@@ -42,10 +42,6 @@ function appDataReducer(data, action) {
       // Only update the number of steps
       return { ...data, terminalsteps: action.newterminalsteps };
 
-    case "setRoutes":
-      // Only update the number of steps
-      return { ...data, routes: action.newroutes };
-
     case "setMatch":
       // Only updated the match object
       if (action.match == "reinit") {
@@ -106,6 +102,14 @@ function appDataReducer(data, action) {
       // refresh simulation
       const newchartdataTerminal = runSecurity(newdataTerminal);
       return { ...newdataTerminal, simresult: newchartdataTerminal };
+
+    case "setRoutes":
+      // Update routes and refresh calculations
+      const newdataRoutes = { ...data, routes: action.newroutes };
+
+      // refresh simulation
+      const newchartdataRoutes = runSecurity(newdataRoutes);
+      return { ...newdataRoutes, simresult: newchartdataRoutes };
 
     default: {
       return {

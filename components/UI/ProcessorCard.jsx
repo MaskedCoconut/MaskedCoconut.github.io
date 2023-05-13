@@ -58,7 +58,11 @@ export default function OutlinedCard({ processor, keyprocessor }) {
       >
         <Stack direction="row" spacing={1}>
           <Typography variant="h5" color="primary" align="center" flexGrow={1}>
-            <AirportIcons type={processor["icon"]} sx={{ mr: 1 }} />
+            <AirportIcons
+              type={processor["icon"]}
+              sx={{ mr: 1 }}
+              color="secondary"
+            />
             {arrayAvg(processor["name"])}
           </Typography>
         </Stack>
@@ -348,6 +352,26 @@ export const deleteprocessor = (data, dispatch, keyprocessor) => {
 };
 
 const saveprocessor = (data, dispatch, editedprocessor, keyprocessor) => {
+  // update processor
   data.terminal[keyprocessor] = editedprocessor;
   dispatch({ type: "setTerminal", newterminal: data.terminal });
+
+  // update routes
+  const updatedRoutes = editedprocessor["previous steps"].map((parent) => {
+    const ratio =
+      data.routes.filter(
+        (route) => route.parent == parent && route.child == keyprocessor
+      )?.[0]?.ratio ?? 100;
+    return {
+      parent: parent,
+      child: keyprocessor,
+      ratio: ratio,
+    };
+  });
+
+  const newroutes = data.routes
+    .filter((route) => !(route.child == keyprocessor))
+    .concat(updatedRoutes);
+
+  dispatch({ type: "setRoutes", newroutes: newroutes });
 };

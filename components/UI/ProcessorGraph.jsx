@@ -21,6 +21,7 @@ import { IconButton } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import { processortypes } from "../settings";
 import LoSGraph from "./LoSGraph";
+import { AirportIcons } from "../icons/icons";
 
 ChartJS.register(
   CategoryScale,
@@ -124,6 +125,10 @@ export default function App({ processor, options }) {
         }}
       >
         <Typography variant="h6" textAlign="center" sx={{ pt: 0, mt: 0 }}>
+          <AirportIcons
+            type={data.terminal[processor]["icon"]}
+            sx={{ mr: 1 }}
+          />
           {data.terminal[processor].name}
         </Typography>
         <Box sx={{ height: "40vh" }}>

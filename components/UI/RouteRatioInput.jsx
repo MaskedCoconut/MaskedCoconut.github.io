@@ -51,9 +51,6 @@ export default function RouteRatioInput({ parent, child }) {
         max: 100,
         type: "number",
         style: { textAlign: "center" },
-        // alternative to "number"
-        // inputMode: "numeric",
-        // pattern: "[0-9]*",
       }}
       InputProps={{
         endAdornment: <InputAdornment position="end">%</InputAdornment>,
