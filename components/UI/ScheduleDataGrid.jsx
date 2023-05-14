@@ -1,4 +1,12 @@
-import { Box, Button, Chip, Input, Collapse, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Chip,
+  Input,
+  Collapse,
+  Typography,
+  ToggleButton,
+} from "@mui/material";
 import {
   DataGrid,
   GridToolbarColumnsButton,
@@ -48,6 +56,7 @@ export default function DataGridDemo() {
         });
         data["file"] = inputFile;
         handleLoad();
+        SetisMatchvisible(true);
       }
     }
   };
@@ -94,6 +103,7 @@ export default function DataGridDemo() {
     dispatch({ type: "setRows", newrows: null });
     dispatch({ type: "setFile", file: null });
     dispatch({ type: "setSimresult", newsimresult: null });
+    SetisMatchvisible(false);
   };
 
   const cols = data.rows
@@ -207,13 +217,19 @@ export default function DataGridDemo() {
           >
             reload .csv
           </Button>,
-          <Button
+          <ToggleButton
             color="primary"
-            startIcon={<AirportIcons type="FlightscheduleIcon" />}
             onClick={toggleMatchvisible}
+            selected={isMatchvisible}
+            variant="text"
+            size="small"
+            sx={{ border: 0 }}
           >
-            column menu
-          </Button>,
+            <Typography color="primary">
+              <AirportIcons type="FlightscheduleIcon" sx={{ mr: 1 }} />
+              column menu
+            </Typography>
+          </ToggleButton>,
         ]}
       </GridToolbarContainer>
     );

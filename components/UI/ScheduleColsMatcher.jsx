@@ -128,7 +128,7 @@ export default function ScheduleColsMatcher({
         onClick={handleMatchClick}
         disabled={data.isvalidated}
       >
-        {data.isvalidated ? "reload .csv" : "update columns"}
+        {data.isvalidated ? "reload .csv" : "match columns"}
       </Button>
     </Stack>
   );
