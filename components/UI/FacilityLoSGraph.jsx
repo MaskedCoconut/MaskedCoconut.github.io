@@ -52,6 +52,7 @@ export default function LoSGraph({ processor }) {
         enabled: false,
         position: "nearest",
         external: externalTooltipHandler,
+        filter: (tooltipItem) => tooltipItem.raw > 0,
       },
     },
     scales: {
