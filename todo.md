@@ -4,14 +4,13 @@
 
 - empty column header in papa parse
 - table: highlight matched headers
-- accept time or date+time for "scheduled time"
 - can access the filtered data from table?
 
 - visual cues as to what should be the next step
 - self-contained demo
 - tooltips (with parcimony)
+- download graph data as csv/excel + fullscreen
 
-- Fact cards + gentle layout for results and fullscreen toggle
 - load should refresh terminal steps and all
 
 advanced ideas:
