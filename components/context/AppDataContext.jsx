@@ -50,6 +50,9 @@ function appDataReducer(data, action) {
         return { ...data, match: action.match };
       }
 
+    case "setColumnsVis":
+      return { ...data, columnsvis: action.newcolumnsvis };
+
     case "setRows":
       // updated schedule
       const newdataRows = { ...data, rows: action.newrows };
@@ -128,6 +131,7 @@ function appDataReducer(data, action) {
 
 const initialAppData = Object.fromEntries([
   ["currenttab", 0],
+  ["columnsvis", {}],
   ["rows", null],
   ["match", Object.fromEntries(SELECTLIST.map((col) => [col, ""]))],
   ["file", null],

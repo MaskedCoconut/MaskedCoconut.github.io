@@ -1,5 +1,6 @@
 import { erf } from "mathjs";
 import { SELECTLIST, timestep, processortypes } from "./settings";
+import { demoSchedule, demoData } from "../public/demo/demo_schedule";
 
 // Should be moved to settings
 const halltypes = processortypes
@@ -433,18 +434,68 @@ export const importData = (e, data, dispatch) => {
       reader.readAsText(inputFile);
       reader.onload = ({ target }) => {
         const parsedData = JSON.parse(target.result);
+
+        // this cannot work
+        // dispatch({ type: "setFile", file: parsedData.file });
+        dispatch({
+          type: "setIsValidated",
+          isvalidated: parsedData.isvalidated,
+        });
+        dispatch({
+          type: "setTerminalsteps",
+          newterminalsteps: parsedData.terminalsteps,
+        });
+        dispatch({ type: "setMatch", match: parsedData.match });
+        dispatch({ type: "setRows", newrows: parsedData.rows });
+        dispatch({ type: "setShowup", newshowup: parsedData.showup });
+        dispatch({ type: "setTerminal", newterminal: parsedData.terminal });
+        dispatch({ type: "setRoutes", newroutes: parsedData.routes });
+        dispatch({ type: "setSimresult", newsimresult: parsedData.simresult });
+        dispatch({
+          type: "setColumnsVis",
+          newcolumnsvis: parsedData.columnsvis,
+        });
+
+        // success messsage
         dispatch({
           type: "setSnackbar",
           snackbar: { children: "data loaded from file", severity: "success" },
         });
-
-        data = structuredClone(parsedData);
-        dispatch({ type: "setRows", newrows: data.rows });
-        dispatch({ type: "setTerminal", newterminal: parsedData.terminal });
-        // many other dispatch!!!
       };
     }
   }
+};
+
+export const LoadDemo = (dispatch) => {
+  // send the demo schedule
+  const demoSchedulestring = `data:text/csv;chatset=utf-8,${encodeURIComponent(
+    demoSchedule
+  )}`;
+  const link = document.createElement("a");
+  link.href = demoSchedulestring;
+  link.download = "example_schedule.csv";
+  link.click();
+
+  // load the demo data
+  const parsedData = demoData;
+  dispatch({
+    type: "setIsValidated",
+    isvalidated: parsedData.isvalidated,
+  });
+  dispatch({
+    type: "setTerminalsteps",
+    newterminalsteps: parsedData.terminalsteps,
+  });
+  dispatch({ type: "setMatch", match: parsedData.match });
+  dispatch({ type: "setRows", newrows: parsedData.rows });
+  dispatch({ type: "setShowup", newshowup: parsedData.showup });
+  dispatch({ type: "setTerminal", newterminal: parsedData.terminal });
+  dispatch({ type: "setRoutes", newroutes: parsedData.routes });
+  dispatch({ type: "setSimresult", newsimresult: parsedData.simresult });
+  dispatch({
+    type: "setColumnsVis",
+    newcolumnsvis: parsedData.columnsvis,
+  });
 };
 
 export const MovingAverage = (array, window) => {

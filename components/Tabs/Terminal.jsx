@@ -62,7 +62,7 @@ const App = () => {
                 padding: 2,
               }}
             >
-              <GroupsIcon sx={{ fontSize: 100 }} color="secondary" />
+              <GroupsIcon sx={{ fontSize: 100 }} color="primary" />
               <Typography align="center" color="primary" variant="h6">
                 Show-up
               </Typography>

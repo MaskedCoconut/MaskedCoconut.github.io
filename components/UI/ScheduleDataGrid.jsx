@@ -22,6 +22,8 @@ import {
 } from "../context/AppDataContext";
 import * as Constants from "../settings";
 
+import MyCustomNoRowsOverlay from "./ScheduleDataGridNoRowsOverlay";
+
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
@@ -133,34 +135,6 @@ export default function DataGridDemo() {
       )
     : [];
 
-  const MyCustomNoRowsOverlay = () => (
-    <Box
-      height="100%"
-      alignContent="center"
-      alignItems="stretch"
-      justifyContent="center"
-      justifyItems="center"
-      sx={{ display: "flex" }}
-    >
-      <Button component="label" sx={{ flexGrow: 1 }}>
-        <input
-          onChange={handleFileChange}
-          id="csvInput"
-          hidden
-          accept=".csv"
-          type="File"
-        />
-        <Typography variant="h2" sx={{ fontSize: 90 }} color="primary">
-          <AirportIcons
-            type="FlightscheduleIcon"
-            sx={{ fontSize: 90, mr: 3 }}
-          />
-          Import a Schedule
-        </Typography>
-      </Button>
-    </Box>
-  );
-
   const processRowUpdate = (newRow) => {
     newRow["error"] = getRowError(newRow);
     const updatedRow = { ...newRow };
@@ -217,40 +191,46 @@ export default function DataGridDemo() {
             //  onDelete={handleDeleteChip}
           />
         )}
-        {data.rows && [
-          <Button
-            color="primary"
-            startIcon={<DeleteForever />}
-            onClick={handleDeletedata}
-          >
-            Delete all
-          </Button>,
-          <Button
-            color="primary"
-            startIcon={<ReplayIcon />}
-            onClick={handleLoad}
-          >
-            reload .csv
-          </Button>,
-          <ToggleButton
-            color="primary"
-            onClick={toggleMatchvisible}
-            selected={isMatchvisible}
-            variant="text"
-            size="small"
-            sx={{ border: 0 }}
-          >
-            <Typography color="primary">
-              <AirportIcons type="FlightscheduleIcon" sx={{ mr: 1 }} />
-              column menu
-            </Typography>
-          </ToggleButton>,
-        ]}
+        {data.rows && (
+          <Box>
+            <Button
+              color="primary"
+              startIcon={<DeleteForever />}
+              onClick={handleDeletedata}
+            >
+              Delete all
+            </Button>
+            {data.file && (
+              <Button
+                color="primary"
+                startIcon={<ReplayIcon />}
+                onClick={handleLoad}
+              >
+                reload .csv
+              </Button>
+            )}
+            <ToggleButton
+              color="primary"
+              onClick={toggleMatchvisible}
+              selected={isMatchvisible}
+              variant="text"
+              size="small"
+              sx={{ border: 0 }}
+            >
+              <Typography color="primary">
+                <AirportIcons type="FlightscheduleIcon" sx={{ mr: 1 }} />
+                column menu
+              </Typography>
+            </ToggleButton>
+          </Box>
+        )}
       </GridToolbarContainer>
     );
   }
 
-  const [columnVisibilityModel, setColumnVisibilityModel] = React.useState({});
+  const setColumnVisibilityModel = (newModel) => {
+    dispatch({ type: "setColumnsVis", newcolumnsvis: newModel });
+  };
 
   return (
     <Box
@@ -292,7 +272,7 @@ export default function DataGridDemo() {
       <DataGrid
         columns={cols}
         rows={data.rows ? data.rows : []}
-        columnVisibilityModel={columnVisibilityModel}
+        columnVisibilityModel={data.columnsvis}
         onColumnVisibilityModelChange={(newModel) =>
           setColumnVisibilityModel(newModel)
         }

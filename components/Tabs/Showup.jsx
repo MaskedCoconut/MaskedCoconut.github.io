@@ -39,9 +39,9 @@ const App = () => {
             maxWidth={{ xs: "100vw", md: "70vw" }}
             flexGrow={1}
           >
-            {data?.simresult?.showup && <ShowUpChart />}
+            {data?.rows && data?.simresult?.showup && <ShowUpChart />}
           </Box>
-          <Box>{data?.simresult?.showup && <ShowUpCard />}</Box>
+          <Box>{data?.rows && data?.simresult?.showup && <ShowUpCard />}</Box>
         </Stack>
 
         {/* Profile */}
