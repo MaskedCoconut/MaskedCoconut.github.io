@@ -15,7 +15,7 @@ import * as React from "react";
 import { useContext } from "react";
 import { useTheme } from "@mui/material/styles";
 import { AppDataContext } from "../context/AppDataContext";
-import TerminalGraphEditor from "./TerminalGraphEditor";
+import FacilityGraphEditor from "./FacilityGraphEditor";
 import { Box } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { IconButton } from "@mui/material";
@@ -52,6 +52,7 @@ export default function LoSGraph({ processor }) {
         enabled: false,
         position: "nearest",
         external: externalTooltipHandler,
+        filter: (tooltipItem) => tooltipItem.raw > 0,
       },
     },
     scales: {
@@ -76,8 +77,8 @@ export default function LoSGraph({ processor }) {
         data: data.simresult[processor].map((row) =>
           row["LoS"] == "Optimal" ? 1 : ""
         ),
-        borderColor: theme.palette.success.light,
-        backgroundColor: theme.palette.success.light,
+        borderColor: theme.palette.LoS["Optimal"],
+        backgroundColor: theme.palette.LoS["Optimal"],
         barPercentage: 1,
         categoryPercentage: 1,
         inflateAmount: 2,
@@ -88,8 +89,8 @@ export default function LoSGraph({ processor }) {
         data: data.simresult[processor].map((row) =>
           row["LoS"] == "Sub-Optimal" ? 1 : ""
         ),
-        borderColor: theme.palette.warning.light,
-        backgroundColor: theme.palette.warning.light,
+        borderColor: theme.palette.LoS["Sub-Optimal"],
+        backgroundColor: theme.palette.LoS["Sub-Optimal"],
         barPercentage: 1,
         categoryPercentage: 1,
         inflateAmount: 2,
@@ -100,8 +101,8 @@ export default function LoSGraph({ processor }) {
         data: data.simresult[processor].map((row) =>
           row["LoS"] == "Over-Design" ? 1 : ""
         ),
-        borderColor: theme.palette.success.dark,
-        backgroundColor: theme.palette.success.dark,
+        borderColor: theme.palette.LoS["Over-Design"],
+        backgroundColor: theme.palette.LoS["Over-Design"],
         barPercentage: 1,
         categoryPercentage: 1,
         inflateAmount: 2,
@@ -112,8 +113,8 @@ export default function LoSGraph({ processor }) {
         data: data.simresult[processor].map((row) =>
           row["LoS"] == "Under-Provided" ? 1 : ""
         ),
-        borderColor: theme.palette.error.main,
-        backgroundColor: theme.palette.error.main,
+        borderColor: theme.palette.LoS["Under-Provided"],
+        backgroundColor: theme.palette.LoS["Under-Provided"],
         barPercentage: 1,
         categoryPercentage: 1,
         inflateAmount: 2,

@@ -77,7 +77,7 @@ const options = {
       },
       beginAtZero: true,
     },
-    y: {
+    y1: {
       type: "linear",
       beginAtZero: true,
       title: {
@@ -90,6 +90,20 @@ const options = {
         dash: [4, 4],
       },
     },
+
+    y2: {
+      type: "linear",
+      beginAtZero: true,
+      title: {
+        display: true,
+        text: "[ % ]",
+      },
+      position: "right",
+      border: {
+        display: false,
+        dash: [4, 4],
+      },
+    },
   },
 };
 
@@ -97,17 +111,34 @@ export default function App() {
   const theme = useTheme();
   const data = useContext(AppDataContext);
 
+  const profileData = data.profiledata
+    .toReversed()
+    .map((row) => Math.floor(row["Show-up Profile"] * 100 * 100) / 100);
+
+  const profileDatacumsum = profileData.map((_val, id) =>
+    profileData.slice(0, id + 1).reduce((x, y) => x + y)
+  );
+
   const graphdata = {
     labels: data.profiledata.toReversed().map((row) => row["slot"]),
     datasets: [
       {
         label: "Show-up Profile [%]",
-        data: data.profiledata
-          .toReversed()
-          .map((row) => Math.floor(row["Show-up Profile"] * 100 * 100) / 100),
+        type: "bar",
+        data: profileData,
         borderColor: theme.palette.info.main,
         backgroundColor: theme.palette.info.main,
-        yAxisID: "y",
+        yAxisID: "y1",
+        order: 2,
+      },
+      {
+        label: "Show-up Profile (cumul.) [%]",
+        type: "line",
+        data: profileDatacumsum,
+        borderColor: theme.palette.secondary.main,
+        backgroundColor: theme.palette.secondary.main,
+        yAxisID: "y2",
+        order: 1,
       },
     ],
   };

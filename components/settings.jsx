@@ -8,6 +8,9 @@ export const ALLOWEDEXTENSIONS = ["csv"];
 export const processorcardWidth = 333;
 export const stepminheight = 300;
 
+// default timestep in minutes
+export const timestep = 5;
+
 // List of destination columns to match
 export const SELECTLIST = [
   // "Flight Number",
@@ -21,9 +24,6 @@ export const SELECTLIST = [
   // "Seats",
   "Pax",
 ];
-
-// default timestep in minutes
-export const timestep = 5;
 
 // Types of processor
 export const processortypes = [
@@ -60,24 +60,24 @@ export const processortypes = [
   {
     name: "Security",
     type: "processor",
-    sqmPaxlow: 1.2,
-    sqmPaxhigh: 1,
+    sqmPaxlow: 1,
+    sqmPaxhigh: 1.2,
     waitLow: 5,
     waitHigh: 10,
   },
   {
     name: "Border control - auto",
     type: "processor",
-    sqmPaxlow: 1.2,
-    sqmPaxhigh: 1,
+    sqmPaxlow: 1,
+    sqmPaxhigh: 1.2,
     waitLow: 1,
     waitHigh: 5,
   },
   {
     name: "Border control - staffed",
     type: "processor",
-    sqmPaxlow: 1.2,
-    sqmPaxhigh: 1,
+    sqmPaxlow: 1,
+    sqmPaxhigh: 1.2,
     waitLow: 5,
     waitHigh: 10,
   },
@@ -86,8 +86,8 @@ export const processortypes = [
   {
     name: "Customs control",
     type: "processor",
-    sqmPaxlow: 1.8,
-    sqmPaxhigh: 1.3,
+    sqmPaxlow: 1.3,
+    sqmPaxhigh: 1.8,
     waitLow: 1,
     waitHigh: 5,
   },

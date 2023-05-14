@@ -1,4 +1,4 @@
-import { Stack, Paper } from "@mui/material";
+import { Stack, Paper, Tooltip } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
@@ -14,14 +14,18 @@ import {
 import { SELECTLIST } from "../settings";
 import { getRowError, FilterObjectOnValue, getKeyByValue } from "../utils";
 
-export default function BasicSelect() {
+export default function ScheduleColsMatcher({
+  isMatchvisible,
+  SetisMatchvisible,
+  setColumnVisibilityModel,
+}) {
   // AppDataContext
   const dispatch = useContext(AppDataDispatchContext);
   const data = useContext(AppDataContext);
 
-  const choices = Object.keys(data.rows[0]).filter(
-    (choice) => !["error"].includes(choice)
-  );
+  const choices = data.rows
+    ? Object.keys(data.rows[0]).filter((choice) => !["error"].includes(choice))
+    : [];
 
   const handleSelect = (e) => {
     // record the updated value
@@ -61,24 +65,36 @@ export default function BasicSelect() {
         return row;
       });
 
+      const colsToHide = Object.keys(updatedRows[0]).filter(
+        (col) => !SELECTLIST.concat(["error", "id"]).includes(col)
+      );
+
       dispatch({ type: "setRows", newrows: updatedRows });
       dispatch({ type: "setIsValidated", isvalidated: true });
       dispatch({ type: "setMatch", match: "reinit" });
+      SetisMatchvisible(!isMatchvisible);
+      setColumnVisibilityModel(
+        Object.fromEntries(colsToHide.map((col) => [col, false]))
+      );
     }
   };
 
   return (
     <Stack
       padding={1}
-      spacing={{ xs: 1, sm: 2 }}
+      spacing={{ xs: 2, sm: 4 }}
       direction="row"
       useFlexGap
       flexWrap="wrap"
       alignItems="center"
       justifyContent="center"
+      border={1}
+      borderRadius={1}
+      borderColor="#e0e0e0"
+      borderBottom="hidden"
     >
       {SELECTLIST.map((col) => (
-        <Box key={"box" + col} sx={{ minWidth: 120 }}>
+        <Box key={"box" + col} sx={{ minWidth: 200 }}>
           <FormControl key={"form" + col} fullWidth>
             <InputLabel
               key={"InputLabel" + col}
@@ -105,8 +121,7 @@ export default function BasicSelect() {
             >
               {choices.map((val) => (
                 <MenuItem key={val} value={val}>
-                  {" "}
-                  {val}{" "}
+                  {val}
                 </MenuItem>
               ))}
             </Select>
@@ -114,14 +129,16 @@ export default function BasicSelect() {
         </Box>
       ))}
 
-      <Button
-        variant="contained"
-        component="label"
-        onClick={handleMatchClick}
-        disabled={data.isvalidated}
-      >
-        {data.isvalidated ? "reload .csv" : "update columns"}
-      </Button>
+      <Tooltip title="You need to indicate which column is 'Scheduled time' (date or datetime) and which column is 'Pax' (number)">
+        <Button
+          variant="contained"
+          component="label"
+          onClick={handleMatchClick}
+          disabled={data.isvalidated}
+        >
+          {data.isvalidated ? "reload .csv" : "match columns"}
+        </Button>
+      </Tooltip>
     </Stack>
   );
 }

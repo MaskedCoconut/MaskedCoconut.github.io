@@ -14,13 +14,14 @@ import * as React from "react";
 import { useContext } from "react";
 import { useTheme } from "@mui/material/styles";
 import { AppDataContext } from "../context/AppDataContext";
-import TerminalGraphEditor from "./TerminalGraphEditor";
+import TerminalGraphEditor from "./FacilityGraphEditor";
 import { Box } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { IconButton } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import { processortypes } from "../settings";
-import LoSGraph from "./LoSGraph";
+import LoSGraph from "./FacilityLoSGraph";
+import { AirportIcons } from "../icons/icons";
 
 ChartJS.register(
   CategoryScale,
@@ -124,6 +125,10 @@ export default function App({ processor, options }) {
         }}
       >
         <Typography variant="h6" textAlign="center" sx={{ pt: 0, mt: 0 }}>
+          <AirportIcons
+            type={data.terminal[processor]["icon"]}
+            sx={{ mr: 1 }}
+          />
           {data.terminal[processor].name}
         </Typography>
         <Box sx={{ height: "40vh" }}>

@@ -42,10 +42,6 @@ function appDataReducer(data, action) {
       // Only update the number of steps
       return { ...data, terminalsteps: action.newterminalsteps };
 
-    case "setRoutes":
-      // Only update the number of steps
-      return { ...data, routes: action.newroutes };
-
     case "setMatch":
       // Only updated the match object
       if (action.match == "reinit") {
@@ -53,6 +49,9 @@ function appDataReducer(data, action) {
       } else {
         return { ...data, match: action.match };
       }
+
+    case "setColumnsVis":
+      return { ...data, columnsvis: action.newcolumnsvis };
 
     case "setRows":
       // updated schedule
@@ -107,6 +106,17 @@ function appDataReducer(data, action) {
       const newchartdataTerminal = runSecurity(newdataTerminal);
       return { ...newdataTerminal, simresult: newchartdataTerminal };
 
+    case "setRoutes":
+      // Update routes and refresh calculations
+      const newdataRoutes = { ...data, routes: action.newroutes };
+
+      // refresh simulation
+      const newchartdataRoutes = runSecurity(newdataRoutes);
+      return { ...newdataRoutes, simresult: newchartdataRoutes };
+
+    case "setSimresult":
+      return { ...data, simresult: action.newsimresult };
+
     default: {
       return {
         ...data,
@@ -121,6 +131,7 @@ function appDataReducer(data, action) {
 
 const initialAppData = Object.fromEntries([
   ["currenttab", 0],
+  ["columnsvis", {}],
   ["rows", null],
   ["match", Object.fromEntries(SELECTLIST.map((col) => [col, ""]))],
   ["file", null],
@@ -129,15 +140,11 @@ const initialAppData = Object.fromEntries([
   [
     "showup",
     Object.fromEntries([
-      ["type", "default"],
       ["mean", 120],
       ["stdev", 20],
     ]),
   ],
-  [
-    "profiledata",
-    calculateProfile({ showup: { type: "default", mean: 120, stdev: 20 } }),
-  ],
+  ["profiledata", calculateProfile({ showup: { mean: 120, stdev: 20 } })],
   ["simresult", null],
   ["terminal", {}],
   ["terminalsteps", []],

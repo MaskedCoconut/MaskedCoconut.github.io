@@ -1,10 +1,11 @@
 import { erf } from "mathjs";
-import {
-  SELECTLIST,
-  defaultShowUpProfile,
-  timestep,
-  processortypes,
-} from "./settings";
+import { SELECTLIST, timestep, processortypes } from "./settings";
+import { demoSchedule, demoData } from "../public/demo/demo_schedule";
+
+// Should be moved to settings
+const halltypes = processortypes
+  .filter((obj) => obj.type == "hall")
+  .map((obj) => obj.name);
 
 // Get keys (array) by value
 export const getKeyByValue = (object, value) => {
@@ -42,7 +43,10 @@ export const getRowError = (row) => {
           break;
         case "Scheduled Time":
           const originTime = "2022-10-13 ";
-          if (Date.parse([originTime, row[field]].join(" "))) {
+          if (
+            Date.parse([originTime, row[field]].join(" ")) ||
+            Date.parse(row[field])
+          ) {
             result.push(1);
           } else {
             result.push(0);
@@ -72,10 +76,6 @@ export const getRowError = (row) => {
     ? "valid row"
     : errors.join("|");
 };
-
-const halltypes = processortypes
-  .filter((obj) => obj.type == "hall")
-  .map((obj) => obj.name);
 
 // recalculate all processors queues and output successively
 export const runSecurity = (data) => {
@@ -312,19 +312,10 @@ const calculateLoS = (queuePax, queueMinutes, facility, data) => {
 
 // calculate Showup Profile
 export const calculateProfile = (data) => {
-  // case default or normal distribution
-  var usedShowUpProfile = [];
-  switch (data.showup.type) {
-    case "default":
-      usedShowUpProfile = generateNormShowupProfile(120, 20);
-
-    case "normdist":
-      usedShowUpProfile = generateNormShowupProfile(
-        data.showup.mean,
-        data.showup.stdev
-      );
-      break;
-  }
+  const usedShowUpProfile = generateNormShowupProfile(
+    data.showup.mean,
+    data.showup.stdev
+  );
 
   // format object for plot and state management
   const profiledata = usedShowUpProfile.map((val, id) =>
@@ -337,6 +328,22 @@ export const calculateProfile = (data) => {
   return profiledata;
 };
 
+// Showup profile, always sums to 100%, always stops at 0
+function generateNormShowupProfile(mean, stdev) {
+  // at 0, we get all Pax that would arrive after 0 (=STD)
+  const profileArray = [
+    cdfNormal(0, mean, stdev) - cdfNormal(-99999 * timestep, mean, stdev),
+  ];
+
+  for (let idx = 1; cdfNormal(idx * timestep, mean, stdev) <= 1 - 1e-6; idx++) {
+    profileArray.push(
+      cdfNormal(idx * timestep, mean, stdev) -
+        cdfNormal((idx - 1) * timestep, mean, stdev)
+    );
+  }
+  return profileArray;
+}
+
 // calculate the show-up and profile
 export const calculateShowUp = (data) => {
   if (data.rows) {
@@ -346,7 +353,10 @@ export const calculateShowUp = (data) => {
       .filter((row) => row.Pax)
       .map((row) => {
         const originTime = "2022-10-13 ";
-        const date = new Date([originTime, row["Scheduled Time"]].join(" "));
+
+        const date = Date.parse([originTime, row["Scheduled Time"]].join(" "))
+          ? new Date([originTime, row["Scheduled Time"]].join(" "))
+          : new Date(row["Scheduled Time"]);
         const std5Minutes = Math.floor(
           (date.getMinutes() + date.getHours() * 60) / timestep
         );
@@ -376,20 +386,17 @@ export const calculateShowUp = (data) => {
   }
 };
 
-export function generateNormShowupProfile(mean, stdev) {
-  const startArray = new Array((5 * 60) / timestep).fill(0);
-  return startArray.map(
-    (_val, idx) =>
-      cdfNormal(idx * timestep, mean, stdev) -
-      cdfNormal((idx - 1) * timestep, mean, stdev)
-  );
-}
+// Simple date formatter, consider localeString()?
+export const dataFormatter = (number) => {
+  retusn(`${Intl.NumberFormat("us").format(Math.round(number)).toString()}`);
+};
 
-export const dataFormatter = (number) =>
-  `${Intl.NumberFormat("us").format(Math.round(number)).toString()}`;
+// Simple percentage, should add significant digits and harmonize across App
+export const percentageFormatter = (number) => {
+  return `${(number * 100).toFixed(2)}%`;
+};
 
-export const percentageFormatter = (number) => `${(number * 100).toFixed(2)}%`;
-
+// The Fromatter <3
 export const timeFromatter = (slot5m) => {
   const h = Math.floor((slot5m * timestep) / 60);
   const m = (slot5m * timestep) % 60;
@@ -400,6 +407,7 @@ export function cdfNormal(x, mean, standardDeviation) {
   return (1 - erf((mean - x) / (Math.sqrt(2) * standardDeviation))) / 2;
 }
 
+// all App data to JSON and downloaded by user
 export const exportData = (data) => {
   const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
     JSON.stringify(data)
@@ -410,6 +418,7 @@ export const exportData = (data) => {
   link.click();
 };
 
+// regenerate Appdata from JSON uploaded by user
 export const importData = (e, data, dispatch) => {
   if (e.target.files.length) {
     const inputFile = e.target.files[0];
@@ -425,16 +434,84 @@ export const importData = (e, data, dispatch) => {
       reader.readAsText(inputFile);
       reader.onload = ({ target }) => {
         const parsedData = JSON.parse(target.result);
+
+        // this cannot work
+        // dispatch({ type: "setFile", file: parsedData.file });
+        dispatch({
+          type: "setIsValidated",
+          isvalidated: parsedData.isvalidated,
+        });
+        dispatch({
+          type: "setTerminalsteps",
+          newterminalsteps: parsedData.terminalsteps,
+        });
+        dispatch({ type: "setMatch", match: parsedData.match });
+        dispatch({ type: "setRows", newrows: parsedData.rows });
+        dispatch({ type: "setShowup", newshowup: parsedData.showup });
+        dispatch({ type: "setTerminal", newterminal: parsedData.terminal });
+        dispatch({ type: "setRoutes", newroutes: parsedData.routes });
+        dispatch({ type: "setSimresult", newsimresult: parsedData.simresult });
+        dispatch({
+          type: "setColumnsVis",
+          newcolumnsvis: parsedData.columnsvis,
+        });
+
+        // success messsage
         dispatch({
           type: "setSnackbar",
           snackbar: { children: "data loaded from file", severity: "success" },
         });
-
-        data = structuredClone(parsedData);
-        dispatch({ type: "setRows", newrows: data.rows });
-        // Why do I need that?
-        dispatch({ type: "setTerminal", newterminal: parsedData.terminal });
       };
     }
   }
+};
+
+export const LoadDemo = (dispatch) => {
+  // send the demo schedule
+  const demoSchedulestring = `data:text/csv;chatset=utf-8,${encodeURIComponent(
+    demoSchedule
+  )}`;
+  const link = document.createElement("a");
+  link.href = demoSchedulestring;
+  link.download = "example_schedule.csv";
+  link.click();
+
+  // load the demo data
+  const parsedData = demoData;
+  dispatch({
+    type: "setIsValidated",
+    isvalidated: parsedData.isvalidated,
+  });
+  dispatch({
+    type: "setTerminalsteps",
+    newterminalsteps: parsedData.terminalsteps,
+  });
+  dispatch({ type: "setMatch", match: parsedData.match });
+  dispatch({ type: "setRows", newrows: parsedData.rows });
+  dispatch({ type: "setShowup", newshowup: parsedData.showup });
+  dispatch({ type: "setTerminal", newterminal: parsedData.terminal });
+  dispatch({ type: "setRoutes", newroutes: parsedData.routes });
+  dispatch({ type: "setSimresult", newsimresult: parsedData.simresult });
+  dispatch({
+    type: "setColumnsVis",
+    newcolumnsvis: parsedData.columnsvis,
+  });
+};
+
+export const MovingAverage = (array, window) => {
+  // centered and considering a "rotating" array
+  const before = Math.floor(window / 2);
+  const after = Math.floor(window / 2) + (window % 2);
+
+  //...
+  const triplearray = [...array].concat([...array]).concat([...array]);
+
+  const result = array.map((_val, id) => {
+    const newid = id + array.length;
+    return triplearray
+      .slice(newid - before, newid + after)
+      .reduce((x, y) => x + y);
+  });
+
+  return result.map((x) => x / window);
 };
