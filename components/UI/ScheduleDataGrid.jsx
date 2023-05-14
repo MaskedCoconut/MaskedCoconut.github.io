@@ -106,8 +106,16 @@ export default function DataGridDemo() {
     SetisMatchvisible(false);
   };
 
+  const columsSorted = data.rows
+    ? [...Object.keys(data.rows[0])].sort((a, b) => {
+        if (a === "error") {
+          return -1;
+        }
+      })
+    : [];
+
   const cols = data.rows
-    ? Object.keys(data.rows[0]).map((col) =>
+    ? columsSorted.map((col) =>
         Object.fromEntries([
           ["field", col],
           ["headerName", col],
@@ -300,7 +308,8 @@ export default function DataGridDemo() {
               return Date.parse(params.value) ? "ok" : "bad";
             case "Scheduled Time":
               const originTime = "2022-10-13 ";
-              return Date.parse([originTime, params.value].join(""))
+              return Date.parse([originTime, params.value].join("")) ||
+                Date.parse(params.value)
                 ? "ok"
                 : "bad";
             case "Arr./Dep.":

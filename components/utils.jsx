@@ -42,7 +42,10 @@ export const getRowError = (row) => {
           break;
         case "Scheduled Time":
           const originTime = "2022-10-13 ";
-          if (Date.parse([originTime, row[field]].join(" "))) {
+          if (
+            Date.parse([originTime, row[field]].join(" ")) ||
+            Date.parse(row[field])
+          ) {
             result.push(1);
           } else {
             result.push(0);
@@ -349,7 +352,10 @@ export const calculateShowUp = (data) => {
       .filter((row) => row.Pax)
       .map((row) => {
         const originTime = "2022-10-13 ";
-        const date = new Date([originTime, row["Scheduled Time"]].join(" "));
+
+        const date = Date.parse([originTime, row["Scheduled Time"]].join(" "))
+          ? new Date([originTime, row["Scheduled Time"]].join(" "))
+          : new Date(row["Scheduled Time"]);
         const std5Minutes = Math.floor(
           (date.getMinutes() + date.getHours() * 60) / timestep
         );

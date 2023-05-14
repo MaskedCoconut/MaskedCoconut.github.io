@@ -1,4 +1,4 @@
-import { Stack, Paper } from "@mui/material";
+import { Stack, Paper, Tooltip } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
@@ -86,7 +86,7 @@ export default function ScheduleColsMatcher({
       borderBottom="hidden"
     >
       {SELECTLIST.map((col) => (
-        <Box key={"box" + col} sx={{ minWidth: 120 }}>
+        <Box key={"box" + col} sx={{ minWidth: 200 }}>
           <FormControl key={"form" + col} fullWidth>
             <InputLabel
               key={"InputLabel" + col}
@@ -113,8 +113,7 @@ export default function ScheduleColsMatcher({
             >
               {choices.map((val) => (
                 <MenuItem key={val} value={val}>
-                  {" "}
-                  {val}{" "}
+                  {val}
                 </MenuItem>
               ))}
             </Select>
@@ -122,14 +121,19 @@ export default function ScheduleColsMatcher({
         </Box>
       ))}
 
-      <Button
-        variant="contained"
-        component="label"
-        onClick={handleMatchClick}
-        disabled={data.isvalidated}
+      <Tooltip
+        title="Match columns to expected format and activate data validation.
+       Scheduled Time should be a time or date+time and Pax should be a number"
       >
-        {data.isvalidated ? "reload .csv" : "match columns"}
-      </Button>
+        <Button
+          variant="contained"
+          component="label"
+          onClick={handleMatchClick}
+          disabled={data.isvalidated}
+        >
+          {data.isvalidated ? "reload .csv" : "match columns"}
+        </Button>
+      </Tooltip>
     </Stack>
   );
 }
