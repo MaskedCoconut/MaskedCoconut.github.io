@@ -27,9 +27,19 @@ const App = () => {
             .map((key) => {
               const options = cloneDeep(optionsProcessorGraph);
               return (
-                <Box width="100%" key={key} padding={1}>
-                  <Stack direction="row">
-                    <Box flexGrow={1}>
+                <Box width="100%" key={key}>
+                  <Stack
+                    direction="row"
+                    gap={2}
+                    justifyItems="center"
+                    alignItems="center"
+                    flexWrap="wrap"
+                  >
+                    <Box
+                      minWidth="50vw"
+                      maxWidth={{ xs: "100vw", md: "75vw" }}
+                      flexGrow={1}
+                    >
                       <FacilityGraph
                         key={key}
                         processor={key}

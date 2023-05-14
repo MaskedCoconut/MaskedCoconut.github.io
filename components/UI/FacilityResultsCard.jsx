@@ -6,6 +6,7 @@ import {
   Typography,
   Stack,
   Divider,
+  Tooltip,
 } from "@mui/material";
 
 import { useTheme } from "@mui/material/styles";
@@ -75,17 +76,6 @@ export default function ShowUpCard({ processor }) {
                 <InfoIcon sx={{ mr: 1 }} />
                 {data.terminal[processor].name}
               </Typography>
-              {/* <Typography
-                variant="subtitle1"
-                sx={{
-                  mt: 0,
-                  pt: 0,
-                  textAlign: "center",
-                }}
-                color="primary"
-              >
-                details on busiest time
-              </Typography> */}
             </Stack>
 
             {/* Busiest hour */}
@@ -99,17 +89,23 @@ export default function ShowUpCard({ processor }) {
                   >
                     {timeFromatter(busyIndex)}
                   </Typography>
-                  {/* <Typography variant="h5">[Pax/day]</Typography> */}
                 </Stack>
               </Box>
-              <Box>
-                <Typography
-                  variant="subtitle2"
-                  sx={{ mt: 0, pt: 0, fontStyle: "oblique", textAlign: "left" }}
-                >
-                  Busiest hour (CMA)
-                </Typography>
-              </Box>
+              <Tooltip title="5-min slot when the Centered Moving Average (1 hour) of queue is the highest">
+                <Box>
+                  <Typography
+                    variant="subtitle2"
+                    sx={{
+                      mt: 0,
+                      pt: 0,
+                      fontStyle: "oblique",
+                      textAlign: "left",
+                    }}
+                  >
+                    Busiest hour (CMA)
+                  </Typography>
+                </Box>
+              </Tooltip>
             </Box>
           </Stack>
           <Divider />
@@ -119,7 +115,7 @@ export default function ShowUpCard({ processor }) {
               variant="subtitle1"
               sx={{ mt: 0, pt: 0, fontWeight: "bold", textAlign: "left" }}
             >
-              Space LoS
+              Space LoS [sqm/Pax]
             </Typography>
             <Box>
               <LoSbar
@@ -129,22 +125,20 @@ export default function ShowUpCard({ processor }) {
                 type="space"
               />
             </Box>
-            {!isHall && (
-              <Box>
-                <Typography
-                  variant="subtitle1"
-                  sx={{ mt: 0, pt: 0, fontWeight: "bold", textAlign: "left" }}
-                >
-                  wait LoS
-                </Typography>
-                <LoSbar
-                  low={waitLow}
-                  high={waitHigh}
-                  value={waitValue}
-                  type="wait"
-                />
-              </Box>
-            )}
+            {!isHall && [
+              <Typography
+                variant="subtitle1"
+                sx={{ mt: 0, pt: 0, fontWeight: "bold", textAlign: "left" }}
+              >
+                wait LoS [min]
+              </Typography>,
+              <LoSbar
+                low={waitLow}
+                high={waitHigh}
+                value={waitValue}
+                type="wait"
+              />,
+            ]}
           </Stack>
         </CardContent>
       </Paper>

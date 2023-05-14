@@ -93,6 +93,7 @@ export default function DataGridDemo() {
   const handleDeletedata = () => {
     dispatch({ type: "setRows", newrows: null });
     dispatch({ type: "setFile", file: null });
+    dispatch({ type: "setSimresult", newsimresult: null });
   };
 
   const cols = data.rows

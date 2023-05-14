@@ -111,6 +111,9 @@ function appDataReducer(data, action) {
       const newchartdataRoutes = runSecurity(newdataRoutes);
       return { ...newdataRoutes, simresult: newchartdataRoutes };
 
+    case "setSimresult":
+      return { ...data, simresult: action.newsimresult };
+
     default: {
       return {
         ...data,
