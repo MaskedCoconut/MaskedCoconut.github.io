@@ -56,7 +56,6 @@ export default function DataGridDemo() {
         });
         data["file"] = inputFile;
         handleLoad();
-        SetisMatchvisible(true);
       }
     }
   };
@@ -89,13 +88,10 @@ export default function DataGridDemo() {
           type: "setSnackbar",
           snackbar: { children: "data loaded from file", severity: "success" },
         });
+        SetisMatchvisible(true);
+        setColumnVisibilityModel({});
       };
     }
-  };
-
-  // deleteable Chip with filename
-  const handleDeleteChip = () => {
-    dispatch({ type: "setFile", file: null });
   };
 
   // delete the data
@@ -107,22 +103,33 @@ export default function DataGridDemo() {
   };
 
   const columsSorted = data.rows
-    ? [...Object.keys(data.rows[0])].sort((a, b) => {
-        if (a === "error") {
-          return -1;
+    ? [...Object.keys(data.rows[0]).filter((col) => col != "id")].sort(
+        (a, b) => {
+          if (a === "error") {
+            return -1;
+          }
         }
-      })
+      )
     : [];
 
   const cols = data.rows
-    ? columsSorted.map((col) =>
+    ? [
         Object.fromEntries([
-          ["field", col],
-          ["headerName", col],
-          ["editable", true],
-          ["flex", 1],
-          ["minWidth", 100],
-        ])
+          ["field", "id"],
+          ["headerName", "id"],
+          ["editable", false],
+          ["width", 75],
+        ]),
+      ].concat(
+        columsSorted.map((col) =>
+          Object.fromEntries([
+            ["field", col],
+            ["headerName", col],
+            ["editable", true],
+            ["flex", 1],
+            ["minWidth", 100],
+          ])
+        )
       )
     : [];
 
@@ -243,6 +250,8 @@ export default function DataGridDemo() {
     );
   }
 
+  const [columnVisibilityModel, setColumnVisibilityModel] = React.useState({});
+
   return (
     <Box
       sx={{
@@ -276,12 +285,17 @@ export default function DataGridDemo() {
         <ScheduleColsMatcher
           isMatchvisible={isMatchvisible}
           SetisMatchvisible={SetisMatchvisible}
+          setColumnVisibilityModel={setColumnVisibilityModel}
         />
       </Collapse>
 
       <DataGrid
         columns={cols}
         rows={data.rows ? data.rows : []}
+        columnVisibilityModel={columnVisibilityModel}
+        onColumnVisibilityModelChange={(newModel) =>
+          setColumnVisibilityModel(newModel)
+        }
         density="compact"
         initialState={{
           pagination: {

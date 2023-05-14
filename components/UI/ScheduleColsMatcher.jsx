@@ -17,6 +17,7 @@ import { getRowError, FilterObjectOnValue, getKeyByValue } from "../utils";
 export default function ScheduleColsMatcher({
   isMatchvisible,
   SetisMatchvisible,
+  setColumnVisibilityModel,
 }) {
   // AppDataContext
   const dispatch = useContext(AppDataDispatchContext);
@@ -64,10 +65,17 @@ export default function ScheduleColsMatcher({
         return row;
       });
 
+      const colsToHide = Object.keys(updatedRows[0]).filter(
+        (col) => !SELECTLIST.concat(["error", "id"]).includes(col)
+      );
+
       dispatch({ type: "setRows", newrows: updatedRows });
       dispatch({ type: "setIsValidated", isvalidated: true });
       dispatch({ type: "setMatch", match: "reinit" });
       SetisMatchvisible(!isMatchvisible);
+      setColumnVisibilityModel(
+        Object.fromEntries(colsToHide.map((col) => [col, false]))
+      );
     }
   };
 
@@ -121,10 +129,7 @@ export default function ScheduleColsMatcher({
         </Box>
       ))}
 
-      <Tooltip
-        title="Match columns to expected format and activate data validation.
-       Scheduled Time should be a time or date+time and Pax should be a number"
-      >
+      <Tooltip title="You need to indicate which column is 'Scheduled time' (date or datetime) and which column is 'Pax' (number)">
         <Button
           variant="contained"
           component="label"
