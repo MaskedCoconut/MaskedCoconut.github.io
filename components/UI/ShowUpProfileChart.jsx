@@ -76,13 +76,17 @@ const options = {
         display: false,
       },
       beginAtZero: true,
+      title: {
+        display: true,
+        text: "time before departure",
+      },
     },
     y1: {
       type: "linear",
       beginAtZero: true,
       title: {
         display: true,
-        text: "[ % ]",
+        text: "Pax arriving [ % ]",
       },
       position: "left",
       border: {
@@ -96,7 +100,7 @@ const options = {
       beginAtZero: true,
       title: {
         display: true,
-        text: "[ % ]",
+        text: "Pax arrived [ % ]",
       },
       position: "right",
       border: {
