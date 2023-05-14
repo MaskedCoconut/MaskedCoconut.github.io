@@ -125,20 +125,22 @@ export default function ShowUpCard({ processor }) {
                 type="space"
               />
             </Box>
-            {!isHall && [
-              <Typography
-                variant="subtitle1"
-                sx={{ mt: 0, pt: 0, fontWeight: "bold", textAlign: "left" }}
-              >
-                wait LoS [min]
-              </Typography>,
-              <LoSbar
-                low={waitLow}
-                high={waitHigh}
-                value={waitValue}
-                type="wait"
-              />,
-            ]}
+            {!isHall && (
+              <Box>
+                <Typography
+                  variant="subtitle1"
+                  sx={{ mt: 0, pt: 0, fontWeight: "bold", textAlign: "left" }}
+                >
+                  wait LoS [min]
+                </Typography>
+                <LoSbar
+                  low={waitLow}
+                  high={waitHigh}
+                  value={waitValue}
+                  type="wait"
+                />
+              </Box>
+            )}
           </Stack>
         </CardContent>
       </Paper>
