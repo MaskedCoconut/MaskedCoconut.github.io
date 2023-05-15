@@ -84,7 +84,7 @@ export default function TerminalGraphEditor({ processor }) {
             onChange={handleSelectAttribute}
             sx={{ width: 200, margin: "auto" }}
           >
-            <MenuItem value="processing time [s]">processing time [s]</MenuItem>
+            {/* <MenuItem value="processing time [s]">processing time [s]</MenuItem> */}
             <MenuItem value="processor number">processor number</MenuItem>
           </TextField>
         </Box>

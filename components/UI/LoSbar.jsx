@@ -71,7 +71,7 @@ export default function ShowUpCard({ low, high, value, type }) {
 
   return (
     <Box>
-      <Box sx={{ mt: 4, mb: 4, position: "relative" }}>
+      <Box sx={{ mt: 4, mb: 2, position: "relative" }}>
         <Stack direction="row" spacing={0}>
           <Tooltip title="Under-Provided">
             <Box

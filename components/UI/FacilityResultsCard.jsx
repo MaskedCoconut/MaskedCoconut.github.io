@@ -17,6 +17,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import { timestep, processortypes, processorcardWidth } from "../settings";
 import LoSbar from "./LoSbar";
 import { MovingAverage, timeFromatter, halltypes } from "../utils";
+import { arrayAvg } from "./FacilityCard";
 
 export default function ShowUpCard({ processor }) {
   const theme = useTheme();
@@ -50,72 +51,90 @@ export default function ShowUpCard({ processor }) {
     !isHall &&
     Math.floor(data.simresult[processor][busyIndex]["Queue [min]"] * 10) / 10;
 
-  // calculer les parametres LOS
+  // requirements as per IATA formula
+  // depends on previous process, button to "make all Optimal?"
+  const maxShowup = Math.max(
+    ...MovingAverage(
+      data.simresult[processor].map((obj) => obj["Show-up [Pax/h]"]),
+      12
+    )
+  );
+
+  const req_proc =
+    !isHall &&
+    Math.round(
+      (maxShowup * arrayAvg(data.terminal[processor]["processing time [s]"])) /
+        60 /
+        (60 + (waitHigh + waitLow) / 2)
+    );
+
+  const req_sqm = !isHall
+    ? Math.round(
+        (((req_proc * (waitHigh + waitLow)) / 2) * (sqmPaxhigh + sqmPaxlow)) /
+          2 /
+          (arrayAvg(data.terminal[processor]["processing time [s]"]) / 60)
+      )
+    : Math.round(
+        (Math.max(
+          ...data.simresult[processor].map((obj) => obj["Queue [Pax]"])
+        ) *
+          (sqmPaxhigh + sqmPaxlow)) /
+          2
+      );
 
   return (
     <Card>
       <Paper sx={{ width: 350, margin: "auto" }}>
         <CardContent>
-          <Stack spacing={1} sx={{ mb: 1 }}>
-            <Stack
-              spacing={0}
+          <Stack spacing={0.5} sx={{ mb: 0.5 }}>
+            {/* title */}
+            <Typography
+              variant="h6"
               sx={{
-                justifyContent: "flex-start",
-                justifyItems: "flex-start",
+                mb: 0,
+                pb: 0,
+                textAlign: "center",
               }}
+              color="primary"
             >
-              <Typography
-                variant="h6"
-                sx={{
-                  mb: 0,
-                  pb: 0,
-                  textAlign: "center",
-                }}
-                color="primary"
-              >
-                <InfoIcon sx={{ mr: 1 }} />
-                {data.terminal[processor].name}
-              </Typography>
-            </Stack>
+              <InfoIcon sx={{ mr: 1 }} />
+              {data.terminal[processor].name}
+            </Typography>
 
             {/* Busiest hour */}
             <Box spacing={0}>
-              <Box>
-                <Stack direction="row" spacing={2}>
-                  <Typography
-                    variant="h5"
-                    sx={{ fontWeight: "bold" }}
-                    color="secondary"
-                  >
-                    {timeFromatter(busyIndex)}
-                  </Typography>
-                </Stack>
-              </Box>
+              <Typography
+                variant="h5"
+                sx={{ fontWeight: "bold", textAlign: "center" }}
+                color="secondary"
+              >
+                {timeFromatter(busyIndex)}
+              </Typography>
               <Tooltip title="5-min slot when the Centered Moving Average (1 hour) of queue is the highest">
-                <Box>
-                  <Typography
-                    variant="subtitle2"
-                    sx={{
-                      mt: 0,
-                      pt: 0,
-                      fontStyle: "oblique",
-                      textAlign: "left",
-                    }}
-                  >
-                    Busiest hour (CMA)
-                  </Typography>
-                </Box>
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    mt: 0,
+                    pt: 0,
+                    fontStyle: "oblique",
+                    textAlign: "left",
+                  }}
+                >
+                  Busiest hour (CMA)
+                </Typography>
               </Tooltip>
             </Box>
           </Stack>
           <Divider />
 
-          <Stack sx={{ mt: 1 }} spacing={1}>
+          {/* LoS stack */}
+
+          <Stack sx={{ mt: 1, mb: 2 }} spacing={0.75}>
             <Typography
               variant="subtitle1"
               sx={{ mt: 0, pt: 0, fontWeight: "bold", textAlign: "center" }}
             >
-              Space LoS [sqm/Pax]
+              LoS [sqm/Pax]
             </Typography>
             <Box>
               <LoSbar
@@ -126,13 +145,15 @@ export default function ShowUpCard({ processor }) {
               />
             </Box>
             {!isHall && (
+              <Typography
+                variant="subtitle1"
+                sx={{ mt: 0, pt: 0, fontWeight: "bold", textAlign: "center" }}
+              >
+                LoS [min]
+              </Typography>
+            )}
+            {!isHall && (
               <Box>
-                <Typography
-                  variant="subtitle1"
-                  sx={{ mt: 0, pt: 0, fontWeight: "bold", textAlign: "center" }}
-                >
-                  wait LoS [min]
-                </Typography>
                 <LoSbar
                   low={waitLow}
                   high={waitHigh}
@@ -141,6 +162,23 @@ export default function ShowUpCard({ processor }) {
                 />
               </Box>
             )}
+          </Stack>
+
+          <Divider />
+
+          {/* requirements stack */}
+
+          <Stack sx={{ mt: 1 }} spacing={0.5}>
+            <Typography
+              variant="subtitle1"
+              sx={{ mt: 0, pt: 0, fontWeight: "bold", textAlign: "center" }}
+            >
+              Optimal requirements
+            </Typography>
+            <Stack direction="row">
+              <Typography>area: {req_sqm} [sqm]</Typography>
+              {!isHall && <Typography>Processors: {req_proc}</Typography>}
+            </Stack>
           </Stack>
         </CardContent>
       </Paper>

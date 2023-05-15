@@ -325,7 +325,7 @@ export default function OutlinedCard({ processor, keyprocessor }) {
   );
 }
 
-const arrayAvg = (val) => {
+export const arrayAvg = (val) => {
   if (Array.isArray(val)) {
     return val.reduce((a, b) => a + b, 0) / val.length;
   } else {
