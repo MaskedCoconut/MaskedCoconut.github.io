@@ -131,7 +131,7 @@ export default function App({ processor, options }) {
           />
           {data.terminal[processor].name}
         </Typography>
-        <Box sx={{ height: "40vh" }}>
+        <Box sx={{ minHeight: "40vh" }}>
           <Line options={options} data={graphdata} />
         </Box>
         <Box>
