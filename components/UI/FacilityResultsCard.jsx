@@ -113,7 +113,7 @@ export default function ShowUpCard({ processor }) {
           <Stack sx={{ mt: 1 }} spacing={1}>
             <Typography
               variant="subtitle1"
-              sx={{ mt: 0, pt: 0, fontWeight: "bold", textAlign: "left" }}
+              sx={{ mt: 0, pt: 0, fontWeight: "bold", textAlign: "center" }}
             >
               Space LoS [sqm/Pax]
             </Typography>
@@ -129,7 +129,7 @@ export default function ShowUpCard({ processor }) {
               <Box>
                 <Typography
                   variant="subtitle1"
-                  sx={{ mt: 0, pt: 0, fontWeight: "bold", textAlign: "left" }}
+                  sx={{ mt: 0, pt: 0, fontWeight: "bold", textAlign: "center" }}
                 >
                   wait LoS [min]
                 </Typography>
