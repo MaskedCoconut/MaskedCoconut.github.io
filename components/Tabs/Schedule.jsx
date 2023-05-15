@@ -14,7 +14,7 @@ const App = () => {
   const data = useContext(AppDataContext);
 
   return (
-    <Stack minHeight={500}>
+    <Stack minHeight={600}>
       <ScheduleDatagrid />
     </Stack>
   );
