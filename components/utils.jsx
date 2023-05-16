@@ -1,6 +1,7 @@
 import { erf } from "mathjs";
 import { SELECTLIST, timestep, processortypes } from "./settings";
 import { demoSchedule, demoData } from "../public/demo/demo_schedule";
+import * as XLSX from "xlsx";
 
 // Should be moved to settings
 const halltypes = processortypes
@@ -514,4 +515,30 @@ export const MovingAverage = (array, window) => {
   });
 
   return result.map((x) => x / window);
+};
+
+export const ExcelExport = (data, dispatch) => {
+  if (!data.simresult) {
+    dispatch({
+      type: "setSnackbar",
+      snackbar: { children: "No result to export", severity: "error" },
+    });
+  } else {
+    /* generate workbook */
+    const workbook = XLSX.utils.book_new();
+
+    Object.keys(data.simresult).forEach((key) => {
+      const worksheet = XLSX.utils.json_to_sheet(data.simresult[key]);
+
+      // create workbook
+      XLSX.utils.book_append_sheet(
+        workbook,
+        worksheet,
+        key == "showup" ? "Show-up" : data.terminal[key].name
+      );
+    });
+
+    /* create an XLSX file and try to save to Presidents.xlsx */
+    XLSX.writeFile(workbook, "Sim_results.xlsx", { compression: true });
+  }
 };

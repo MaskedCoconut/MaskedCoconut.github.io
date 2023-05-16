@@ -242,6 +242,7 @@ export default function DataGridDemo() {
         width: isfullScreen ? "100vw" : "95%",
         position: isfullScreen && "absolute",
         height: isfullScreen ? "100vh" : "80vh",
+        minHeight: 600,
         top: isfullScreen && 0,
         right: isfullScreen && 0,
         backgroundColor: "white",
