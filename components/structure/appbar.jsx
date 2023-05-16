@@ -19,7 +19,7 @@ import {
   AppDataDispatchContext,
 } from "../context/AppDataContext";
 import { appTitle } from "../settings";
-import { exportData, importData } from "../utils";
+import { exportData, importData, ExcelExport } from "../utils";
 import SettingsIcon from "@mui/icons-material/Settings";
 
 function a11yProps(index) {
@@ -119,8 +119,11 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
+              {/* save */}
+
               <MenuItem>
                 <Button
+                  sx={{ width: "100%" }}
                   onClick={() => {
                     exportData(data);
                     handleCloseUserMenu();
@@ -132,8 +135,16 @@ function ResponsiveAppBar() {
                   Save
                 </Button>
               </MenuItem>
+
+              {/* Load */}
+
               <MenuItem>
-                <Button size="medium" variant="contained" component="label">
+                <Button
+                  size="medium"
+                  variant="contained"
+                  component="label"
+                  sx={{ width: "100%" }}
+                >
                   Load
                   <input
                     onChange={(e) => {
@@ -145,6 +156,23 @@ function ResponsiveAppBar() {
                     hidden
                     type="File"
                   />
+                </Button>
+              </MenuItem>
+
+              {/* to Excel */}
+
+              <MenuItem>
+                <Button
+                  onClick={() => {
+                    ExcelExport(data, dispatch);
+                    handleCloseUserMenu();
+                  }}
+                  sx={{ width: "100%" }}
+                  size="medium"
+                  variant="contained"
+                  component="label"
+                >
+                  Export to Excel
                 </Button>
               </MenuItem>
             </Menu>
