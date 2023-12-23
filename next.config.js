@@ -6,4 +6,8 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 
-module.exports = withPlugins([[withBundleAnalyzer], [withSvgr]]);
+module.exports = withPlugins([[withBundleAnalyzer], [withSvgr]], {
+  images: {
+    unoptimized: true,
+  },
+});
