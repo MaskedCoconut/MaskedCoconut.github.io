@@ -13,13 +13,17 @@ const App = () => {
   const options = cloneDeep(optionsProcessorGraph);
   return (
     <>
-      <Stack>
-        <Box width="100%">{data.rows && <PfmGraph options={options} />}</Box>
-        <ExcelExportButton
-          data={data.rows}
-          filename={data.file.name.replace(/(\.[^.]+)$/, "_edited$1")}
-        />
-      </Stack>
+      {data.rows && (
+        <Stack>
+          <Box width="100%">
+            <PfmGraph options={options} />
+          </Box>
+          <ExcelExportButton
+            data={data.rows}
+            filename={data.file.name.replace(/(\.[^.]+)$/, "_edited$1")}
+          />
+        </Stack>
+      )}
     </>
   );
 };
