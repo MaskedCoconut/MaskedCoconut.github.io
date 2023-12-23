@@ -1,18 +1,14 @@
 import { Alert, Box, Snackbar } from "@mui/material";
-import type { ReactElement } from 'react';
 import { useContext } from "react";
-import Results from "../components/Tabs/Results";
-import Schedule from "../components/Tabs/Schedule";
-import Showup from "../components/Tabs/Showup";
-import Terminal from "../components/Tabs/Terminal";
+import Edit from "../components/Tabs/CSV_editor/Edit";
+import Upload from "../components/Tabs/CSV_editor/Upload";
 import {
   AppDataContext,
   AppDataDispatchContext,
-} from "../components/context/AppDataContext";
-import Layout from '../components/structure/layout';
-import type { NextPageWithLayout } from './_app';
+} from "../components/context/CSV_editor/AppDataContext";
+import Layout from "../components/structure/CSV_editor/layout";
 
-const App: NextPageWithLayout = () => {
+const App = () => {
   // AppDataContext
   const dispatch = useContext(AppDataDispatchContext);
   const data = useContext(AppDataContext);
@@ -27,16 +23,10 @@ const App: NextPageWithLayout = () => {
   return (
     <Box sx={{ width: "100%" }}>
       <TabPanel value={data.currenttab} index={0}>
-        <Schedule />
+        <Upload />
       </TabPanel>
       <TabPanel value={data.currenttab} index={1}>
-        <Showup />
-      </TabPanel>
-      <TabPanel value={data.currenttab} index={2}>
-        <Terminal />
-      </TabPanel>
-      <TabPanel value={data.currenttab} index={3}>
-        <Results />
+        <Edit />
       </TabPanel>
       {!!data.snackbar && (
         <Snackbar
@@ -52,12 +42,9 @@ const App: NextPageWithLayout = () => {
   );
 };
 
-
-App.getLayout = function getLayout(page: ReactElement) {
-  return (
-    <Layout>{page}</Layout>
-  )
-}
+App.getLayout = function getLayout(page) {
+  return <Layout>{page}</Layout>;
+};
 
 export default App;
 
