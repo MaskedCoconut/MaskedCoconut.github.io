@@ -72,9 +72,9 @@ export default function DataGridDemo() {
           Object.assign({ id: idx }, row)
         );
 
-        dispatch({ type: "setRows", newrows: rows, option: "reinit" });
-        dispatch({ type: "setMatch", match: "reinit" });
-        dispatch({ type: "setIsValidated", isvalidated: false });
+        dispatch({ type: "setRows", newrows: rows });
+        // dispatch({ type: "setMatch", match: "reinit" });
+        // dispatch({ type: "setIsValidated", isvalidated: false });
         dispatch({
           type: "setSnackbar",
           snackbar: { children: "data loaded from file", severity: "success" },

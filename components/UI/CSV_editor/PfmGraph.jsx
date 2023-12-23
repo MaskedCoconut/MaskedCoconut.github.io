@@ -16,7 +16,7 @@ import * as React from "react";
 import { useContext } from "react";
 import { Line } from "react-chartjs-2";
 import { AppDataContext } from "../../context/CSV_editor/AppDataContext";
-import TerminalGraphEditor from "../FacilityGraphEditor";
+import TerminalGraphEditor from "./PfmGraphEditor";
 
 ChartJS.register(
   CategoryScale,

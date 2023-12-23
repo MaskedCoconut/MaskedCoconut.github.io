@@ -5,14 +5,29 @@ import {
   AppDataContext,
   AppDataDispatchContext,
 } from "../../context/CSV_editor/AppDataContext";
-import { timeFromatter } from "../../utils";
+
+// Options for short date and time format
+const DateOptions = {
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hour12: false, // Use 24-hour format
+  timeZone: "Asia/Tokyo", // Set timezone to Japan
+};
 
 export default function TerminalGraphEditor({ processor }) {
   const data = useContext(AppDataContext);
   const dispatch = useContext(AppDataDispatchContext);
 
-  const [min, max, step] = [0, 287, 1];
-  const [range, setRange] = useState([72, 144]);
+  const start_timestamp = Date.parse(data.rows[0]["From Time"]);
+  const end_timestamp = Date.parse(
+    data.rows[data.rows.length - 1]["From Time"]
+  );
+  const [min, max, step] = [start_timestamp, end_timestamp, 10 * 60 * 1000];
+  const [range, setRange] = useState([start_timestamp, end_timestamp]);
   const [value, setValue] = useState();
   const [attribute, setAttribute] = useState();
 
@@ -37,10 +52,20 @@ export default function TerminalGraphEditor({ processor }) {
   };
 
   const handleClick = () => {
-    const newrange = [...range];
-    newrange[1] += 1;
-    data.terminal?.[processor]?.[attribute].fill(value, ...newrange);
-    dispatch({ type: "setTerminal", newterminal: { ...data.terminal } });
+    // const newrange = [...range];
+    // newrange[1] += 1;
+    // change rows
+    data.rows.forEach((row) => {
+      if (
+        Date.parse(row["From Time"]) >= range[0] &&
+        Date.parse(row["From Time"]) < range[1]
+      ) {
+        row[attribute] =
+          row[attribute] > value * 60 ? value * 60 : row[attribute];
+      }
+    });
+    // dispatch change
+    dispatch({ type: "setRows", newrows: [...data.rows] });
   };
 
   return (
@@ -72,7 +97,12 @@ export default function TerminalGraphEditor({ processor }) {
             sx={{ width: 200, margin: "auto" }}
           >
             {/* <MenuItem value="processing time [s]">processing time [s]</MenuItem> */}
-            <MenuItem value="processor number">processor number</MenuItem>
+            <MenuItem value="T1InternationalSecurityNM4F_Queue_WaitB">
+              North
+            </MenuItem>
+            <MenuItem value="T1InternationalSecuritySM4F_Queue_WaitB">
+              South
+            </MenuItem>
           </TextField>
         </Box>
         {/* number input */}
@@ -82,13 +112,13 @@ export default function TerminalGraphEditor({ processor }) {
             size="small"
             label="value"
             onChange={handleInputChange}
-            onBlur={handleBlur}
+            // onBlur={handleBlur}
             inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
           />
         </Box>
         {/* validation button */}
         <Button variant="contained" component="label" onClick={handleClick}>
-          Set value
+          Set Max queueing for period
         </Button>
       </Stack>
       {/* slider */}
@@ -98,8 +128,8 @@ export default function TerminalGraphEditor({ processor }) {
             value={range}
             onChange={handleRangeChange}
             valueLabelDisplay="auto"
-            getAriaValueText={timeFromatter}
-            valueLabelFormat={timeFromatter}
+            getAriaValueText={Datetimeformatter}
+            valueLabelFormat={Datetimeformatter}
             min={min}
             max={max}
             step={step}
@@ -109,3 +139,23 @@ export default function TerminalGraphEditor({ processor }) {
     </Grid>
   );
 }
+
+const Datetimeformatter = (timestamp) => {
+  const date = new Date(timestamp);
+
+  // Options for formatting the date string
+  const options = {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false, // Use 24-hour format
+    timeZone: "Asia/Tokyo", // Set timezone to UTC (or any other desired timezone)
+  };
+
+  // Format the date as a string
+  const dateString = date.toLocaleString("ja-JP", options);
+  return dateString;
+};
